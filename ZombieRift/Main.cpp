@@ -43,28 +43,53 @@ int main(void)
 	// Dark blue background
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
-	MyMesh* pMesh = new MyMesh();
+	Camera* camera = Camera::GetInstance();
+	camera->SetPosition(glm::vec3(15.0f, 10.0f, 0.0f));
+	camera->SetTarget(glm::vec3(0.0f, 0.0f, 0.0f));
+	camera->SetUp(glm::vec3(0.0f, 1.0f, 0.0f));
 
-	pMesh->AddVertexPosition(glm::vec3(-5.0f, -2.5f, 0.0f));
-	pMesh->AddVertexPosition(glm::vec3(5.0f, -2.5f, 0.0f));
-	pMesh->AddVertexPosition(glm::vec3(0.0f, 2.5f, 0.0f));
+	Shape* myShape = new Shape();
 
-	pMesh->AddVertexColor(glm::vec3(1.0f, 0.0f, 0.0f));
-	pMesh->AddVertexColor(glm::vec3(1.0f, 0.0f, 0.0f));
-	pMesh->AddVertexColor(glm::vec3(1.0f, 0.0f, 0.0f));
+	myShape->GenCube(5.0f,
+		glm::vec3(1.0f, 0.0f, 0.0f),
+		glm::vec3(0.0f, 1.0f, 0.0f),
+		glm::vec3(0.0f, 0.0f, 1.0f),
+		glm::vec3(1.0f, 1.0f, 0.0f),
+		glm::vec3(0.0f, 1.0f, 1.0f),
+		glm::vec3(1.0f, 0.0f, 1.0f));
 
-	pMesh->CompileOpenGL3X();
-
+	float counter = 0;
 	do{
 
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		pMesh->Render(glm::mat4(1.0f));
+		// Draw stuff and do update log here
+
+		// Update
+		if (glfwGetKey(window, GLFW_KEY_A)) {
+			camera->MoveSideways(-0.01f);
+		}
+		if (glfwGetKey(window, GLFW_KEY_D)) {
+			camera->MoveSideways(0.01f);
+		}
+		if (glfwGetKey(window, GLFW_KEY_W)) {
+			camera->MoveVertical(0.1f);
+		}
+		if (glfwGetKey(window, GLFW_KEY_S)) {
+			camera->MoveVertical(-0.1f);
+		}
+		glm::mat4 transformations = glm::mat4(1.0f);
+		transformations = glm::rotate(transformations, counter / 10, 0.0f, 1.0f, 0.0f);
+
+		// Draw
+		myShape->RenderShape(transformations, camera->GetView(), camera->GetProjection(false));
 
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+
+		counter++;
 
 	} // Check if the ESC key was pressed or the window was closed
 	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
@@ -72,8 +97,6 @@ int main(void)
 
 	// Close OpenGL window and terminate GLFW
 	glfwTerminate();
-
-	delete pMesh;
 
 	return 0;
 }

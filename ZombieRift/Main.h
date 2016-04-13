@@ -6,5 +6,7 @@ This project was generated in 2013
 
 #include <iostream>
 #include "MyMesh.h"
+#include "Shape.h"
+#include "Camera.h"
 
 #endif //_MAIN_H

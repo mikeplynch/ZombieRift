@@ -107,7 +107,7 @@ void MyMesh::CompileOpenGL3X(void)
 
 	return;
 }
-void MyMesh::Render(glm::mat4 a_mToWorld)
+void MyMesh::Render(glm::mat4 a_mToWorld, glm::mat4 view, glm::mat4 persp)
 {
 	if (!m_bBinded)
 		return;
@@ -124,8 +124,8 @@ void MyMesh::Render(glm::mat4 a_mToWorld)
 	GLuint v4Color = glGetAttribLocation(m_nShaderProgram, "Color_b");
 
 	//Final Projection of the Camera is going to be hard coded
-	glm::mat4 m4Projection = glm::perspective(45.0f, 1080.0f / 768.0f, 0.01f, 1000.0f);
-	glm::mat4 m4View = glm::lookAt(glm::vec3(0.0f, 0.0f, 15.0f), glm::vec3(0.0f, 0.0f, 14.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 m4Projection = persp;
+	glm::mat4 m4View = view;
 	glUniformMatrix4fv(MVP, 1, GL_FALSE, glm::value_ptr(m4Projection * m4View * a_mToWorld));
 
 	//position

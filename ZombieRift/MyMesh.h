@@ -68,7 +68,7 @@ public:
 	void AddVertexColor(glm::vec3 a_v3Input);
 
 	/* Renders the shape asking for its position in the world and a color */
-	virtual void Render(glm::mat4 a_mToWorld);
+	virtual void Render(glm::mat4 a_mToWorld, glm::mat4 view, glm::mat4 persp);
 
 protected:
 	/* Initialize the object's fields */
