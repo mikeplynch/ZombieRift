@@ -58,6 +58,8 @@ int main(void)
 		glm::vec3(0.0f, 1.0f, 1.0f),
 		glm::vec3(1.0f, 0.0f, 1.0f));
 
+	CubeObject* cube = new CubeObject();
+
 	float counter = 0;
 	do{
 
@@ -83,7 +85,8 @@ int main(void)
 		transformations = glm::rotate(transformations, counter / 10, 0.0f, 1.0f, 0.0f);
 
 		// Draw
-		myShape->RenderShape(transformations, camera->GetView(), camera->GetProjection(false));
+		//myShape->RenderShape(transformations, camera->GetView(), camera->GetProjection(false));
+		cube->draw();
 
 		// Swap buffers
 		glfwSwapBuffers(window);

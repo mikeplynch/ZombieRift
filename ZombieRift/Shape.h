@@ -30,4 +30,6 @@ public:
 	void GenCube(float size, glm::vec3 front, glm::vec3 left, glm::vec3 right, glm::vec3 bottom, glm::vec3 top, glm::vec3 back);
 	void GenCube(float size, glm::vec3 color);
 	void GenCube(float size);
+
+	void clearVertices();
 };

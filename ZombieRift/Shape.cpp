@@ -129,3 +129,9 @@ void Shape::GenCube(float size)
 	GenCube(size, defaultColor, defaultColor, defaultColor, defaultColor, defaultColor, defaultColor);
 }
 
+void Shape::clearVertices()
+{
+	m_lVertexPos.clear();
+	m_lVertexCol.clear();
+}
+
