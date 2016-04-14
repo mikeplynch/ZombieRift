@@ -32,4 +32,6 @@ public:
 	void GenCube(float size);
 
 	void clearVertices();
+
+	void ReColor(glm::vec3 color);
 };

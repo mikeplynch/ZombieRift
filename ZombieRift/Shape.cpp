@@ -2,6 +2,7 @@
 
 void Shape::compileShape()
 {
+	m_bBinded = false;
 	CompileOpenGL3X();
 	m_needsCompilation = false;
 }
@@ -133,5 +134,15 @@ void Shape::clearVertices()
 {
 	m_lVertexPos.clear();
 	m_lVertexCol.clear();
+}
+
+void Shape::ReColor(glm::vec3 color)
+{
+	defaultColor = color;
+	m_lVertexCol.clear();
+	for (int i = 0; i < m_lVertexPos.size(); i++)
+	{
+		AddColor(color);
+	}
 }
 

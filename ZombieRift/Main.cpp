@@ -70,6 +70,7 @@ int main(void)
 
 		// Update
 		if (glfwGetKey(window, GLFW_KEY_A)) {
+			cube->SetColor(glm::vec3(0.0f, 1.0f, 1.0f));
 			camera->MoveSideways(-0.01f);
 		}
 		if (glfwGetKey(window, GLFW_KEY_D)) {
@@ -83,9 +84,10 @@ int main(void)
 		}
 		glm::mat4 transformations = glm::mat4(1.0f);
 		transformations = glm::rotate(transformations, counter / 10, 0.0f, 1.0f, 0.0f);
+		transformations *= glm::translate(glm::vec3(5.0, 0, 0));
 
 		// Draw
-		//myShape->RenderShape(transformations, camera->GetView(), camera->GetProjection(false));
+		myShape->RenderShape(transformations, camera->GetView(), camera->GetProjection(false));
 		cube->draw();
 
 		// Swap buffers

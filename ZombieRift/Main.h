@@ -8,6 +8,6 @@ This project was generated in 2013
 #include "MyMesh.h"
 #include "Shape.h"
 #include "Camera.h"
-#include "GameObject.h"
+#include "SimpleObjects.h"
 
 #endif //_MAIN_H
