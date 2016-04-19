@@ -11,9 +11,11 @@ private:
 public:
 	Shape();
 
+	const std::vector<glm::vec3>& GetVertices() { return m_lVertexPos; }
+
 	// When color is unspecied, defaultColor is used.
 	// default is set to red when unset.
-	glm::vec3 defaultColor = glm::vec3(1.0f, 0.0f, 0.0f); 
+	glm::vec3 defaultColor; 
 
 	void RenderShape(glm::mat4 toWorld, glm::mat4 view, glm::mat4 persp);
 
@@ -30,6 +32,11 @@ public:
 	void GenCube(float size, glm::vec3 front, glm::vec3 left, glm::vec3 right, glm::vec3 bottom, glm::vec3 top, glm::vec3 back);
 	void GenCube(float size, glm::vec3 color);
 	void GenCube(float size);
+
+	//Creates a box with the designated colors for the faces
+	void GenBox(float width, float length, float height, glm::vec3 front, glm::vec3 left, glm::vec3 right, glm::vec3 bottom, glm::vec3 top, glm::vec3 back);
+	void GenBox(float width, float length, float height, glm::vec3 color);
+	void GenBox(float width, float length, float height);
 
 	void clearVertices();
 

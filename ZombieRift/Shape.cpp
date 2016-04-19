@@ -3,6 +3,12 @@
 void Shape::compileShape()
 {
 	m_bBinded = false;
+	if (m_ColorBuffer > 0)
+		glDeleteBuffers(1, &m_ColorBuffer);
+	if (m_VertexBuffer > 0)
+		glDeleteBuffers(1, &m_VertexBuffer);
+	if (m_vao > 0)
+		glDeleteVertexArrays(1, &m_vao);
 	CompileOpenGL3X();
 	m_needsCompilation = false;
 }
@@ -10,6 +16,7 @@ void Shape::compileShape()
 Shape::Shape()
 {
 	m_shapeType = "none";
+	defaultColor = glm::vec3(1.0f, 0.0f, 0.0f);
 }
 
 void Shape::RenderShape(glm::mat4 toWorld, glm::mat4 view, glm::mat4 persp)
@@ -76,24 +83,43 @@ void Shape::AddTri(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3)
 
 void Shape::GenCube(float size, glm::vec3 front, glm::vec3 left, glm::vec3 right, glm::vec3 bottom, glm::vec3 top, glm::vec3 back)
 {
+	GenBox(size, size, size, front, left, right, bottom, top, back);
+	m_shapeType = "Cube";
+}
+
+void Shape::GenCube(float size, glm::vec3 color)
+{
+	GenCube(size, color, color, color, color, color, color);
+}
+
+void Shape::GenCube(float size)
+{
+	GenCube(size, defaultColor);
+}
+
+void Shape::GenBox(float width, float length, float height, glm::vec3 front, glm::vec3 left, glm::vec3 right, glm::vec3 bottom, glm::vec3 top, glm::vec3 back)
+{
 	//Create the eight points that will map out to the cube
 	//remember counterclockwise to the tri is where the face will be visible
 
-	float value = 0.5f * size;
+	width *= .5f;
+	length *= .5f;
+	height *= .5f;
+
 	//Top points
-	glm::vec3 point0 = glm::vec3(-value, -value, value);
-	glm::vec3 point1 = glm::vec3(value, -value, value);
-	glm::vec3 point2 = glm::vec3(value, value, value);
-	glm::vec3 point3 = glm::vec3(-value, value, value);
+	glm::vec3 point0 = glm::vec3(-width, -height, length);
+	glm::vec3 point1 = glm::vec3(width, -height, length);
+	glm::vec3 point2 = glm::vec3(width, height, length);
+	glm::vec3 point3 = glm::vec3(-width, height, length);
 
 	//Bottom points
-	glm::vec3 point4 = glm::vec3(-value, -value, -value);
-	glm::vec3 point5 = glm::vec3(value, -value, -value);
-	glm::vec3 point6 = glm::vec3(value, value, -value);
-	glm::vec3 point7 = glm::vec3(-value, value, -value);
+	glm::vec3 point4 = glm::vec3(-width, -height, -length);
+	glm::vec3 point5 = glm::vec3(width, -height, -length);
+	glm::vec3 point6 = glm::vec3(width, height, -length);
+	glm::vec3 point7 = glm::vec3(-width, height, -length);
 
 	//Front
-	AddTri( point1, point3, point0,  front);
+	AddTri(point1, point3, point0, front);
 	AddTri(point2, point3, point1, front);
 
 	//Left
@@ -116,18 +142,19 @@ void Shape::GenCube(float size, glm::vec3 front, glm::vec3 left, glm::vec3 right
 	AddTri(point6, point7, point4, back);
 	AddTri(point5, point6, point4, back);
 
-	//Set the shape to square
-	m_shapeType = "square";
+	//Set the shape to cube
+	m_shapeType = "Box";
+
 }
 
-void Shape::GenCube(float size, glm::vec3 color)
+void Shape::GenBox(float width, float length, float height, glm::vec3 color)
 {
-	GenCube(size, color, color, color, color, color, color);
+	GenBox(width, length, height, color, color, color, color, color, color);
 }
 
-void Shape::GenCube(float size)
+void Shape::GenBox(float width, float length, float height)
 {
-	GenCube(size, defaultColor, defaultColor, defaultColor, defaultColor, defaultColor, defaultColor);
+	GenBox(width, height, length, defaultColor);
 }
 
 void Shape::clearVertices()

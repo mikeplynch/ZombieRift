@@ -5,9 +5,8 @@ This project was generated in 2013
 #define _MAIN_H
 
 #include <iostream>
-#include "MyMesh.h"
-#include "Shape.h"
 #include "Camera.h"
 #include "SimpleObjects.h"
+#include "GameManager.h"
 
 #endif //_MAIN_H

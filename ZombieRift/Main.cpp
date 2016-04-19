@@ -4,7 +4,7 @@ modified by labigm@rit.edu
 --------------------------------------------------------------------------------------------------*/
 // Include standard headers
 #include "Main.h"
- 
+
 GLFWwindow* window;
 
 int main(void)
@@ -30,6 +30,8 @@ int main(void)
 	}
 	glfwMakeContextCurrent(window);
 
+	glEnable(GL_DEPTH_TEST);
+
 	// Initialize GLEW
 	glewExperimental = true; // Needed for core profile
 	if (glewInit() != GLEW_OK) {
@@ -43,34 +45,41 @@ int main(void)
 	// Dark blue background
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
+	GameManager::window = window;
+	GameManager* game = GameManager::GetInstance();
+
 	Camera* camera = Camera::GetInstance();
 	camera->SetPosition(glm::vec3(15.0f, 10.0f, 0.0f));
 	camera->SetTarget(glm::vec3(0.0f, 0.0f, 0.0f));
 	camera->SetUp(glm::vec3(0.0f, 1.0f, 0.0f));
 
-	Shape* myShape = new Shape();
-
-	myShape->GenCube(5.0f,
-		glm::vec3(1.0f, 0.0f, 0.0f),
-		glm::vec3(0.0f, 1.0f, 0.0f),
-		glm::vec3(0.0f, 0.0f, 1.0f),
-		glm::vec3(1.0f, 1.0f, 0.0f),
-		glm::vec3(0.0f, 1.0f, 1.0f),
-		glm::vec3(1.0f, 0.0f, 1.0f));
+	Scene* scene = new Scene;
 
 	CubeObject* cube = new CubeObject();
+
+	BoxObject* box = new BoxObject(1.0f, 10.0f, 2.0f);
+	box->SetColor(glm::vec3(0.0f, 0.0f, 1.0f));
+	box->m_transformations *= glm::translate(glm::vec3(2.0f, 0.0f, 0.0f));
+	box->m_name = "box";
+
+	PlayerBox* player = new PlayerBox();
+	player->m_name = "player";
+	
+	//scene->AddObject(cube);
+	scene->AddObject(box);
+	scene->AddObject(player);
+
+	game->SetCurrentScene(scene);
 
 	float counter = 0;
 	do{
 
 		// Clear the screen
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		// Draw stuff and do update log here
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Update
+		game->Update();
 		if (glfwGetKey(window, GLFW_KEY_A)) {
-			cube->SetColor(glm::vec3(0.0f, 1.0f, 1.0f));
 			camera->MoveSideways(-0.01f);
 		}
 		if (glfwGetKey(window, GLFW_KEY_D)) {
@@ -82,13 +91,12 @@ int main(void)
 		if (glfwGetKey(window, GLFW_KEY_S)) {
 			camera->MoveVertical(-0.1f);
 		}
-		glm::mat4 transformations = glm::mat4(1.0f);
-		transformations = glm::rotate(transformations, counter / 10, 0.0f, 1.0f, 0.0f);
-		transformations *= glm::translate(glm::vec3(5.0, 0, 0));
 
 		// Draw
-		myShape->RenderShape(transformations, camera->GetView(), camera->GetProjection(false));
-		cube->draw();
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		game->Draw();
+		// Draw debug information(such as bounding boxes)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 		// Swap buffers
 		glfwSwapBuffers(window);
@@ -102,6 +110,9 @@ int main(void)
 
 	// Close OpenGL window and terminate GLFW
 	glfwTerminate();
+
+	delete cube;
+	delete box;
 
 	return 0;
 }
