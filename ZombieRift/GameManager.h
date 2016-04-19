@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameObject.h"
+#include "CollisionData.h"
 
 class Scene {
 public:
@@ -25,7 +26,6 @@ private:
 	GameManager();
 	GameManager(GameManager const* other) {};
 	GameManager& operator=(GameManager const& other) {};
-	bool TestCollisions(GameObject* first, GameObject* second);
 public:
 	static GameManager* GetInstance();
 	static void ReleaseInstance();

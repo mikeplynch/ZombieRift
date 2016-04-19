@@ -2,6 +2,7 @@
 #include "Shape.h"
 #include "Camera.h"
 #include "CollisionData.h"
+extern class CollisionData;
 
 ///<summary>
 ///The base game object used by the engine.  This is the base object, and

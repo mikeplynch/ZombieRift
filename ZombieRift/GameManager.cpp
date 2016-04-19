@@ -1,42 +1,10 @@
 #include "GameManager.h"
-#define DEBUG false
 
 GameManager* GameManager::instance = nullptr;
 GLFWwindow* GameManager::window = nullptr;
 
 GameManager::GameManager()
 {
-}
-
-bool GameManager::TestCollisions(GameObject* first, GameObject * second)
-{
-	bool areColliding = true;
-	glm::vec3 min1 = glm::vec3(first->m_transformations * glm::vec4(first->m_collisionData->m_min, 1.0f));
-	glm::vec3 max1 = glm::vec3(first->m_transformations * glm::vec4(first->m_collisionData->m_max, 1.0f));
-	glm::vec3 min2 = glm::vec3(second->m_transformations * glm::vec4(second->m_collisionData->m_min, 1.0f));
-	glm::vec3 max2 = glm::vec3(second->m_transformations * glm::vec4(second->m_collisionData->m_max, 1.0f));
-
-	if (std::max(max1.x, min1.x) < std::min(min2.x, max2.x))
-		areColliding = false;
-	if (std::min(min1.x, max1.x) > std::max(max2.x, min2.x))
-		areColliding = false;
-
-	if (std::max(max1.y, min1.y) < std::min(min2.y, max2.y))
-		areColliding = false;
-	if (std::min(min1.y, max1.y) > std::max(max2.y, min2.y))
-		areColliding = false;
-
-	if (std::max(max1.z, min1.z) < std::min(min2.z, max2.z))
-		areColliding = false;
-	if (std::min(min1.z, max1.z) > std::max(max2.z, min2.z))
-		areColliding = false;
-
-	if (DEBUG && areColliding)
-	{
-		first->SetColor(glm::vec3(0.0f, 1.0f, 0.0f));
-	}
-
-	return areColliding;
 }
 
 GameManager * GameManager::GetInstance()
@@ -111,19 +79,23 @@ void GameManager::DetectCollisions()
 		{
 			for (int p = 0; p < m_currentScene->m_objectNames.size(); p++)
 			{
+				GameObject* first = m_currentScene->m_objects[m_currentScene->m_objectNames[i]].at(k);
+				if (first->m_collisionData->m_collisionMask == 0)
+					continue;
 				int secondElementSize = m_currentScene->m_objects[m_currentScene->m_objectNames[i]].size();
 				for (int q = 0; q < secondElementSize; q++)
 				{
-					if (!(i == p && k == q))
+					if (i == p && k == q)
+						continue;
+					GameObject* second = m_currentScene->m_objects[m_currentScene->m_objectNames[p]].at(q);
+					if (first->m_collisionData->m_collisionMask & second->m_collisionData->m_collisionMask == 0)
+						continue;
+					if (CollisionData::AreColliding(first, second))
 					{
-						if (TestCollisions(m_currentScene->m_objects[m_currentScene->m_objectNames[i]].at(k),
-							m_currentScene->m_objects[m_currentScene->m_objectNames[p]].at(q)))
-						{
-							//TODO: This is slow as they are both going to check for collision against each other
-							//there should be logic to prevent this
-							m_currentScene->m_objects[m_currentScene->m_objectNames[p]].at(q)->onCollision(m_currentScene->m_objects[m_currentScene->m_objectNames[p]].at(q));
-						}
-					}
+						//TODO: This is slow as they are both going to check for collision against each other
+						//there should be logic to prevent this
+						m_currentScene->m_objects[m_currentScene->m_objectNames[p]].at(q)->onCollision(m_currentScene->m_objects[m_currentScene->m_objectNames[p]].at(q));
+					}	
 				}
 			}
 		}
