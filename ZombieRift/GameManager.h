@@ -7,8 +7,8 @@ class Scene {
 public:
 	Scene() { init(); }
 	~Scene();
-	std::map<std::string, std::vector<GameObject*>> m_objects;
-	std::vector<std::string> m_objectNames;
+	std::map<std::string, std::vector<GameObject*>> m_objectsDictionary;
+	std::vector<GameObject*> m_objects;
 
 	virtual void init() { };
 

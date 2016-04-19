@@ -97,6 +97,7 @@ int main(void)
 		game->Draw();
 		// Draw debug information(such as bounding boxes)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		
 
 		// Swap buffers
 		glfwSwapBuffers(window);
