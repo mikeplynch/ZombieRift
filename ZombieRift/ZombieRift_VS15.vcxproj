@@ -69,9 +69,12 @@
     </Link>
     <PostBuildEvent>
       <Command>mkdir "$(SolutionDir)_Binary\"
+xcopy "$(SolutionDir)include\GL\bin" "$(SolutionDir)_Binary" /y
+xcopy "$(SolutionDir)include\RE\bin\2015" "$(SolutionDir)_Binary" /y
+xcopy "$(SolutionDir)include\SFML\bin\sfml-system-2.dll" "$(SolutionDir)_Binary" /y
+xcopy "$(SolutionDir)include\SFML\bin\sfml-window-2.dll" "$(SolutionDir)_Binary" /y
 mkdir "$(SolutionDir)_Binary\Shaders\"
-copy "$(SolutionDir)include\OpenGL-Tutorials\shaders\*.*" "$(SolutionDir)_Binary\Shaders\"
-copy "$(SolutionDir)include\GL\bin\*.*" "$(SolutionDir)_Binary\"</Command>
+xcopy "$(SolutionDir)include\RE\Shaders" "$(SolutionDir)_Binary\Shaders" /y</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copying binary…</Message>
