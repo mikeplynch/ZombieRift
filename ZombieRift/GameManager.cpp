@@ -138,12 +138,23 @@ void Scene::AddObject(GameObject* object)
 
 GameObject * Scene::GetObjectByName(std::string name)
 {
-	//TODO: Implement this function
+	for (int i = 0; i < m_objects.size(); i++)
+	{
+		if (m_objects[i]->m_name == name)
+		{
+			return m_objects[i];
+		}
+	}
+
 	return nullptr;
 }
 
 std::vector<GameObject*> Scene::GetAllObjectsByName(std::string name)
 {
-	//TODO: IMPLEMENT this function
-	return std::vector<GameObject*>();
+	if (m_objectsDictionary.find(name) != m_objectsDictionary.end())
+	{
+		return m_objectsDictionary.find(name)->second;
+	}
+	else
+		return std::vector<GameObject*>();
 }

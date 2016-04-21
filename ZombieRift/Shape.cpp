@@ -166,7 +166,6 @@ void Shape::GenBox(float width, float height, float length, glm::vec3 front, glm
 	points[7] = glm::vec3(-width, height, -length);
 
 	GenBox(points, front, left, right, bottom, top, back);
-
 }
 
 void Shape::GenBox(float width, float height, float length, glm::vec3 color)
