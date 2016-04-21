@@ -10,13 +10,13 @@ extern class CollisionData;
 ///in SimpleObjects.h
 ///</summary>
 class GameObject {
+	friend class CollisionData;
 private:
 
 protected:
 	GameObject();
 	~GameObject();
 	Shape* m_model;
-	Shape* m_reBoundingBox;
 	Camera* m_worldCamera;
 public:
 	//TODO: add variables for world position, rotation, and scale and implement
@@ -26,6 +26,10 @@ public:
 	///Do all scaling, translations, rotations into this matrix.
 	///</summary>
 	glm::mat4 m_transformations;
+
+	glm::vec3 m_translations = glm::vec3(0, 0, 0);
+	glm::mat4 m_rotations = glm::mat4(1.0f);
+	glm::vec3 m_scales = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	///<summary>
 	///The primary purpose of this hash map is so that users of GameObjects can

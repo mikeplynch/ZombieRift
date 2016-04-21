@@ -7,6 +7,13 @@ CollisionData::CollisionData(Shape* collisionBase, GameObject* object)
 	m_boundingPoints = std::vector<glm::vec3>(8, glm::vec3(0.0f));
 	m_reBoundingPoints = std::vector<glm::vec3>(8, glm::vec3(0.0f));
 	SetModel(collisionBase);
+	m_boundingBox = new Shape();
+	m_boundingBox->GenCube(1.0f);
+}
+
+CollisionData::~CollisionData()
+{
+	delete m_boundingBox;
 }
 
 void CollisionData::GenerateBoundingBox(std::vector<glm::vec3> vertices, glm::vec3& min, glm::vec3& max, glm::vec3& size)
@@ -84,6 +91,16 @@ void CollisionData::SetModel(Shape* shape)
 	GenerateBoundingBox(m_shape->GetVertices(), m_min, m_max, m_size);
 	m_boundingPoints = GenerateBoundingPoints(m_min, m_max);
 	UpdateBoundingBoxes();
+}
+
+void CollisionData::DrawBoundingBox()
+{
+	//TODO: This currently only draws the REBB. Possibly add code to make it draw different ones
+	//Depending on collision mode, or depending on debug mode.
+	glm::mat4 world = glm::mat4(1.0f);
+	world *= glm::translate(m_object->m_translations);
+	world *= glm::scale(m_reSize);
+	m_boundingBox->RenderShape(world, m_object->m_worldCamera->GetView(), m_object->m_worldCamera->GetProjection(false));
 }
 
 bool CollisionData::AreColliding(CollisionDetectionType type, GameObject* first, GameObject* second)

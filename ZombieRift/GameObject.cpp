@@ -5,7 +5,6 @@ GameObject::GameObject()
 	m_worldCamera = Camera::GetInstance();
 	m_data = new std::map<std::string, int>();
 	m_model = new Shape();
-	m_reBoundingBox = new Shape();
 	m_collisionData = nullptr;
 }
 
@@ -16,13 +15,6 @@ GameObject::~GameObject()
 		delete m_model;
 		m_model = nullptr;
 	}
-
-	if (m_reBoundingBox != nullptr)
-	{
-		delete m_reBoundingBox;
-		m_reBoundingBox = nullptr;
-	}
-
 	if (m_data != nullptr)
 	{
 		delete m_data;
@@ -52,10 +44,16 @@ void GameObject::SetModel(Shape* shape)
 
 void GameObject::Draw()
 {
+	m_transformations = glm::mat4(1.0f);
+	m_transformations *= glm::translate(m_translations);
+	m_transformations *= m_rotations;
+	m_transformations *= glm::scale(m_scales);
 	m_model->RenderShape(m_transformations, m_worldCamera->GetView(), m_worldCamera->GetProjection(false));
 }
 
 void GameObject::DrawDebug()
 {
-	m_reBoundingBox->RenderShape(glm::mat4(1.0f), m_worldCamera->GetView(), m_worldCamera->GetProjection(false));
+	//The reason this wraps only one function is for future additions of drawing 
+	//vector information and any other possible information.
+	m_collisionData->DrawBoundingBox();
 }
