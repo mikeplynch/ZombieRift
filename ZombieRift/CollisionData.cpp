@@ -32,6 +32,7 @@ void CollisionData::GenerateBoundingBox()
 			m_min.z = vertices[i].z;
 	}
 
+	m_center = (m_max + m_min) / 2.0f;
 	m_size.x = glm::distance(glm::vec3(m_min.x, 0.0f, 0.0f), glm::vec3(m_max.x, 0.0f, 0.0f));
 	m_size.y = glm::distance(glm::vec3(0.0f, m_min.y, 0.0f), glm::vec3(0.0f, m_max.y, 0.0f));
 	m_size.z = glm::distance(glm::vec3(0.0f, 0.0f, m_min.z), glm::vec3(0.0f, 0.0f, m_max.z));

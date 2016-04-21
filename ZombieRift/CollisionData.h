@@ -13,7 +13,7 @@ private:
 
 	Shape* m_shape;
 public:
-	glm::vec3 m_max, m_min, m_size;
+	glm::vec3 m_max, m_min, m_size, m_center;;
 
 	CollisionData(Shape* collisionBase);
 
