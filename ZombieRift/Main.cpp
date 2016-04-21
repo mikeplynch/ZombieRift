@@ -49,7 +49,7 @@ int main(void)
 	GameManager* game = GameManager::GetInstance();
 
 	Camera* camera = Camera::GetInstance();
-	camera->SetPosition(glm::vec3(15.0f, 10.0f, 0.0f));
+	camera->SetPosition(glm::vec3(0.0f, 10.0f, 15.0f));
 	camera->SetTarget(glm::vec3(0.0f, 0.0f, 0.0f));
 	camera->SetUp(glm::vec3(0.0f, 1.0f, 0.0f));
 
@@ -97,6 +97,7 @@ int main(void)
 		game->Draw();
 		// Draw debug information(such as bounding boxes)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		game->DrawDebug();
 		
 
 		// Swap buffers

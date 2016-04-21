@@ -22,6 +22,8 @@ public:
 
 class GameManager {
 private:
+	bool m_isDebug = false;
+
 	static GameManager* instance;
 	GameManager();
 	GameManager(GameManager const* other) {};
@@ -41,6 +43,7 @@ public:
 	void Update();
 
 	void Draw();
+	void DrawDebug();
 
 	void DetectCollisions();
 };

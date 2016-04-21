@@ -34,6 +34,9 @@ public:
 	void GenCube(float size);
 
 	//Creates a box with the designated colors for the faces
+	void GenBox(std::vector<glm::vec3> points, glm::vec3 front, glm::vec3 left, glm::vec3 right, glm::vec3 bottom, glm::vec3 top, glm::vec3 back);
+	void GenBox(std::vector<glm::vec3> points, glm::vec3 color);
+	void GenBox(std::vector<glm::vec3> points);
 	void GenBox(float width, float length, float height, glm::vec3 front, glm::vec3 left, glm::vec3 right, glm::vec3 bottom, glm::vec3 top, glm::vec3 back);
 	void GenBox(float width, float length, float height, glm::vec3 color);
 	void GenBox(float width, float length, float height);

@@ -97,62 +97,84 @@ void Shape::GenCube(float size)
 	GenCube(size, defaultColor);
 }
 
-void Shape::GenBox(float width, float length, float height, glm::vec3 front, glm::vec3 left, glm::vec3 right, glm::vec3 bottom, glm::vec3 top, glm::vec3 back)
+void Shape::GenBox(std::vector<glm::vec3> points, glm::vec3 front, glm::vec3 left, glm::vec3 right, glm::vec3 bottom, glm::vec3 top, glm::vec3 back)
+{
+	if (points.size() < 8)
+	{
+		return;
+	}
+	
+	//Front
+	AddTri(points[1], points[3], points[0], front);
+	AddTri(points[2], points[3], points[1], front);
+
+	//Left
+	AddTri(points[0], points[3], points[7], left);
+	AddTri(points[4], points[0], points[7], left);
+
+	//Right
+	AddTri(points[1], points[5], points[6], right);
+	AddTri(points[6], points[2], points[1], right);
+
+	//Bottom
+	AddTri(points[0], points[4], points[5], bottom);
+	AddTri(points[5], points[1], points[0], bottom);
+
+	//Top
+	AddTri(points[2], points[6], points[7], top);
+	AddTri(points[3], points[2], points[7], top);
+
+	//Back
+	AddTri(points[6], points[7], points[4], back);
+	AddTri(points[5], points[6], points[4], back);
+
+	//Set the shape to cube
+	m_shapeType = "Box";
+}
+
+void Shape::GenBox(std::vector<glm::vec3> points, glm::vec3 color)
+{
+	GenBox(points, color, glm::vec3(0.0f,1.0f,0.0f), color, color ,color, color);
+}
+
+void Shape::GenBox(std::vector<glm::vec3> points)
+{
+	GenBox(points, defaultColor);
+}
+
+void Shape::GenBox(float width, float height, float length, glm::vec3 front, glm::vec3 left, glm::vec3 right, glm::vec3 bottom, glm::vec3 top, glm::vec3 back)
 {
 	//Create the eight points that will map out to the cube
 	//remember counterclockwise to the tri is where the face will be visible
 
 	width *= .5f;
-	length *= .5f;
 	height *= .5f;
+	length *= .5f;
+
+	std::vector<glm::vec3> points(8, glm::vec3(0.0f));
 
 	//Top points
-	glm::vec3 point0 = glm::vec3(-width, -height, length);
-	glm::vec3 point1 = glm::vec3(width, -height, length);
-	glm::vec3 point2 = glm::vec3(width, height, length);
-	glm::vec3 point3 = glm::vec3(-width, height, length);
+	points[0] = glm::vec3(-width, -height, length);
+	points[1] = glm::vec3(width, -height, length);
+	points[2] = glm::vec3(width, height, length);
+	points[3] = glm::vec3(-width, height, length);
 
 	//Bottom points
-	glm::vec3 point4 = glm::vec3(-width, -height, -length);
-	glm::vec3 point5 = glm::vec3(width, -height, -length);
-	glm::vec3 point6 = glm::vec3(width, height, -length);
-	glm::vec3 point7 = glm::vec3(-width, height, -length);
+	points[4] = glm::vec3(-width, -height, -length);
+	points[5] = glm::vec3(width, -height, -length);
+	points[6] = glm::vec3(width, height, -length);
+	points[7] = glm::vec3(-width, height, -length);
 
-	//Front
-	AddTri(point1, point3, point0, front);
-	AddTri(point2, point3, point1, front);
-
-	//Left
-	AddTri(point0, point3, point7, left);
-	AddTri(point4, point0, point7, left);
-
-	//Right
-	AddTri(point1, point5, point6, right);
-	AddTri(point6, point2, point1, right);
-
-	//Bottom
-	AddTri(point0, point4, point5, bottom);
-	AddTri(point5, point1, point0, bottom);
-
-	//Top
-	AddTri(point2, point6, point7, top);
-	AddTri(point3, point2, point7, top);
-
-	//Back
-	AddTri(point6, point7, point4, back);
-	AddTri(point5, point6, point4, back);
-
-	//Set the shape to cube
-	m_shapeType = "Box";
+	GenBox(points, front, left, right, bottom, top, back);
 
 }
 
-void Shape::GenBox(float width, float length, float height, glm::vec3 color)
+void Shape::GenBox(float width, float height, float length, glm::vec3 color)
 {
-	GenBox(width, length, height, color, color, color, color, color, color);
+	GenBox(width, height, length, color, color, color, color, color, color);
 }
 
-void Shape::GenBox(float width, float length, float height)
+void Shape::GenBox(float width, float height, float length)
 {
 	GenBox(width, height, length, defaultColor);
 }

@@ -44,6 +44,22 @@ void GameManager::PopCurrentScene()
 
 void GameManager::Update()
 {
+	if (glfwGetKey(GameManager::window, GLFW_KEY_LEFT_SHIFT))
+	{
+		if (glfwGetKey(GameManager::window, GLFW_KEY_T))
+		{
+			m_isDebug = false;
+		}
+	}
+	else
+	{
+		if (glfwGetKey(GameManager::window, GLFW_KEY_T))
+		{
+			m_isDebug = true;
+		}
+	}
+	
+
 	for (int i = 0; i < m_currentScene->m_objects.size(); i++)
 	{
 		m_currentScene->m_objects[i]->update();
@@ -58,7 +74,20 @@ void GameManager::Draw()
 {
 	for (int i = 0; i < m_currentScene->m_objects.size(); i++)
 	{
-		m_currentScene->m_objects[i]->draw();
+		m_currentScene->m_objects[i]->Draw();
+	}
+}
+
+void GameManager::DrawDebug()
+{
+	if (!m_isDebug)
+	{
+		return;
+	}
+
+	for (int i = 0; i < m_currentScene->m_objects.size(); i++)
+	{
+		m_currentScene->m_objects[i]->DrawDebug();
 	}
 }
 
@@ -76,13 +105,12 @@ void GameManager::DetectCollisions()
 			GameObject* second = m_currentScene->m_objects[p];
 			if (first->m_collisionData->m_collisionMask & second->m_collisionData->m_collisionMask == 0)
 				continue;
-			if (CollisionData::AreColliding(first, second))
+			if (CollisionData::AreColliding(CollisionData::CollisionDetectionType::AxisRealignedBoundingBox, first, second))
 			{
 				//TODO: This is slow as they are both going to check for collision against each other
 				//there should be logic to prevent this
 				first->onCollision(second);
 			}
-
 		}
 	}
 }

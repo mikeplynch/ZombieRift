@@ -5,16 +5,35 @@ GameObject::GameObject()
 	m_worldCamera = Camera::GetInstance();
 	m_data = new std::map<std::string, int>();
 	m_model = new Shape();
+	m_reBoundingBox = new Shape();
 	m_collisionData = nullptr;
 }
 
 GameObject::~GameObject()
-{
-	delete m_model;
-	m_model = nullptr;
-	delete m_data;
-	m_data = nullptr;
-	m_worldCamera = nullptr;
+{	
+	if (m_model != nullptr)
+	{
+		delete m_model;
+		m_model = nullptr;
+	}
+
+	if (m_reBoundingBox != nullptr)
+	{
+		delete m_reBoundingBox;
+		m_reBoundingBox = nullptr;
+	}
+
+	if (m_data != nullptr)
+	{
+		delete m_data;
+		m_data = nullptr;
+	}
+
+	if (m_worldCamera != nullptr)
+	{
+		//delete m_worldCamera;
+		m_worldCamera = nullptr;
+	}
 }
 
 void GameObject::SetModel(Shape* shape)
@@ -28,10 +47,15 @@ void GameObject::SetModel(Shape* shape)
 	{
 		delete m_collisionData;
 	}
-	m_collisionData = new CollisionData(shape);
+	m_collisionData = new CollisionData(shape, this);
 }
 
-void GameObject::draw()
+void GameObject::Draw()
 {
 	m_model->RenderShape(m_transformations, m_worldCamera->GetView(), m_worldCamera->GetProjection(false));
+}
+
+void GameObject::DrawDebug()
+{
+	m_reBoundingBox->RenderShape(glm::mat4(1.0f), m_worldCamera->GetView(), m_worldCamera->GetProjection(false));
 }

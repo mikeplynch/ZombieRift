@@ -16,6 +16,7 @@ protected:
 	GameObject();
 	~GameObject();
 	Shape* m_model;
+	Shape* m_reBoundingBox;
 	Camera* m_worldCamera;
 public:
 	//TODO: add variables for world position, rotation, and scale and implement
@@ -51,5 +52,6 @@ public:
 	void SetModel(Shape* shape);
 	void SetColor(glm::vec3 color) { m_model->ReColor(color); }
 
-	virtual void draw();
+	virtual void Draw();
+	virtual void DrawDebug();
 };
