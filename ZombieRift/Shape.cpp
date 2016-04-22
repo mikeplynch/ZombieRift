@@ -186,11 +186,6 @@ void Shape::clearVertices()
 
 void Shape::ReColor(glm::vec3 color)
 {
-	defaultColor = color;
-	m_lVertexCol.clear();
-	for (int i = 0; i < m_lVertexPos.size(); i++)
-	{
-		AddColor(color);
-	}
+	this->color = color;
 }
 

@@ -10,7 +10,7 @@ void MyMesh::Init(void)
 	m_ColorBuffer = 0;
 
 	//Compile Color shader
-	m_nShaderProgram = LoadShaders("shaders\\BasicColor.vs", "shaders\\BasicColor.fs");
+	m_nShaderProgram = LoadShaders("shaders\\Color.vs", "shaders\\Color.fs");
 }
 void MyMesh::Swap(MyMesh& other)
 {
@@ -121,7 +121,9 @@ void MyMesh::Render(glm::mat4 a_mToWorld, glm::mat4 view, glm::mat4 persp)
 	// Get the GPU variables by their name and hook them to CPU variables
 	GLuint MVP = glGetUniformLocation(m_nShaderProgram, "MVP");
 	GLuint v4Position = glGetAttribLocation(m_nShaderProgram, "Position_b");
-	GLuint v4Color = glGetAttribLocation(m_nShaderProgram, "Color_b");
+	GLuint v3Color = glGetUniformLocation(m_nShaderProgram, "Color");
+	GLuint v3Tint = glGetUniformLocation(m_nShaderProgram, "Tint");
+	//GLuint v4Color = glGetAttribLocation(m_nShaderProgram, "Color_b");
 
 	//Final Projection of the Camera is going to be hard coded
 	glm::mat4 m4Projection = persp;
@@ -133,14 +135,18 @@ void MyMesh::Render(glm::mat4 a_mToWorld, glm::mat4 view, glm::mat4 persp)
 	glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
 	glVertexAttribPointer(v4Position, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-	//Color
-	glEnableVertexAttribArray(v4Color);
+	//Color & tint
+	float c[3] = { color.x, color.y, color.z };
+	float t[3] = { tint.x, tint.y, tint.z };
+	glUniform3fv(v3Color, 1, c);
+	glUniform3fv(v3Tint, 1, t);
+	/*glEnableVertexAttribArray(v4Color);
 	glBindBuffer(GL_ARRAY_BUFFER, m_ColorBuffer);
-	glVertexAttribPointer(v4Color, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glVertexAttribPointer(v4Color, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);*/
 
 	//Color and draw
 	glDrawArrays(GL_TRIANGLES, 0, m_nVertexCount);
 
 	glDisableVertexAttribArray(v4Position);
-	glDisableVertexAttribArray(v4Color);
+	//glDisableVertexAttribArray(v4Color);
 }

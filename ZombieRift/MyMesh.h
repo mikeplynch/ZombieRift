@@ -42,6 +42,9 @@ protected:
 	std::vector<glm::vec3> m_lVertexPos;	//List of Vertices
 	std::vector<glm::vec3> m_lVertexCol;	//List of Colors
 
+	glm::vec3 color = glm::vec3(1.0f, 0.0f, 0.0f);
+	glm::vec3 tint = glm::vec3(0.9f, 1.0f, 0.1f);
+
 public:
 	/* Constructor */
 	MyMesh(void);
