@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Aesthetics">
+      <UniqueIdentifier>{8301fb1b-43c0-40b5-b129-01532f716e84}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -42,6 +45,9 @@
     <ClCompile Include="XboxControls.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Automota.cpp">
+      <Filter>Aesthetics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h">
@@ -70,6 +76,9 @@
     </ClInclude>
     <ClInclude Include="XboxControls.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Automota.h">
+      <Filter>Aesthetics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

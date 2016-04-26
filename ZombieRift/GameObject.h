@@ -40,6 +40,8 @@ public:
 
 	std::string m_name = "default";
 
+	bool m_visible = true;
+
 	CollisionData* m_collisionData;
 
 	///<summary>

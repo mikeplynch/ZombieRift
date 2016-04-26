@@ -74,7 +74,10 @@ void GameManager::Draw()
 {
 	for (int i = 0; i < m_currentScene->m_objects.size(); i++)
 	{
-		m_currentScene->m_objects[i]->Draw();
+		if (m_currentScene->m_objects[i]->m_visible)
+		{
+			m_currentScene->m_objects[i]->Draw();
+		}
 	}
 }
 
