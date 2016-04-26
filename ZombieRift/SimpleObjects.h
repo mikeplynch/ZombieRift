@@ -1,6 +1,8 @@
 #pragma once
 #include "GameManager.h"
 #include "GameObject.h"
+#include "XboxControls.h"
+
 
 extern GLFWwindow* window;
 
@@ -30,6 +32,7 @@ public:
 
 class PlayerBox : public BoxObject {
 public:
+	XboxControls* Controller = new XboxControls(1);
 	PlayerBox() { m_model->GenBox(1.0f, 2.0f, 1.0f); m_collisionData = new CollisionData(m_model, this);}
 	void update()
 	{
@@ -56,19 +59,19 @@ public:
 		}
 		else
 		{
-			if (glfwGetKey(GameManager::window, GLFW_KEY_LEFT))
+			if (glfwGetKey(GameManager::window, GLFW_KEY_LEFT) || (Controller->GetState().Gamepad.sThumbLX < 0))
 			{
 				m_translations += glm::vec3(-0.1f, 0.0f, 0.0f);
 			}
-			if (glfwGetKey(GameManager::window, GLFW_KEY_RIGHT))
+			if (glfwGetKey(GameManager::window, GLFW_KEY_RIGHT) || (Controller->GetState().Gamepad.sThumbLX > 0))
 			{
 				m_translations += glm::vec3(0.1f, 0.0f, 0.0f);
 			}
-			if (glfwGetKey(GameManager::window, GLFW_KEY_UP))
+			if (glfwGetKey(GameManager::window, GLFW_KEY_UP) || (Controller->GetState().Gamepad.sThumbLY > 0))
 			{
 				m_translations += glm::vec3(0.0f, 0.1f, 0.0f);
 			}
-			if (glfwGetKey(GameManager::window, GLFW_KEY_DOWN))
+			if (glfwGetKey(GameManager::window, GLFW_KEY_DOWN) || (Controller->GetState().Gamepad.sThumbLY < 0))
 			{
 				m_translations += glm::vec3(0.0f, -0.1f, 0.0f);
 			}

@@ -108,7 +108,7 @@ void GameManager::DetectCollisions()
 			if (CollisionData::AreColliding(CollisionData::CollisionDetectionType::AxisRealignedBoundingBox, first, second))
 			{
 				//TODO: This is slow as they are both going to check for collision against each other
-				//there should be logic to prevent this
+				//there should be logic to prevent this v
 				first->onCollision(second);
 			}
 		}
