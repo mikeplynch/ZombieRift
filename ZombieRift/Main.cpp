@@ -69,6 +69,9 @@ int main(void)
 	scene->AddObject(box);
 	scene->AddObject(player);
 
+	//Colony* myColony = new Colony(5, 5, 5);
+	//myColony->AddToScene(scene);
+
 	game->SetCurrentScene(scene);
 
 	float counter = 0;

@@ -1,22 +1,32 @@
 #pragma once
 #include "GameObject.h"
+#include "GameManager.h"
+class Colony;
 
-class automota : GameObject {
+class Automota : public GameObject {
 private:
-	std::vector<automota> m_neighbors;
+	std::vector<Automota*>* m_neighbors;
+	Colony* m_colony;
+	glm::vec3 m_index;
 public:
-	automota() {};
-	virtual void DetermineNeighbors(std::vector<std::vector<std::vector<automota>>>& cells, int h, int w, int l);
+	int m_state = 1;
+	Automota() { };
+	Automota(Colony* col, int h, int w, int l);
+	virtual void DetermineNeighbors();
 	void update();
 };
 
 
-class colony {
+class Colony {
 private:
-
 public:
+	glm::vec3 worldPosition;
+	float spacing = 1.0f;
+	float cellSize = 1.0f;
 	int length, width, height;
-	std::vector<std::vector<std::vector<automota>>> cells;
+	std::vector<std::vector<std::vector<Automota*>>> cells;
 
-	colony(int length, int width, int height);
+	Colony(int length, int width, int height);
+
+	void AddToScene(Scene* target);
 };

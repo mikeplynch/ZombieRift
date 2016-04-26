@@ -8,5 +8,6 @@ This project was generated in 2013
 #include "Camera.h"
 #include "SimpleObjects.h"
 #include "GameManager.h"
+#include "Automota.h"
 
 #endif //_MAIN_H
