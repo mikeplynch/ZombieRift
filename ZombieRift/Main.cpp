@@ -61,21 +61,24 @@ int main(void)
 	box->SetColor(glm::vec3(0.0f, 0.0f, 1.0f));
 	box->m_translations = glm::vec3(2.0f, 1.0f, 0.0f);
 	box->m_name = "box";
+	box->m_visible = false;
 
 	PlayerBox* player = new PlayerBox();
 	player->m_name = "player";
 	player->m_translations = glm::vec3(0.0f, 2.0f, 0.0f);
+	player->m_visible = false;
 	
 	//scene->AddObject(cube);
 	scene->AddObject(box);
 	scene->AddObject(player);
 
-	//Colony* myColony = new Colony(5, 5, 5);
-	//myColony->AddToScene(scene);
+	Colony* myColony = new Colony(5, 5, 5);
+	myColony->RandomizeState(80);
+	myColony->AddToScene(scene);
 
 	game->SetCurrentScene(scene);
 
-	float counter = 0;
+	int counter = 0;
 	do{
 
 		// Clear the screen
@@ -90,7 +93,11 @@ int main(void)
 
 		// Update
 		game->Update();
-		//HandleInput(camera);
+		HandleInput(camera);
+		if(counter % 100 == 0)
+			myColony->Update();
+		if(counter % 3000 == 0)
+			myColony->RandomizeState(80);
 
 		// Swap buffers
 		glfwSwapBuffers(window);

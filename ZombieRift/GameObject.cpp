@@ -48,7 +48,10 @@ void GameObject::Draw()
 	m_transformations *= glm::translate(m_translations);
 	m_transformations *= m_rotations;
 	m_transformations *= glm::scale(m_scales);
-	m_model->RenderShape(m_transformations, m_worldCamera->GetView(), m_worldCamera->GetProjection());
+	if (m_visible)
+	{
+		m_model->RenderShape(m_transformations, m_worldCamera->GetView(), m_worldCamera->GetProjection());
+	}
 }
 
 void GameObject::DrawDebug()

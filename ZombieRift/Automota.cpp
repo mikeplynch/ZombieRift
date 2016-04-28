@@ -33,6 +33,20 @@ Colony::Colony(int length, int width, int height)
 	}
 }
 
+void Colony::Update()
+{
+	for (int h = 0; h < this->height; h++)
+	{
+		for (int w = 0; w < this->width; w++)
+		{
+			for (int l = 0; l < this->length; l++)
+			{
+				cells[h][w][l]->m_state = cells[h][w][l]->m_nextState;
+			}
+		}
+	}
+}
+
 void Colony::AddToScene(Scene * target)
 {
 	for (int h = 0; h < this->height; h++)
@@ -47,6 +61,23 @@ void Colony::AddToScene(Scene * target)
 	}
 }
 
+void Colony::RandomizeState(int percentage)
+{
+	for (int h = 0; h < this->height; h++)
+	{
+		for (int w = 0; w < this->width; w++)
+		{
+			for (int l = 0; l < this->length; l++)
+			{
+				if (rand() % 100 >= percentage)
+				{
+					cells[h][w][l]->m_state = 1;
+				}
+			}
+		}
+	}
+}
+
 
 Automota::Automota(Colony * col, int h, int w, int l)
 {
@@ -56,7 +87,6 @@ Automota::Automota(Colony * col, int h, int w, int l)
 	m_collisionData = new CollisionData(m_model, this);
 	m_collisionData->m_collisionMask = 0;
 	m_model->GenCube(1.0f);
-	
 }
 
 void Automota::DetermineNeighbors()
@@ -100,6 +130,26 @@ void Automota::DetermineNeighbors()
 
 void Automota::update()
 {
+	int living = countNeighbors();
+	if (m_state > 0)
+	{
+		if (living < 2)
+		{
+			m_nextState = 0;
+		}
+		if (living == 2 || living == 3)
+		{
+			m_nextState = 1;
+		}
+		if (living > 3)
+		{
+			m_nextState = 0;
+		}
+	}
+	else if (living == 3)
+	{
+		m_nextState = 1;
+	}
 	m_translations = m_colony->worldPosition + m_index * m_colony->spacing;
 	if (m_state < 1) {
 		m_visible = false;
@@ -108,3 +158,18 @@ void Automota::update()
 		m_visible = true;
 	}
 }
+
+int Automota::countNeighbors()
+{
+	int n = 0;
+	for (int i = 0; i < m_neighbors->size(); i++)
+	{
+		if (m_neighbors->at(i)->m_state > 0)
+		{
+			n++;
+		}
+	}
+	return n;
+}
+
+
