@@ -59,8 +59,6 @@ int main(void)
 	Camera* camera = Camera::GetInstance();
 	camera->SetPosition(glm::vec3(0.0f, 0.0f, 15.0f));
 
-	Colony* myColony = nullptr;
-
 	// - SET THE ACTIVE SCENE HERE -
 	game->SetCurrentScene(new A11Scene);
 
