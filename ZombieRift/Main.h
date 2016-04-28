@@ -9,5 +9,8 @@ This project was generated in 2013
 #include "SimpleObjects.h"
 #include "GameManager.h"
 #include "Automota.h"
+#include "Camera.h"
+
+void HandleInput(Camera* camera);
 
 #endif //_MAIN_H

@@ -100,7 +100,7 @@ void CollisionData::DrawBoundingBox()
 	glm::mat4 world = glm::mat4(1.0f);
 	world *= glm::translate(m_object->m_translations);
 	world *= glm::scale(m_reSize);
-	m_boundingBox->RenderShape(world, m_object->m_worldCamera->GetView(), m_object->m_worldCamera->GetProjection(false));
+	m_boundingBox->RenderShape(world, m_object->m_worldCamera->GetView(), m_object->m_worldCamera->GetProjection());
 }
 
 bool CollisionData::AreColliding(CollisionDetectionType type, GameObject* first, GameObject* second)
