@@ -69,6 +69,8 @@ void Shape::AddTri(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3, glm::ve
 	AddVertexColor(color1);
 	AddVertexColor(color2);
 	AddVertexColor(color3);
+
+	m_faces.push_back(Triangle(point1, point2, point3));
 }
 
 void Shape::AddTri(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3, glm::vec3 color)
@@ -189,3 +191,14 @@ void Shape::ReColor(glm::vec3 color)
 	this->color = color;
 }
 
+Triangle::Triangle(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3)
+{
+	this->point1 = point1;
+	this->point2 = point2;
+	this->point3 = point3;
+	this->edge1 = point2 - point1;
+	this->edge2 = point3 - point2;
+	this->edge3 = point1 - point3;
+
+	surfaceNormal = glm::normalize(glm::cross(point2 - point1, point3 - point1));
+}

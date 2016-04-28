@@ -1,6 +1,20 @@
 #pragma once
 #include "MyMesh.h"
 
+struct Triangle {	
+	glm::vec3 point1;
+	glm::vec3 point2;
+	glm::vec3 point3;
+	glm::vec3 edge1;
+	glm::vec3 edge2;
+	glm::vec3 edge3;
+	glm::vec3 surfaceNormal;
+
+	Triangle(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3);
+
+private:
+	Triangle();
+};
 
 class Shape : MyMesh {
 private:
@@ -8,10 +22,12 @@ private:
 	void compileShape();
 
 	std::string m_shapeType;
+	std::vector<Triangle> m_faces;
 public:
 	Shape();
 
 	const std::vector<glm::vec3>& GetVertices() { return m_lVertexPos; }
+	std::vector<Triangle> GetFaces() { return m_faces; }
 
 	// When color is unspecied, defaultColor is used.
 	// default is set to red when unset.

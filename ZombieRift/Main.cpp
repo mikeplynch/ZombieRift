@@ -80,6 +80,13 @@ int main(void)
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		// Draw
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		game->Draw();
+		// Draw debug information(such as bounding boxes)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		game->DrawDebug();
+
 		// Update
 		game->Update();
 		if (glfwGetKey(window, GLFW_KEY_A)) {
@@ -94,13 +101,6 @@ int main(void)
 		if (glfwGetKey(window, GLFW_KEY_S)) {
 			camera->MoveVertical(-0.1f);
 		}
-
-		// Draw
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		game->Draw();
-		// Draw debug information(such as bounding boxes)
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		game->DrawDebug();
 		
 
 		// Swap buffers

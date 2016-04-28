@@ -14,7 +14,7 @@ private:
 	Shape* m_boundingBox;
 	GameObject* m_object;
 
-	static bool AreCollidingBoundingBox(glm::vec3 min1, glm::vec3 max1, glm::vec3 min2, glm::vec3 max2);
+	static bool Overlaps(glm::vec3 min1, glm::vec3 max1, glm::vec3 min2, glm::vec3 max2);
 
 	void GenerateBoundingBox(std::vector<glm::vec3> vertices, glm::vec3& min, glm::vec3& max, glm::vec3& size);
 
@@ -54,4 +54,8 @@ public:
 	void DrawBoundingBox();
 
 	static bool AreColliding(CollisionDetectionType type, GameObject* first, GameObject* second);
+
+	static std::vector<glm::vec3> GetEdgeAxes(GameObject * first, GameObject * second);
+
+	static bool SeperatingAxisTest(GameObject* first, GameObject* second);
 };

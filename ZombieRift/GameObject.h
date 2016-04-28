@@ -44,6 +44,8 @@ public:
 
 	CollisionData* m_collisionData;
 
+	Shape* GetModel() { return m_model; }
+
 	///<summary>
 	///Update function must be implemented. Game object must be inherited form to use.
 	///</summary>
