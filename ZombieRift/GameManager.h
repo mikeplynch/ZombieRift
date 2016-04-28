@@ -5,14 +5,15 @@
 
 class Scene {
 public:
-	Scene() { init(); }
+	Scene() { };
 	~Scene();
 	std::map<std::string, std::vector<GameObject*>> m_objectsDictionary;
 	std::vector<GameObject*> m_objects;
+	bool initialized = false;
 
-	virtual void init() { };
+	virtual void Init() = 0;
 
-	virtual void Update() {};
+	virtual void Update() = 0;
 
 	void AddObject(GameObject* object);
 

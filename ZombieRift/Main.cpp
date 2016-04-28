@@ -50,33 +50,11 @@ int main(void)
 
 	Camera* camera = Camera::GetInstance();
 	camera->SetPosition(glm::vec3(0.0f, 0.0f, 15.0f));
-	//camera->SetTarget(glm::vec3(0.0f, 0.0f, 0.0f));
-	//camera->Se(glm::vec3(0.0f, 1.0f, 0.0f));
 
-	Scene* scene = new Scene;
+	Colony* myColony = nullptr;
 
-	CubeObject* cube = new CubeObject();
-
-	BoxObject* box = new BoxObject(1.0f, 10.0f, 2.0f);
-	box->SetColor(glm::vec3(0.0f, 0.0f, 1.0f));
-	box->m_translations = glm::vec3(2.0f, 1.0f, 0.0f);
-	box->m_name = "box";
-	box->m_visible = false;
-
-	PlayerBox* player = new PlayerBox();
-	player->m_name = "player";
-	player->m_translations = glm::vec3(0.0f, 2.0f, 0.0f);
-	player->m_visible = false;
-	
-	//scene->AddObject(cube);
-	scene->AddObject(box);
-	scene->AddObject(player);
-
-	Colony* myColony = new Colony(5, 5, 5);
-	myColony->RandomizeState(80);
-	myColony->AddToScene(scene);
-
-	game->SetCurrentScene(scene);
+	// - SET THE ACTIVE SCENE HERE -
+	game->SetCurrentScene(new A10Scene());
 
 	int counter = 0;
 	do{
@@ -93,11 +71,6 @@ int main(void)
 
 		// Update
 		game->Update();
-		HandleInput(camera);
-		if(counter % 100 == 0)
-			myColony->Update();
-		if(counter % 3000 == 0)
-			myColony->RandomizeState(80);
 
 		// Swap buffers
 		glfwSwapBuffers(window);
@@ -112,43 +85,9 @@ int main(void)
 	// Close OpenGL window and terminate GLFW
 	glfwTerminate();
 
-	delete cube;
-	delete box;
+	//Clean up the game!
+	GameManager::ReleaseInstance();
 
 	return 0;
 }
 
-void HandleInput(Camera* camera) {
-	if (glfwGetKey(window, GLFW_KEY_LEFT)) 
-	{
-		camera->ChangeYaw(0.1f);
-	}
-	if (glfwGetKey(window, GLFW_KEY_RIGHT)) 
-	{
-		camera->ChangeYaw(-0.1f);
-	}
-	if (glfwGetKey(window, GLFW_KEY_DOWN)) 
-	{
-		camera->ChangePitch(-0.1f);
-	}
-	if (glfwGetKey(window, GLFW_KEY_UP)) 
-	{
-		camera->ChangePitch(0.1f);
-	}
-	if (glfwGetKey(window, GLFW_KEY_A)) 
-	{
-		camera->MoveSideways(-0.01f);
-	}
-	if (glfwGetKey(window, GLFW_KEY_D)) 
-	{
-		camera->MoveSideways(0.01f);
-	}
-	if (glfwGetKey(window, GLFW_KEY_W)) 
-	{
-		camera->MoveForward(0.01f);
-	}
-	if (glfwGetKey(window, GLFW_KEY_S)) 
-	{
-		camera->MoveForward(-0.01f);
-	}
-}

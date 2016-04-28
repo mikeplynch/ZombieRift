@@ -30,6 +30,11 @@ void GameManager::ReleaseInstance()
 
 void GameManager::SetCurrentScene(Scene* scene)
 {
+	if (scene->initialized == false)
+	{
+		scene->Init();
+		scene->initialized = true;
+	}
 	m_sceneStack.push_back(scene);
 	m_currentScene = scene;
 }

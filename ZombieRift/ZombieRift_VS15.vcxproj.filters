@@ -16,6 +16,9 @@
     <Filter Include="Aesthetics">
       <UniqueIdentifier>{8301fb1b-43c0-40b5-b129-01532f716e84}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameScenes">
+      <UniqueIdentifier>{623691c8-a018-4088-b383-5fa5c4ffa3bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -48,6 +51,12 @@
     <ClCompile Include="Automota.cpp">
       <Filter>Aesthetics</Filter>
     </ClCompile>
+    <ClCompile Include="A10Scene.cpp">
+      <Filter>GameScenes</Filter>
+    </ClCompile>
+    <ClCompile Include="AestheticsScene.cpp">
+      <Filter>Aesthetics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h">
@@ -78,6 +87,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Automota.h">
+      <Filter>Aesthetics</Filter>
+    </ClInclude>
+    <ClInclude Include="A10Scene.h">
+      <Filter>GameScenes</Filter>
+    </ClInclude>
+    <ClInclude Include="AestheticsScene.h">
       <Filter>Aesthetics</Filter>
     </ClInclude>
   </ItemGroup>

@@ -107,6 +107,8 @@ copy "$(SolutionDir)include\GL\bin\*.*" "$(SolutionDir)_Binary\"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\include\OpenGL-Tutorials\shader.cpp" />
+    <ClCompile Include="A10Scene.cpp" />
+    <ClCompile Include="AestheticsScene.cpp" />
     <ClCompile Include="Automota.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CollisionData.cpp" />
@@ -118,6 +120,8 @@ copy "$(SolutionDir)include\GL\bin\*.*" "$(SolutionDir)_Binary\"</Command>
     <ClCompile Include="XboxControls.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="A10Scene.h" />
+    <ClInclude Include="AestheticsScene.h" />
     <ClInclude Include="Automota.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CollisionData.h" />

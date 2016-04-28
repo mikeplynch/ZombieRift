@@ -39,59 +39,52 @@ public:
 		m_collisionData->UpdateBoundingBoxes();
 		SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
 
-		// Controls have been moved over to the camera in main.cpp
-		/*if (glfwGetKey(GameManager::window, GLFW_KEY_LEFT_SHIFT))
+		if (glfwGetKey(GameManager::window, GLFW_KEY_LEFT_SHIFT))
 		{
-			if (glfwGetKey(GameManager::window, GLFW_KEY_UP))
+			if (glfwGetKey(GameManager::window, GLFW_KEY_I))
 			{
 				m_translations += glm::vec3(0.0f, -0.1f, 0.0f);
 			}
-			if (glfwGetKey(GameManager::window, GLFW_KEY_DOWN))
+			if (glfwGetKey(GameManager::window, GLFW_KEY_K))
 			{
 				m_translations += glm::vec3(0.0f, 0.1f, 0.01f);
 			}
-			if (glfwGetKey(GameManager::window, GLFW_KEY_Q))
+			if (glfwGetKey(GameManager::window, GLFW_KEY_U))
 			{
 				m_rotations *= glm::rotate(1.0f, glm::vec3(0.0f, -1.0f, 0.0f));
 			}
-			if (glfwGetKey(GameManager::window, GLFW_KEY_E))
+			if (glfwGetKey(GameManager::window, GLFW_KEY_O))
 			{
 				m_rotations *= glm::rotate(1.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 			}
 		}
 		else
 		{
-			if (glfwGetKey(GameManager::window, GLFW_KEY_LEFT) || (Controller->GetState().Gamepad.sThumbLX < 0))
+			if (glfwGetKey(GameManager::window, GLFW_KEY_J) || (Controller->GetState().Gamepad.sThumbLX < 0))
 			{
 				m_translations += glm::vec3(-0.1f, 0.0f, 0.0f);
 			}
-			if (glfwGetKey(GameManager::window, GLFW_KEY_RIGHT) || (Controller->GetState().Gamepad.sThumbLX > 0))
+			if (glfwGetKey(GameManager::window, GLFW_KEY_L) || (Controller->GetState().Gamepad.sThumbLX > 0))
 			{
 				m_translations += glm::vec3(0.1f, 0.0f, 0.0f);
 			}
-			if (glfwGetKey(GameManager::window, GLFW_KEY_UP) || (Controller->GetState().Gamepad.sThumbLY > 0))
+			if (glfwGetKey(GameManager::window, GLFW_KEY_I) || (Controller->GetState().Gamepad.sThumbLY > 0))
 			{
 				m_translations += glm::vec3(0.0f, 0.1f, 0.0f);
 			}
-			if (glfwGetKey(GameManager::window, GLFW_KEY_DOWN) || (Controller->GetState().Gamepad.sThumbLY < 0))
+			if (glfwGetKey(GameManager::window, GLFW_KEY_K) || (Controller->GetState().Gamepad.sThumbLY < 0))
 			{
 				m_translations += glm::vec3(0.0f, -0.1f, 0.0f);
 			}
-			if (glfwGetKey(GameManager::window, GLFW_KEY_Q))
+			if (glfwGetKey(GameManager::window, GLFW_KEY_U))
 			{
 				m_rotations *= glm::rotate(1.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 			}
-			if (glfwGetKey(GameManager::window, GLFW_KEY_E))
+			if (glfwGetKey(GameManager::window, GLFW_KEY_O))
 			{
 				m_rotations *= glm::rotate(1.0f, glm::vec3(0.0f, 0.0f, -1.0f));
 			}
-		}*/
-
-		// Generate the realigned bounding box
-		//TODO: FIX THIS! THIS IS VERY BAD - TC 4/20
-		//delete m_reBoundingBox;
-		//m_reBoundingBox = new Shape();
-		//m_reBoundingBox->GenBox(m_collisionData->m_reBoundingPoints);
+		}
 	}
 
 	void onCollision(GameObject* other) {

@@ -11,6 +11,9 @@ This project was generated in 2013
 #include "Automota.h"
 #include "Camera.h"
 
+//Include scene headers
+#include "A10Scene.h"
+
 void HandleInput(Camera* camera);
 
 #endif //_MAIN_H
