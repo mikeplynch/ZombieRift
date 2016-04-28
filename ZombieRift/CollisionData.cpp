@@ -175,7 +175,7 @@ bool CollisionData::SeperatingAxisTest(GameObject * first, GameObject * second)
 		axes.push_back(glm::normalize(glm::vec3(second->m_transformations * glm::vec4(secondFaces[i], 1.0))));
 	}
 	//Determine the plane points
-	glm::vec3 planePoint = (second->m_translations + first->m_translations) * 0.5f;
+	glm::vec3 planePoint = glm::vec3(0,0,0);
 
 	//Now project each vertice, onto the plane created by the axes to see if there is a collision.
 	std::vector<glm::vec3> firstVertices = first->m_model->GetVertices();
