@@ -13,7 +13,6 @@ This project was generated in 2013
 
 //Include scene headers
 #include "A10Scene.h"
-
-void HandleInput(Camera* camera);
+#include "AestheticsScene.h"
 
 #endif //_MAIN_H

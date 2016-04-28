@@ -10,3 +10,6 @@ class A10Scene : public Scene {
 
 	void HandleInput(Camera* camera);
 };
+
+
+class A11Scene : public A10Scene { };

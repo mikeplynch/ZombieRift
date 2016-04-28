@@ -1,9 +1,10 @@
 #pragma once
 #include "GameManager.h"
+#include "SimpleObjects.h"
 #include "Automota.h"
 
 class AestheticsScene : public Scene {
-	Colony colony;
+	Colony* colony;
 	int counter = 0;
 
 	virtual void Init();

@@ -54,7 +54,7 @@ int main(void)
 	Colony* myColony = nullptr;
 
 	// - SET THE ACTIVE SCENE HERE -
-	game->SetCurrentScene(new A10Scene());
+	game->SetCurrentScene(new A11Scene);
 
 	int counter = 0;
 	do{
