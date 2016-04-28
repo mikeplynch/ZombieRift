@@ -145,7 +145,7 @@ GameObject * Scene::GetObjectByName(std::string name)
 {
 	if (m_objectsDictionary.find(name) != m_objectsDictionary.end())
 	{
-		return m_objectsDictionary[name].front;
+		return m_objectsDictionary[name].front();
 	}
 	else 
 		return nullptr;
