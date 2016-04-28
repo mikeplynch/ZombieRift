@@ -89,7 +89,7 @@ int main(void)
 
 		// Update
 		game->Update();
-		HandleInput(camera);
+		//HandleInput(camera);
 
 		// Swap buffers
 		glfwSwapBuffers(window);

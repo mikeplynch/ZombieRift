@@ -40,7 +40,6 @@ public:
 		SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
 
 		// Controls have been moved over to the camera in main.cpp
-		/*
 		if (glfwGetKey(GameManager::window, GLFW_KEY_LEFT_SHIFT))
 		{
 			if (glfwGetKey(GameManager::window, GLFW_KEY_UP))
@@ -87,7 +86,6 @@ public:
 				m_rotations *= glm::rotate(1.0f, glm::vec3(0.0f, 0.0f, -1.0f));
 			}
 		}
-		*/
 
 		// Generate the realigned bounding box
 		//TODO: FIX THIS! THIS IS VERY BAD - TC 4/20
