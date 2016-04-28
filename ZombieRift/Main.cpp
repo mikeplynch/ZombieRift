@@ -49,9 +49,9 @@ int main(void)
 	GameManager* game = GameManager::GetInstance();
 
 	Camera* camera = Camera::GetInstance();
-	camera->SetPosition(glm::vec3(0.0f, 10.0f, 15.0f));
-	camera->SetTarget(glm::vec3(0.0f, 0.0f, 0.0f));
-	camera->SetUp(glm::vec3(0.0f, 1.0f, 0.0f));
+	camera->SetPosition(glm::vec3(0.0f, 0.0f, 15.0f));
+	//camera->SetTarget(glm::vec3(0.0f, 0.0f, 0.0f));
+	//camera->Se(glm::vec3(0.0f, 1.0f, 0.0f));
 
 	Scene* scene = new Scene;
 
@@ -89,19 +89,7 @@ int main(void)
 
 		// Update
 		game->Update();
-		if (glfwGetKey(window, GLFW_KEY_A)) {
-			camera->MoveSideways(-0.01f);
-		}
-		if (glfwGetKey(window, GLFW_KEY_D)) {
-			camera->MoveSideways(0.01f);
-		}
-		if (glfwGetKey(window, GLFW_KEY_W)) {
-			camera->MoveVertical(0.1f);
-		}
-		if (glfwGetKey(window, GLFW_KEY_S)) {
-			camera->MoveVertical(-0.1f);
-		}
-		
+		HandleInput(camera);
 
 		// Swap buffers
 		glfwSwapBuffers(window);
@@ -120,4 +108,39 @@ int main(void)
 	delete box;
 
 	return 0;
+}
+
+void HandleInput(Camera* camera) {
+	if (glfwGetKey(window, GLFW_KEY_LEFT)) 
+	{
+		camera->ChangeYaw(0.1f);
+	}
+	if (glfwGetKey(window, GLFW_KEY_RIGHT)) 
+	{
+		camera->ChangeYaw(-0.1f);
+	}
+	if (glfwGetKey(window, GLFW_KEY_DOWN)) 
+	{
+		camera->ChangePitch(-0.1f);
+	}
+	if (glfwGetKey(window, GLFW_KEY_UP)) 
+	{
+		camera->ChangePitch(0.1f);
+	}
+	if (glfwGetKey(window, GLFW_KEY_A)) 
+	{
+		camera->MoveSideways(-0.01f);
+	}
+	if (glfwGetKey(window, GLFW_KEY_D)) 
+	{
+		camera->MoveSideways(0.01f);
+	}
+	if (glfwGetKey(window, GLFW_KEY_W)) 
+	{
+		camera->MoveForward(0.01f);
+	}
+	if (glfwGetKey(window, GLFW_KEY_S)) 
+	{
+		camera->MoveForward(-0.01f);
+	}
 }
