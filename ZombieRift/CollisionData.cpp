@@ -141,27 +141,16 @@ bool CollisionData::AreColliding(CollisionDetectionType type, GameObject* first,
 
 std::vector<glm::vec3> CollisionData::GetEdgeAxes(GameObject* first, GameObject* second)
 {
-	std::vector<Triangle> firstFaces = first->GetModel()->GetFaces();
-	std::vector<Triangle> secondFaces = second->GetModel()->GetFaces();
+	std::vector<glm::vec3> firstEdges = first->GetModel()->m_SATEdges;
+	std::vector<glm::vec3> secondEdges = second->GetModel()->m_SATEdges;
 	std::vector<glm::vec3> axes;
 	//Loop through the faces of the first object
-	for (int i = 0; i < firstFaces.size(); i++)
+	for (int i = 0; i < firstEdges.size(); i++)
 	{
 		//loop through the second object
-		for (int k = 0; k < secondFaces.size(); k++)
+		for (int k = 0; k < secondEdges.size(); k++)
 		{
-			//Create the corresponding axes via the cross product of all of the edges against each other
-			axes.push_back(glm::normalize(glm::cross(glm::vec3(first->m_transformations * glm::vec4(firstFaces[i].edge1, 1)), glm::vec3(second->m_transformations * glm::vec4(secondFaces[k].edge1, 1)))));
-			axes.push_back(glm::normalize(glm::cross(glm::vec3(first->m_transformations * glm::vec4(firstFaces[i].edge1, 1)), glm::vec3(second->m_transformations * glm::vec4(secondFaces[k].edge2, 1)))));
-			axes.push_back(glm::normalize(glm::cross(glm::vec3(first->m_transformations * glm::vec4(firstFaces[i].edge1, 1)), glm::vec3(second->m_transformations * glm::vec4(secondFaces[k].edge3, 1)))));
-																												 												   
-			axes.push_back(glm::normalize(glm::cross(glm::vec3(first->m_transformations * glm::vec4(firstFaces[i].edge2, 1)), glm::vec3(second->m_transformations * glm::vec4(secondFaces[k].edge1, 1)))));
-			axes.push_back(glm::normalize(glm::cross(glm::vec3(first->m_transformations * glm::vec4(firstFaces[i].edge2, 1)), glm::vec3(second->m_transformations * glm::vec4(secondFaces[k].edge2, 1)))));
-			axes.push_back(glm::normalize(glm::cross(glm::vec3(first->m_transformations * glm::vec4(firstFaces[i].edge2, 1)), glm::vec3(second->m_transformations * glm::vec4(secondFaces[k].edge3, 1)))));
-																												 												    
-			axes.push_back(glm::normalize(glm::cross(glm::vec3(first->m_transformations * glm::vec4(firstFaces[i].edge3, 1)), glm::vec3(second->m_transformations * glm::vec4(secondFaces[k].edge1, 1)))));
-			axes.push_back(glm::normalize(glm::cross(glm::vec3(first->m_transformations * glm::vec4(firstFaces[i].edge3, 1)), glm::vec3(second->m_transformations * glm::vec4(secondFaces[k].edge2, 1)))));
-			axes.push_back(glm::normalize(glm::cross(glm::vec3(first->m_transformations * glm::vec4(firstFaces[i].edge3, 1)), glm::vec3(second->m_transformations * glm::vec4(secondFaces[k].edge3, 1)))));
+			axes.push_back(glm::normalize(glm::cross(glm::vec3(first->m_transformations * glm::vec4(firstEdges[i], 1)), glm::vec3(second->m_transformations * glm::vec4(secondEdges[k], 1)))));
 		}
 	}
 	return axes;
@@ -170,20 +159,20 @@ std::vector<glm::vec3> CollisionData::GetEdgeAxes(GameObject* first, GameObject*
 bool CollisionData::SeperatingAxisTest(GameObject * first, GameObject * second)
 {
 	//The first step is to obtain the seperating Axes between the two shapes, this is done through getting
-	//Every Edge combiniation between the two of them.
+	//Every Edge combiniation between the two of them.  
 	std::vector<glm::vec3> axes = GetEdgeAxes(first, second);
 
 	//Now add each face normal to the Axes so that all seperating axes are accounted for
-	std::vector<Triangle> firstFaces = first->GetModel()->GetFaces();
+	std::vector<glm::vec3> firstFaces = first->GetModel()->m_SATNormals;
 	for (int i = 0; i < firstFaces.size(); i++)
 	{
-		axes.push_back(glm::normalize(glm::vec3(first->m_transformations * glm::vec4(firstFaces[i].surfaceNormal, 1.0))));
+		axes.push_back(glm::normalize(glm::vec3(first->m_transformations * glm::vec4(firstFaces[i], 1.0))));
 	}
 	//Add those of the other object as well
-	std::vector<Triangle> secondFaces = second->GetModel()->GetFaces();
+	std::vector<glm::vec3> secondFaces = second->GetModel()->m_SATNormals;
 	for (int i = 0; i < secondFaces.size(); i++)
 	{
-		axes.push_back(glm::normalize(glm::vec3(second->m_transformations * glm::vec4(secondFaces[i].surfaceNormal, 1.0))));
+		axes.push_back(glm::normalize(glm::vec3(second->m_transformations * glm::vec4(secondFaces[i], 1.0))));
 	}
 	//Determine the plane points
 	glm::vec3 planePoint = (second->m_translations + first->m_translations) * 0.5f;
@@ -216,7 +205,6 @@ bool CollisionData::SeperatingAxisTest(GameObject * first, GameObject * second)
 			projectedPoint.y < firstMin.y ? firstMin.y = projectedPoint.y : (projectedPoint.y > firstMax.y ? firstMax.y = projectedPoint.y : 0);
 			projectedPoint.z < firstMin.z ? firstMin.z = projectedPoint.z : (projectedPoint.z > firstMax.z ? firstMax.z = projectedPoint.z : 0);
 		}
-		std::vector<glm::vec3> firstProjection;
 		for (int i = 1; i < secondVertices.size(); i++)
 		{
 			glm::vec3 projectedPoint = secondVertices[i] - glm::dot(secondVertices[i] - planePoint, axes[a]) * axes[a];

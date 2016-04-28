@@ -11,12 +11,63 @@ void Shape::compileShape()
 		glDeleteVertexArrays(1, &m_vao);
 	CompileOpenGL3X();
 	m_needsCompilation = false;
+
+	//Remove doubled points in the vertex list
+	for (int i = 0; i < m_lVertexPos.size(); i++)
+	{
+		glm::vec3 a = m_lVertexPos[i];
+		for (int k = 0; k < m_lVertexPos.size(); k++)
+		{
+			glm::vec3 b = m_lVertexPos[k];
+			if (i != k && a == b)
+			{
+				m_lVertexPos.erase(m_lVertexPos.begin() + k);
+				k--;
+			}
+		}
+	}
+	//Remove double and superflous edges in the SATEdges list
+	for (int i = 0; i < m_SATEdges.size(); i++)
+	{
+		glm::vec3 a = m_SATEdges[i];
+		for (int k = 0; k < m_SATEdges.size(); k++)
+		{
+			glm::vec3 b = m_SATEdges[k];
+			float dot = abs(glm::dot(a, b));
+			if (i != k)
+			{
+				if (glm::abs(a) == glm::abs(b))
+				{
+					m_SATEdges.erase(m_SATEdges.begin() + k);
+					k--;
+				}
+			}
+		}
+	}
+	//Now loop through and reslolve the surface normals
+	for (int i = 0; i < m_SATNormals.size(); i++)
+	{
+		glm::vec3 a = m_SATNormals[i];
+		for (int k = 0; k < m_SATNormals.size(); k++)
+		{
+			glm::vec3 b = m_SATNormals[k];
+			float dot = abs(glm::dot(a, b));
+			if (i != k)
+			{
+				if (glm::abs(a) == glm::abs(b))
+				{
+					m_SATNormals.erase(m_SATNormals.begin() + k);
+					k--;
+				}
+			}
+		}
+	}
 }
 
 Shape::Shape()
 {
 	m_shapeType = "none";
-	defaultColor = glm::vec3(1.0f, 0.0f, 0.0f);
+	m_defaultColor = glm::vec3(1.0f, 0.0f, 0.0f);
 }
 
 void Shape::RenderShape(glm::mat4 toWorld, glm::mat4 view, glm::mat4 persp)
@@ -69,8 +120,12 @@ void Shape::AddTri(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3, glm::ve
 	AddVertexColor(color1);
 	AddVertexColor(color2);
 	AddVertexColor(color3);
-
-	m_faces.push_back(Triangle(point1, point2, point3));
+	Face f = Face(point1, point2, point3);
+	m_faces.push_back(f);
+	m_SATEdges.push_back(glm::normalize(f.edge1));
+	m_SATEdges.push_back(glm::normalize(f.edge2));
+	m_SATEdges.push_back(glm::normalize(f.edge3));
+	m_SATNormals.push_back(f.surfaceNormal);
 }
 
 void Shape::AddTri(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3, glm::vec3 color)
@@ -80,7 +135,7 @@ void Shape::AddTri(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3, glm::ve
 
 void Shape::AddTri(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3)
 {
-	AddTri(point1, point2, point3, defaultColor, defaultColor, defaultColor);
+	AddTri(point1, point2, point3, m_defaultColor, m_defaultColor, m_defaultColor);
 }
 
 void Shape::GenCube(float size, glm::vec3 front, glm::vec3 left, glm::vec3 right, glm::vec3 bottom, glm::vec3 top, glm::vec3 back)
@@ -96,7 +151,7 @@ void Shape::GenCube(float size, glm::vec3 color)
 
 void Shape::GenCube(float size)
 {
-	GenCube(size, defaultColor);
+	GenCube(size, m_defaultColor);
 }
 
 void Shape::GenBox(std::vector<glm::vec3> points, glm::vec3 front, glm::vec3 left, glm::vec3 right, glm::vec3 bottom, glm::vec3 top, glm::vec3 back)
@@ -141,7 +196,7 @@ void Shape::GenBox(std::vector<glm::vec3> points, glm::vec3 color)
 
 void Shape::GenBox(std::vector<glm::vec3> points)
 {
-	GenBox(points, defaultColor);
+	GenBox(points, m_defaultColor);
 }
 
 void Shape::GenBox(float width, float height, float length, glm::vec3 front, glm::vec3 left, glm::vec3 right, glm::vec3 bottom, glm::vec3 top, glm::vec3 back)
@@ -177,7 +232,7 @@ void Shape::GenBox(float width, float height, float length, glm::vec3 color)
 
 void Shape::GenBox(float width, float height, float length)
 {
-	GenBox(width, height, length, defaultColor);
+	GenBox(width, height, length, m_defaultColor);
 }
 
 void Shape::clearVertices()
@@ -191,11 +246,8 @@ void Shape::ReColor(glm::vec3 color)
 	this->color = color;
 }
 
-Triangle::Triangle(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3)
+Face::Face(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3)
 {
-	this->point1 = point1;
-	this->point2 = point2;
-	this->point3 = point3;
 	this->edge1 = point2 - point1;
 	this->edge2 = point3 - point2;
 	this->edge3 = point1 - point3;

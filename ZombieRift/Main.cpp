@@ -59,11 +59,12 @@ int main(void)
 
 	BoxObject* box = new BoxObject(1.0f, 10.0f, 2.0f);
 	box->SetColor(glm::vec3(0.0f, 0.0f, 1.0f));
-	box->m_translations = glm::vec3(2.0f, 0.0f, 0.0f);
+	box->m_translations = glm::vec3(2.0f, 1.0f, 0.0f);
 	box->m_name = "box";
 
 	PlayerBox* player = new PlayerBox();
 	player->m_name = "player";
+	player->m_translations = glm::vec3(0.0f, 2.0f, 0.0f);
 	
 	//scene->AddObject(cube);
 	scene->AddObject(box);

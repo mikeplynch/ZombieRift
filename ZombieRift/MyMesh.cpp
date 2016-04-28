@@ -1,4 +1,6 @@
 #include "MyMesh.h"
+GLuint SHADER_TYPES::DEFAULT_LOCATION = -1;
+
 //  MyMesh
 void MyMesh::Init(void)
 {
@@ -10,7 +12,16 @@ void MyMesh::Init(void)
 	m_ColorBuffer = 0;
 
 	//Compile Color shader
-	m_nShaderProgram = LoadShaders("shaders\\Color.vs", "shaders\\Color.fs");
+	switch (m_shaderType)
+	{
+	default:
+		if (SHADER_TYPES::DEFAULT_LOCATION == -1)
+		{
+			SHADER_TYPES::DEFAULT_LOCATION = LoadShaders("shaders\\Color.vs", "shaders\\Color.fs");
+		}
+		m_nShaderProgram = SHADER_TYPES::DEFAULT_LOCATION;
+		break;
+	}
 }
 void MyMesh::Swap(MyMesh& other)
 {

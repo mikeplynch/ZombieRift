@@ -26,6 +26,13 @@ for better functionality.
 
 #include "OpenGL-Tutorials\shader.hpp"
 
+static struct SHADER_TYPES {
+	static const int DEFAULT = 0;
+	static const int PHONG = 1;
+
+	static GLuint DEFAULT_LOCATION;
+};
+
 //System Class
 class MyMesh
 {
@@ -54,6 +61,8 @@ public:
 	MyMesh& operator=(MyMesh const& other);
 	/* Destructor */
 	~MyMesh(void);
+
+	int m_shaderType = SHADER_TYPES::DEFAULT;
 
 	/* Swaps the contents of the object with another object's content */
 	void Swap(MyMesh& other);
