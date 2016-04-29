@@ -193,9 +193,10 @@ bool CollisionData::SeperatingAxisTest(GameObject * first, GameObject * second)
 	{
 		//Do the calculations in the for loop once so that we have accurate starting points for the min and maxes
 		glm::vec3 firstMin = firstVertices[0] - glm::dot(firstVertices[0] - planePoint, axes[a]) * axes[a];
-		glm::vec3 firstMax = firstVertices[0] - glm::dot(firstVertices[0] - planePoint, axes[a]) * axes[a];
+		glm::vec3 firstMax = firstMin;
 		glm::vec3 secondMin = secondVertices[0] - glm::dot(secondVertices[0] - planePoint, axes[a]) * axes[a];
-		glm::vec3 secondMax = secondVertices[0] - glm::dot(secondVertices[0] - planePoint, axes[a]) * axes[a];
+		glm::vec3 secondMax = secondMin;
+		glm::vec3 minOverlap = firstMin - secondMin;
 		for (int i = 1; i < firstVertices.size(); i++)
 		{
 			//Find the projection onto the plane
@@ -213,9 +214,13 @@ bool CollisionData::SeperatingAxisTest(GameObject * first, GameObject * second)
 			projectedPoint.z < secondMin.z ? secondMin.z = projectedPoint.z : (projectedPoint.z > secondMax.z ? secondMax.z = projectedPoint.z : 0);
 		}
 
-		//Lastly check to see if there is overlap between the min and max for this axis.
+		//Lastly check to see if there is overlap between the min and max for this axis and set minimum overlap.
 		if (!Overlaps(firstMin, firstMax, secondMin, secondMax))
 		{
+			// minimum overlap checks
+			if (minOverlap.x > abs(firstMin.x - secondMin.x)) { minOverlap.x = abs(firstMin.x - secondMin.x); } //x
+			if (minOverlap.y > abs(firstMin.y - secondMin.y)) { minOverlap.y = abs(firstMin.y - secondMin.y); } //y
+			if (minOverlap.z > abs(firstMin.z - secondMin.z)) { minOverlap.z = abs(firstMin.z - secondMin.z); } //z
 			return false;
 		}
 	}
