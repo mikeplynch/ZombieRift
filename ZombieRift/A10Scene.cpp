@@ -62,3 +62,23 @@ void A10Scene::HandleInput(Camera* camera) {
 		camera->MoveVertical(-0.01f);
 	}
 }
+
+void MainGameScene::Init()
+{
+	box = new BoxObject(1.0f, 10.0f, 2.0f);
+	box->SetColor(glm::vec3(0.0f, 0.0f, 1.0f));
+	box->m_translations = glm::vec3(0.0f, 1.0f, -15.0f);
+	box->m_name = "Box";
+
+	player = new Player();
+	player->m_name = "Player";
+	//player->m_translations = glm::vec3(0.0f, 2.0f, 0.0f);
+
+	AddObject(box);
+	AddObject(player);
+}
+
+void MainGameScene::Update()
+{
+
+}

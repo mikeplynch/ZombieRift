@@ -67,7 +67,7 @@ void GameManager::Update()
 
 	for (int i = 0; i < m_currentScene->m_objects.size(); i++)
 	{
-		m_currentScene->m_objects[i]->update();
+		m_currentScene->m_objects[i]->Update();
 	}
 
 	m_currentScene->Update();

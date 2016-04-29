@@ -25,7 +25,7 @@ public:
 	///This is the primary transformation matrix for the game object.
 	///Do all scaling, translations, rotations into this matrix.
 	///</summary>
-	glm::mat4 m_transformations;
+	glm::mat4 m_transformations = glm::mat4(0.0f);
 
 	glm::vec3 m_translations = glm::vec3(0, 0, 0);
 	glm::mat4 m_rotations = glm::mat4(1.0f);
@@ -49,7 +49,7 @@ public:
 	///<summary>
 	///Update function must be implemented. Game object must be inherited form to use.
 	///</summary>
-	virtual void update() = 0;
+	virtual void Update() = 0;
 
 	///<Summary>
 	///This function is called whenever a collision between two objects happens. Use this

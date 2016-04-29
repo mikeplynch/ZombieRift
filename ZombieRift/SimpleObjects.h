@@ -12,7 +12,7 @@ public:
 
 	CubeObject(float size) { m_model->GenCube(size); m_collisionData = new CollisionData(m_model, this); }
 
-	void update() 
+	void Update() 
 	{
 		m_collisionData->UpdateBoundingBoxes();
 	};
@@ -23,7 +23,7 @@ public:
 	BoxObject() { BoxObject(1.0f, 2.0f, 1.0f); }
 	BoxObject(float length, float width, float height) { m_model->GenBox(length, width, height); m_collisionData = new CollisionData(m_model, this);  }
 
-	void update() 
+	void Update() 
 	{
 		//TODO: Discuss whether or not calling this should be an "option" of those inheriting form GameObject
 		m_collisionData->UpdateBoundingBoxes();
@@ -34,7 +34,7 @@ class PlayerBox : public BoxObject {
 public:
 	XboxControls* Controller = new XboxControls(1);
 	PlayerBox() { m_model->GenBox(1.0f, 2.0f, 1.0f); m_collisionData = new CollisionData(m_model, this);}
-	void update()
+	void Update()
 	{
 		m_collisionData->UpdateBoundingBoxes();
 		SetColor(glm::vec3(1.0f, 0.0f, 0.0f));

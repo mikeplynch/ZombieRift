@@ -14,7 +14,7 @@ public:
 	Automota() { };
 	Automota(Colony* col, int h, int w, int l);
 	virtual void DetermineNeighbors();
-	void update();
+	void Update();
 	int countNeighbors();
 };
 

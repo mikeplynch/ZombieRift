@@ -128,7 +128,7 @@ void Automota::DetermineNeighbors()
 	if(!(h + 1  >= height || h + 1  < 0 || w + -1 >= width || w + -1 < 0 || l + -1 >= length || l + -1 < 0 ))m_neighbors->push_back(cells[h + 1 ][w + -1][l + -1]);
 }
 
-void Automota::update()
+void Automota::Update()
 {
 	int living = countNeighbors();
 	if (m_state > 0)

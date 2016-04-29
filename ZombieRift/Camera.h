@@ -258,6 +258,9 @@ public:
 	*/
 	void ResetCamera(void);
 
+	glm::vec3 GetForward(void) { return m_v3Forward; }
+	glm::vec3 GetRightward(void) { return m_v3Rightward; }
+
 private:
 	/*
 
