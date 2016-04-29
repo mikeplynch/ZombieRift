@@ -39,27 +39,27 @@ void A10Scene::HandleInput(Camera* camera) {
 	}
 	if (glfwGetKey(window, GLFW_KEY_A))
 	{
-		camera->MoveSideways(-0.01f);
+		camera->MoveSideways(-0.1f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_D))
 	{
-		camera->MoveSideways(0.01f);
+		camera->MoveSideways(0.1f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_W))
 	{
-		camera->MoveForward(0.01f);
+		camera->MoveForward(0.1f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_S))
 	{
-		camera->MoveForward(-0.01f);
+		camera->MoveForward(-0.1f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_Q))
 	{
-		camera->MoveVertical(0.01f);
+		camera->MoveVertical(0.1f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_E))
 	{
-		camera->MoveVertical(-0.01f);
+		camera->MoveVertical(-0.1f);
 	}
 }
 
