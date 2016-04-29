@@ -26,6 +26,22 @@ void Shape::compileShape()
 			}
 		}
 	}
+	//Remove interior edges
+	for (int i = 0; i < m_SATRemovalEdges.size(); i++)
+	{
+		m_SATRemovalEdges[i] = glm::normalize(m_SATRemovalEdges[i]);
+		for (int k = 0; k < m_SATEdges.size(); k++)
+		{
+			if (i != k)
+			{
+				if (glm::abs(m_SATRemovalEdges[i]) == glm::abs(m_SATEdges[k]))
+				{
+					m_SATEdges.erase(m_SATEdges.begin() + k);
+					k--;
+				}
+			}
+		}
+	}
 	//Remove double and superflous edges in the SATEdges list
 	for (int i = 0; i < m_SATEdges.size(); i++)
 	{
@@ -121,6 +137,80 @@ void Shape::AddTri(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3, glm::ve
 	AddVertexColor(color2);
 	AddVertexColor(color3);
 	Face f = Face(point1, point2, point3);
+	for (int i = 0; i < m_faces.size(); i++)
+	{
+		if (f.surfaceNormal == m_faces[i].surfaceNormal)
+		{
+			Face other = m_faces[i];
+			if (f.point1 == other.point1)
+			{
+				if(f.point2 == other.point2) m_SATRemovalEdges.push_back(f.point2 - f.point1);
+				if(f.point2 == other.point3) m_SATRemovalEdges.push_back(f.point2 - f.point1);
+				if(f.point3 == other.point2) m_SATRemovalEdges.push_back(f.point3 - f.point1);
+				if(f.point3 == other.point3) m_SATRemovalEdges.push_back(f.point3 - f.point1);
+			} 
+			else if (f.point1 == other.point2)
+			{
+				if (f.point2 == other.point1) m_SATRemovalEdges.push_back(f.point2 - f.point1);
+				if (f.point2 == other.point3) m_SATRemovalEdges.push_back(f.point2 - f.point1);
+				if (f.point3 == other.point1) m_SATRemovalEdges.push_back(f.point3 - f.point1);
+				if (f.point3 == other.point3) m_SATRemovalEdges.push_back(f.point3 - f.point1);
+			}
+			else if (f.point1 == other.point3)
+			{
+				if (f.point2 == other.point2) m_SATRemovalEdges.push_back(f.point2 - f.point1);
+				if (f.point2 == other.point3) m_SATRemovalEdges.push_back(f.point2 - f.point1);
+				if (f.point3 == other.point2) m_SATRemovalEdges.push_back(f.point3 - f.point1);
+				if (f.point3 == other.point3) m_SATRemovalEdges.push_back(f.point3 - f.point1);
+			}
+
+			if (f.point2 == other.point1)
+			{
+				if (f.point1 == other.point2) m_SATRemovalEdges.push_back(f.point1 - f.point2);
+				if (f.point1 == other.point3) m_SATRemovalEdges.push_back(f.point1 - f.point2);
+				if (f.point3 == other.point2) m_SATRemovalEdges.push_back(f.point3 - f.point2);
+				if (f.point3 == other.point3) m_SATRemovalEdges.push_back(f.point3 - f.point2);
+			}
+			else if (f.point2 == other.point2)
+			{
+				if (f.point1 == other.point1) m_SATRemovalEdges.push_back(f.point1 - f.point2);
+				if (f.point1 == other.point3) m_SATRemovalEdges.push_back(f.point1 - f.point2);
+				if (f.point3 == other.point1) m_SATRemovalEdges.push_back(f.point3 - f.point2);
+				if (f.point3 == other.point3) m_SATRemovalEdges.push_back(f.point3 - f.point2);
+			}
+			else if (f.point2 == other.point3)
+			{
+				if (f.point1 == other.point2) m_SATRemovalEdges.push_back(f.point1 - f.point2);
+				if (f.point1 == other.point3) m_SATRemovalEdges.push_back(f.point1 - f.point2);
+				if (f.point3 == other.point2) m_SATRemovalEdges.push_back(f.point3 - f.point2);
+				if (f.point3 == other.point3) m_SATRemovalEdges.push_back(f.point3 - f.point2);
+			}
+
+			if (f.point3 == other.point1)
+			{
+				if (f.point2 == other.point2) m_SATRemovalEdges.push_back(f.point2 - f.point3);
+				if (f.point2 == other.point3) m_SATRemovalEdges.push_back(f.point2 - f.point3);
+				if (f.point1 == other.point2) m_SATRemovalEdges.push_back(f.point1 - f.point3);
+				if (f.point1 == other.point3) m_SATRemovalEdges.push_back(f.point1 - f.point3);
+			}
+			else if (f.point3 == other.point2)
+			{
+				if (f.point2 == other.point1) m_SATRemovalEdges.push_back(f.point2 - f.point3);
+				if (f.point2 == other.point3) m_SATRemovalEdges.push_back(f.point2 - f.point3);
+				if (f.point1 == other.point1) m_SATRemovalEdges.push_back(f.point1 - f.point3);
+				if (f.point1 == other.point3) m_SATRemovalEdges.push_back(f.point1 - f.point3);
+			}
+			else if (f.point3 == other.point3)
+			{
+				if (f.point2 == other.point2) m_SATRemovalEdges.push_back(f.point2 - f.point3);
+				if (f.point2 == other.point3) m_SATRemovalEdges.push_back(f.point2 - f.point3);
+				if (f.point1 == other.point2) m_SATRemovalEdges.push_back(f.point1 - f.point3);
+				if (f.point1 == other.point3) m_SATRemovalEdges.push_back(f.point1 - f.point3);
+			}
+			
+			
+		}
+	}
 	m_faces.push_back(f);
 	m_SATEdges.push_back(glm::normalize(f.edge1));
 	m_SATEdges.push_back(glm::normalize(f.edge2));
@@ -248,6 +338,9 @@ void Shape::ReColor(glm::vec3 color)
 
 Face::Face(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3)
 {
+	this->point1 = point1;
+	this->point2 = point2;
+	this->point3 = point3;
 	this->edge1 = point2 - point1;
 	this->edge2 = point3 - point2;
 	this->edge3 = point1 - point3;
