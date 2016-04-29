@@ -67,7 +67,8 @@ int main(void)
 	game->SetCurrentScene(new A11Scene);
 
 	int counter = 0;
-	float lastTime = 0;
+	static double target_frame_rate = 60;
+	static double frame_start = 0;
 	do{
 
 		// Clear the screen
@@ -77,14 +78,17 @@ int main(void)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 		// Limit the frame rate to 60fps
-		float currentTime = glfwGetTime();
-		float deltaTime = currentTime - lastTime;
-
-		/*if (deltaTime >= 1.0f / 60.0f)
+		double wait_time = 1.0 / (target_frame_rate);
+		double deltaTime = glfwGetTime() - frame_start;
+		double dur = 1000.0 * (wait_time - deltaTime) + 0.5;
+		int durDW = (int)dur;
+		if (durDW > 0) // ensures that we don't have a dur > 0.0 which converts to a durDW of 0.
 		{
-			lastTime = currentTime;
-			game->Draw();
-		}*/
+			Sleep((DWORD)durDW);
+		}
+
+		double frame_end = glfwGetTime();
+		frame_start = frame_end;
 		game->Draw();
 		
 		// Draw debug information(such as bounding boxes)
@@ -92,8 +96,8 @@ int main(void)
 		game->DrawDebug();
 
 		// Update
-		//game->Update(deltaTime);
-		game->Update();
+		game->Update(deltaTime);
+		//game->Update();
 
 		// Swap buffers
 		glfwSwapBuffers(window);
