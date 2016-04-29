@@ -1,7 +1,10 @@
 #pragma once
 #include "MyMesh.h"
 
-struct Face {	
+struct Face {
+	glm::vec3 point1;
+	glm::vec3 point2;
+	glm::vec3 point3;
 	glm::vec3 edge1;
 	glm::vec3 edge2;
 	glm::vec3 edge3;
@@ -42,6 +45,7 @@ public:
 	//with SAT.
 	//</summary>
 	std::vector<glm::vec3> m_SATNormals;
+	std::vector<glm::vec3> m_SATRemovalEdges;
 	//<summary>
 	//This is the scaling vector used specifically by the shape class to optimize shape drawing
 	//by only creating one of a primitive type of object.  A single object is used to draw every
