@@ -20,6 +20,7 @@ int main(void)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	
 	int width = 1024;
 	int height = 768;
 
@@ -27,14 +28,17 @@ int main(void)
 	window = glfwCreateWindow(width, height, "MyMesh class", NULL, NULL);
 	if (window == NULL){
 		fprintf(stderr, "Failed to open GLFW window with OpenGL 3.3.  Attempting 3.1\n");
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
 		window = glfwCreateWindow(width, height, "MyMesh class", NULL, NULL);
 		if (window == NULL)
 		{
 			fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
+
+			glfwTerminate();
+			return -1;
 		}
-		glfwTerminate();
-		return -1;
 	}
 	glfwMakeContextCurrent(window);
 
@@ -63,6 +67,8 @@ int main(void)
 	game->SetCurrentScene(new A11Scene);
 
 	int counter = 0;
+	static double target_frame_rate = 60;
+	static double frame_start = 0;
 	do{
 
 		// Clear the screen
@@ -70,13 +76,28 @@ int main(void)
 
 		// Draw
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+		// Limit the frame rate to 60fps
+		double wait_time = 1.0 / (target_frame_rate);
+		double deltaTime = glfwGetTime() - frame_start;
+		double dur = 1000.0 * (wait_time - deltaTime) + 0.5;
+		int durDW = (int)dur;
+		if (durDW > 0) // ensures that we don't have a dur > 0.0 which converts to a durDW of 0.
+		{
+			Sleep((DWORD)durDW);
+		}
+
+		double frame_end = glfwGetTime();
+		frame_start = frame_end;
 		game->Draw();
+		
 		// Draw debug information(such as bounding boxes)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		game->DrawDebug();
 
 		// Update
-		game->Update();
+		game->Update(deltaTime);
+		//game->Update();
 
 		// Swap buffers
 		glfwSwapBuffers(window);

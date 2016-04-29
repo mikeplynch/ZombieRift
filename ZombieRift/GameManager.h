@@ -41,7 +41,8 @@ public:
 	void SetCurrentScene(Scene* scene);
 	void PopCurrentScene();
 
-	void Update();
+	void Update(float deltaTime);
+	//void Update();
 
 	void Draw();
 	void DrawDebug();

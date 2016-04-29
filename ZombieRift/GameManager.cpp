@@ -47,7 +47,7 @@ void GameManager::PopCurrentScene()
 	delete oldScene;
 }
 
-void GameManager::Update()
+void GameManager::Update(float deltaTime)
 {
 	if (glfwGetKey(GameManager::window, GLFW_KEY_LEFT_SHIFT))
 	{
