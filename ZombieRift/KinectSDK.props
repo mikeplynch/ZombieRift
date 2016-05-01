@@ -9,6 +9,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(KINECTSDK20_DIR)/lib/x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kinect20.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />

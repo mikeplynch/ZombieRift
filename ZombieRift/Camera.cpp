@@ -150,7 +150,7 @@ glm::mat4 Camera::GetVP(void)
 //--- Non Standard Singleton Methods
 void Camera::CalculateProjection(void)
 {
-	float fRatio = 1080.0f / 768.0f;
+	float fRatio = 1920.0f / 1080.0f;
 	float fPos = 0;
 	m_m4Projection = glm::perspective(m_fFOV, fRatio, m_v2NearFar.x, m_v2NearFar.y);
 }

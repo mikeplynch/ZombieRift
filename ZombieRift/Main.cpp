@@ -21,8 +21,8 @@ int main(void)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	
-	int width = 1024;
-	int height = 768;
+	int width = 1920;
+	int height = 1080;
 
 	// Open a window and create its OpenGL context
 	window = glfwCreateWindow(width, height, "MyMesh class", NULL, NULL);
@@ -43,6 +43,7 @@ int main(void)
 	glfwMakeContextCurrent(window);
 
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_TEXTURE_2D);
 
 	// Initialize GLEW
 	glewExperimental = true; // Needed for core profile
@@ -54,8 +55,9 @@ int main(void)
 	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-	// Dark blue background
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+	// Sky Blue background
+	glClearColor(0.529f, 0.807f, 0.9803f, 0.0f);
+	glClearDepth(1.0f);
 
 	GameManager::window = window;
 	GameManager* game = GameManager::GetInstance();
@@ -64,15 +66,18 @@ int main(void)
 	camera->SetPosition(glm::vec3(0.0f, 0.0f, 15.0f));
 
 	// - SET THE ACTIVE SCENE HERE -
-	game->SetCurrentScene(new A11Scene);
+	game->SetCurrentScene(new A10Scene);
 
-	int counter = 0;
 	static double target_frame_rate = 60;
 	static double frame_start = 0;
 	do{
 
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// Draw debug information(such as bounding boxes)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		game->DrawDebug();
 
 		// Draw
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -90,21 +95,13 @@ int main(void)
 		double frame_end = glfwGetTime();
 		frame_start = frame_end;
 		game->Draw();
-		
-		// Draw debug information(such as bounding boxes)
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		game->DrawDebug();
 
 		// Update
 		game->Update(deltaTime);
-		//game->Update();
 
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
-
-		counter++;
-
 	} // Check if the ESC key was pressed or the window was closed
 	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 	glfwWindowShouldClose(window) == 0);
