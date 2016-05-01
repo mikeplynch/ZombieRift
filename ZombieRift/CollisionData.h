@@ -1,6 +1,9 @@
 #pragma once
 #include "GameObject.h"
-extern class GameObject;
+#include "MyMesh.h"
+class GameObject;
+class MyMesh;
+class Model;
 
 ///<summary>
 ///This is the core collision data for every object.
@@ -9,16 +12,16 @@ extern class GameObject;
 class CollisionData
 {
 private:
-	CollisionData() {};
-	Shape* m_shape;
-	Shape* m_boundingBox;
 	GameObject* m_object;
+	static Model* s_boundingBox;
 
 	static bool Overlaps(glm::vec3 min1, glm::vec3 max1, glm::vec3 min2, glm::vec3 max2);
 
 	void GenerateBoundingBox(std::vector<glm::vec3> vertices, glm::vec3& min, glm::vec3& max, glm::vec3& size);
 
 public:
+	CollisionData();
+	~CollisionData();
 	glm::vec3 m_max, m_min, m_size, m_center;
 	glm::vec3 m_reMax, m_reMin, m_reSize;
 	std::vector<glm::vec3> m_boundingPoints;
@@ -30,8 +33,7 @@ public:
 		AxisRealignedBoundingBox = 1,
 	};
 
-	CollisionData(Shape* collisionBase, GameObject* object);
-	~CollisionData();
+	void BindToObject(GameObject* object);
 
 	///<summary>
 	///The collision mask for an object.  Initial set to 1 so that every base collision object 
@@ -49,7 +51,7 @@ public:
 
 	static std::vector<glm::vec3> GenerateBoundingPoints(glm::vec3 min, glm::vec3 max);
 
-	void SetModel(Shape* shape);
+	void SetModel(MyMesh* mesh);
 
 	void DrawBoundingBox();
 
@@ -58,4 +60,23 @@ public:
 	static std::vector<glm::vec3> GetEdgeAxes(GameObject * first, GameObject * second);
 
 	static bool SeperatingAxisTest(GameObject* first, GameObject* second);
+
+	//<summary>
+	//This is the speciailized list of edges that need to be cheked for SAT.
+	//It is optimized to remove extra edges that will have already been accounted for by 
+	//Other edges in the geometry.
+	//</sumarry>
+	std::vector<glm::vec3> m_SATEdges;
+
+	//<summary>
+	//Similar to the m_SATEEdges this is an optimized collection of face normals to use
+	//with SAT.
+	//</summary>
+	std::vector<glm::vec3> m_SATNormals;
+
+	//<summary>
+	//Similar to the m_SATEEdges this is an optimized collection of face normals to use
+	//with SAT.
+	//</summary>
+	std::vector<glm::vec3> m_SATRemovalEdges;
 };

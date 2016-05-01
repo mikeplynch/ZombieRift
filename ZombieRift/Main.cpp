@@ -59,6 +59,9 @@ int main(void)
 	glClearColor(0.529f, 0.807f, 0.9803f, 0.0f);
 	glClearDepth(1.0f);
 
+	
+	Model* myModel = new Model("Default");
+
 	GameManager::window = window;
 	GameManager* game = GameManager::GetInstance();
 

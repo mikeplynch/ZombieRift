@@ -1,5 +1,4 @@
 #include "MyMesh.h"
-GLuint SHADER_TYPES::DEFAULT_LOCATION = -1;
 
 //  MyMesh
 void MyMesh::Init(void)
@@ -11,17 +10,7 @@ void MyMesh::Init(void)
 	m_VertexBuffer = 0;
 	m_ColorBuffer = 0;
 
-	//Compile Color shader
-	switch (m_shaderType)
-	{
-	default:
-		if (SHADER_TYPES::DEFAULT_LOCATION == -1)
-		{
-			SHADER_TYPES::DEFAULT_LOCATION = LoadShaders("shaders\\Color.vs", "shaders\\Color.fs");
-		}
-		m_nShaderProgram = SHADER_TYPES::DEFAULT_LOCATION;
-		break;
-	}
+	m_modelCollisionData = new CollisionData;
 }
 void MyMesh::Swap(MyMesh& other)
 {
@@ -34,8 +23,6 @@ void MyMesh::Swap(MyMesh& other)
 
 	std::swap(m_lVertexPos, other.m_lVertexPos);
 	std::swap(m_lVertexCol, other.m_lVertexCol);
-
-	std::swap(m_nShaderProgram, other.m_nShaderProgram);
 }
 void MyMesh::Release(void)
 {
@@ -64,8 +51,6 @@ MyMesh::MyMesh(MyMesh const& other)
 
 	m_lVertexPos = other.m_lVertexPos;
 	m_lVertexCol = other.m_lVertexCol;
-
-	m_nShaderProgram = other.m_nShaderProgram;
 }
 MyMesh& MyMesh::operator=(MyMesh const& other)
 {
@@ -89,6 +74,75 @@ void MyMesh::CompleteMesh(void)
 	int nColorTotal = static_cast<int>(m_lVertexCol.size());
 	for (int nColor = nColorTotal; nColor < m_nVertexCount; nColor++)
 		m_lVertexCol.push_back(glm::vec3(1.0f, 0.0f, 1.0f));
+}
+void MyMesh::CompileCollisionData()
+{
+	//Remove doubled points in the vertex list
+	for (int i = 0; i < m_lVertexPos.size(); i++)
+	{
+		glm::vec3 a = m_lVertexPos[i];
+		for (int k = 0; k < m_lVertexPos.size(); k++)
+		{
+			glm::vec3 b = m_lVertexPos[k];
+			if (i != k && a == b)
+			{
+				m_lVertexPos.erase(m_lVertexPos.begin() + k);
+				k--;
+			}
+		}
+	}
+	//Remove interior edges
+	for (int i = 0; i < m_modelCollisionData->m_SATRemovalEdges.size(); i++)
+	{
+		m_modelCollisionData->m_SATRemovalEdges[i] = glm::normalize(m_modelCollisionData->m_SATRemovalEdges[i]);
+		for (int k = 0; k < m_modelCollisionData->m_SATEdges.size(); k++)
+		{
+			if (i != k)
+			{
+				if (glm::abs(m_modelCollisionData->m_SATRemovalEdges[i]) == glm::abs(m_modelCollisionData->m_SATEdges[k]))
+				{
+					m_modelCollisionData->m_SATEdges.erase(m_modelCollisionData->m_SATEdges.begin() + k);
+					k--;
+				}
+			}
+		}
+	}
+	//Remove double and superflous edges in the SATEdges list
+	for (int i = 0; i < m_modelCollisionData->m_SATEdges.size(); i++)
+	{
+		glm::vec3 a = m_modelCollisionData->m_SATEdges[i];
+		for (int k = 0; k < m_modelCollisionData->m_SATEdges.size(); k++)
+		{
+			glm::vec3 b = m_modelCollisionData->m_SATEdges[k];
+			float dot = abs(glm::dot(a, b));
+			if (i != k)
+			{
+				if (glm::abs(a) == glm::abs(b))
+				{
+					m_modelCollisionData->m_SATEdges.erase(m_modelCollisionData->m_SATEdges.begin() + k);
+					k--;
+				}
+			}
+		}
+	}
+	//Now loop through and reslolve the surface normals
+	for (int i = 0; i < m_modelCollisionData->m_SATNormals.size(); i++)
+	{
+		glm::vec3 a = m_modelCollisionData->m_SATNormals[i];
+		for (int k = 0; k < m_modelCollisionData->m_SATNormals.size(); k++)
+		{
+			glm::vec3 b = m_modelCollisionData->m_SATNormals[k];
+			float dot = abs(glm::dot(a, b));
+			if (i != k)
+			{
+				if (glm::abs(a) == glm::abs(b))
+				{
+					m_modelCollisionData->m_SATNormals.erase(m_modelCollisionData->m_SATNormals.begin() + k);
+					k--;
+				}
+			}
+		}
+	}
 }
 void MyMesh::CompileOpenGL3X(void)
 {
@@ -118,46 +172,110 @@ void MyMesh::CompileOpenGL3X(void)
 
 	return;
 }
-void MyMesh::Render(glm::mat4 a_mToWorld, glm::mat4 view, glm::mat4 persp)
+void MyMesh::CompileMesh()
 {
-	if (!m_bBinded)
-		return;
+	CompileOpenGL3X();
+}
 
-	if (m_nVertexCount == 0)
-		return;
+void MyMesh::AddTri(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3, glm::vec3 color1, glm::vec3 color2, glm::vec3 color3)
+{
+	AddVertexPosition(point1);
+	AddVertexPosition(point2);
+	AddVertexPosition(point3);
 
-	// Use the buffer and shader
-	glUseProgram(m_nShaderProgram);
+	AddVertexColor(color1);
+	AddVertexColor(color2);
+	AddVertexColor(color3);
+	Face f = Face(point1, point2, point3);
+	for (int i = 0; i < m_faces.size(); i++)
+	{
+		if (f.surfaceNormal == m_faces[i].surfaceNormal)
+		{
+			Face other = m_faces[i];
+			if (f.point1 == other.point1)
+			{
+				if (f.point2 == other.point2) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point2 - f.point1);
+				if (f.point2 == other.point3) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point2 - f.point1);
+				if (f.point3 == other.point2) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point3 - f.point1);
+				if (f.point3 == other.point3) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point3 - f.point1);
+			}
+			else if (f.point1 == other.point2)
+			{
+				if (f.point2 == other.point1) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point2 - f.point1);
+				if (f.point2 == other.point3) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point2 - f.point1);
+				if (f.point3 == other.point1) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point3 - f.point1);
+				if (f.point3 == other.point3) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point3 - f.point1);
+			}
+			else if (f.point1 == other.point3)
+			{
+				if (f.point2 == other.point2) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point2 - f.point1);
+				if (f.point2 == other.point3) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point2 - f.point1);
+				if (f.point3 == other.point2) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point3 - f.point1);
+				if (f.point3 == other.point3) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point3 - f.point1);
+			}
 
-	// Get the GPU variables by their name and hook them to CPU variables
-	GLuint MVP = glGetUniformLocation(m_nShaderProgram, "MVP");
-	GLuint v4Position = glGetAttribLocation(m_nShaderProgram, "Position_b");
-	GLuint v3Color = glGetUniformLocation(m_nShaderProgram, "Color");
-	GLuint v3Tint = glGetUniformLocation(m_nShaderProgram, "Tint");
-	//GLuint v4Color = glGetAttribLocation(m_nShaderProgram, "Color_b");
+			if (f.point2 == other.point1)
+			{
+				if (f.point1 == other.point2) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point1 - f.point2);
+				if (f.point1 == other.point3) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point1 - f.point2);
+				if (f.point3 == other.point2) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point3 - f.point2);
+				if (f.point3 == other.point3) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point3 - f.point2);
+			}
+			else if (f.point2 == other.point2)
+			{
+				if (f.point1 == other.point1) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point1 - f.point2);
+				if (f.point1 == other.point3) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point1 - f.point2);
+				if (f.point3 == other.point1) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point3 - f.point2);
+				if (f.point3 == other.point3) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point3 - f.point2);
+			}
+			else if (f.point2 == other.point3)
+			{
+				if (f.point1 == other.point2) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point1 - f.point2);
+				if (f.point1 == other.point3) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point1 - f.point2);
+				if (f.point3 == other.point2) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point3 - f.point2);
+				if (f.point3 == other.point3) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point3 - f.point2);
+			}
 
-	//Final Projection of the Camera is going to be hard coded
-	glm::mat4 m4Projection = persp;
-	glm::mat4 m4View = view;
-	glUniformMatrix4fv(MVP, 1, GL_FALSE, glm::value_ptr(m4Projection * m4View * a_mToWorld));
+			if (f.point3 == other.point1)
+			{
+				if (f.point2 == other.point2) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point2 - f.point3);
+				if (f.point2 == other.point3) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point2 - f.point3);
+				if (f.point1 == other.point2) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point1 - f.point3);
+				if (f.point1 == other.point3) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point1 - f.point3);
+			}
+			else if (f.point3 == other.point2)
+			{
+				if (f.point2 == other.point1) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point2 - f.point3);
+				if (f.point2 == other.point3) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point2 - f.point3);
+				if (f.point1 == other.point1) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point1 - f.point3);
+				if (f.point1 == other.point3) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point1 - f.point3);
+			}
+			else if (f.point3 == other.point3)
+			{
+				if (f.point2 == other.point2) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point2 - f.point3);
+				if (f.point2 == other.point3) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point2 - f.point3);
+				if (f.point1 == other.point2) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point1 - f.point3);
+				if (f.point1 == other.point3) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point1 - f.point3);
+			}
 
-	//position
-	glEnableVertexAttribArray(v4Position);
-	glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
-	glVertexAttribPointer(v4Position, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-	//Color & tint
-	float c[3] = { color.x, color.y, color.z };
-	float t[3] = { tint.x, tint.y, tint.z };
-	glUniform3fv(v3Color, 1, c);
-	glUniform3fv(v3Tint, 1, t);
-	/*glEnableVertexAttribArray(v4Color);
-	glBindBuffer(GL_ARRAY_BUFFER, m_ColorBuffer);
-	glVertexAttribPointer(v4Color, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);*/
+		}
+	}
+	m_faces.push_back(f);
+	m_modelCollisionData->m_SATEdges.push_back(glm::normalize(f.edge1));
+	m_modelCollisionData->m_SATEdges.push_back(glm::normalize(f.edge2));
+	m_modelCollisionData->m_SATEdges.push_back(glm::normalize(f.edge3));
+	m_modelCollisionData->m_SATNormals.push_back(f.surfaceNormal);
+}
 
-	//Color and draw
-	glDrawArrays(GL_TRIANGLES, 0, m_nVertexCount);
+Face::Face(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3)
+{
+	this->point1 = point1;
+	this->point2 = point2;
+	this->point3 = point3;
+	this->edge1 = point2 - point1;
+	this->edge2 = point3 - point2;
+	this->edge3 = point1 - point3;
 
-	glDisableVertexAttribArray(v4Position);
-	//glDisableVertexAttribArray(v4Color);
+	surfaceNormal = glm::normalize(glm::cross(point2 - point1, point3 - point1));
 }

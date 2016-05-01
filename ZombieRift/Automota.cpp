@@ -84,7 +84,7 @@ Automota::Automota(Colony * col, int h, int w, int l)
 	m_colony = col;
 	m_index = glm::vec3(h, w, l);
 	m_neighbors = new std::vector<Automota*>();
-	m_collisionData = new CollisionData(m_model, this);
+	EnableCollision();
 	m_collisionData->m_collisionMask = 0;
 	m_model->GenCube(1.0f);
 }

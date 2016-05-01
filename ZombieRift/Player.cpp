@@ -6,7 +6,7 @@ static const float SPEED_MODIFIER = 10.0f;
 Player::Player()
 {
 	m_model->GenBox(1.0f, 2.0f, 1.0f);
-	m_collisionData = new CollisionData(m_model, this);
+	EnableCollision();
 	m_worldCamera->ResetCamera();
 	m_worldCamera->SetPositionAndTarget(m_translations, m_translations + m_worldCamera->GetForward());
 	m_visible = false;

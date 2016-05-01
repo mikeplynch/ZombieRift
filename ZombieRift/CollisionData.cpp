@@ -1,19 +1,16 @@
 #include "CollisionData.h"
 #define DEBUG false
 
-CollisionData::CollisionData(Shape* collisionBase, GameObject* object)
+Model* CollisionData::s_boundingBox = nullptr;
+
+void CollisionData::BindToObject(GameObject* object)
 {
 	m_object = object;
-	m_boundingPoints = std::vector<glm::vec3>(8, glm::vec3(0.0f));
-	m_reBoundingPoints = std::vector<glm::vec3>(8, glm::vec3(0.0f));
-	SetModel(collisionBase);
-	m_boundingBox = new Shape();
-	m_boundingBox->GenCube(1.0f);
 }
 
 CollisionData::~CollisionData()
 {
-	delete m_boundingBox;
+	//delete m_boundingBox;
 }
 
 void CollisionData::GenerateBoundingBox(std::vector<glm::vec3> vertices, glm::vec3& min, glm::vec3& max, glm::vec3& size)
@@ -44,6 +41,12 @@ void CollisionData::GenerateBoundingBox(std::vector<glm::vec3> vertices, glm::ve
 	size.x = glm::distance(glm::vec3(min.x, 0.0f, 0.0f), glm::vec3(max.x, 0.0f, 0.0f));
 	size.y = glm::distance(glm::vec3(0.0f, min.y, 0.0f), glm::vec3(0.0f, max.y, 0.0f));
 	size.z = glm::distance(glm::vec3(0.0f, 0.0f, min.z), glm::vec3(0.0f, 0.0f, max.z));
+}
+
+CollisionData::CollisionData()
+{
+	m_boundingPoints = std::vector<glm::vec3>(8, glm::vec3(0.0f));
+	m_reBoundingPoints = std::vector<glm::vec3>(8, glm::vec3(0.0f));
 }
 
 void CollisionData::UpdateBoundingBoxes()
@@ -80,15 +83,9 @@ std::vector<glm::vec3> CollisionData::GenerateBoundingPoints(glm::vec3 min, glm:
 	return points;
 }
 
-void CollisionData::SetModel(Shape* shape)
+void CollisionData::SetModel(MyMesh* mesh)
 {
-	if (m_shape != nullptr)
-	{
-		delete m_shape;
-	}
-	m_shape = shape;
-
-	GenerateBoundingBox(m_shape->GetVertices(), m_min, m_max, m_size);
+	GenerateBoundingBox(mesh->GetVertices(), m_min, m_max, m_size);
 	m_boundingPoints = GenerateBoundingPoints(m_min, m_max);
 	UpdateBoundingBoxes();
 }
@@ -97,10 +94,15 @@ void CollisionData::DrawBoundingBox()
 {
 	//TODO: This currently only draws the REBB. Possibly add code to make it draw different ones
 	//Depending on collision mode, or depending on debug mode.
+	if (s_boundingBox == nullptr) 
+	{
+		s_boundingBox = new Model("Cube");
+	}
+
 	glm::mat4 world = glm::mat4(1.0f);
 	world *= glm::translate(m_object->m_translations);
 	world *= glm::scale(m_reSize);
-	m_boundingBox->RenderShape(world, m_object->m_worldCamera->GetView(), m_object->m_worldCamera->GetProjection());
+	s_boundingBox->Render(world, m_object->m_worldCamera->GetView(), m_object->m_worldCamera->GetProjection());
 }
 
 bool CollisionData::AreColliding(CollisionDetectionType type, GameObject* first, GameObject* second)
@@ -141,8 +143,8 @@ bool CollisionData::AreColliding(CollisionDetectionType type, GameObject* first,
 
 std::vector<glm::vec3> CollisionData::GetEdgeAxes(GameObject* first, GameObject* second)
 {
-	std::vector<glm::vec3> firstEdges = first->GetModel()->m_SATEdges;
-	std::vector<glm::vec3> secondEdges = second->GetModel()->m_SATEdges;
+	std::vector<glm::vec3> firstEdges = first->m_collisionData->m_SATEdges;
+	std::vector<glm::vec3> secondEdges = second->m_collisionData->m_SATEdges;
 	std::vector<glm::vec3> axes;
 	//Loop through the faces of the first object
 	for (int i = 0; i < firstEdges.size(); i++)
@@ -163,13 +165,13 @@ bool CollisionData::SeperatingAxisTest(GameObject * first, GameObject * second)
 	std::vector<glm::vec3> axes = GetEdgeAxes(first, second);
 
 	//Now add each face normal to the Axes so that all seperating axes are accounted for
-	std::vector<glm::vec3> firstFaces = first->GetModel()->m_SATNormals;
+	std::vector<glm::vec3> firstFaces = first->m_collisionData->m_SATNormals;
 	for (int i = 0; i < firstFaces.size(); i++)
 	{
 		axes.push_back(glm::normalize(glm::vec3(first->m_transformations * glm::vec4(firstFaces[i], 1.0))));
 	}
 	//Add those of the other object as well
-	std::vector<glm::vec3> secondFaces = second->GetModel()->m_SATNormals;
+	std::vector<glm::vec3> secondFaces = second->m_collisionData->m_SATNormals;
 	for (int i = 0; i < secondFaces.size(); i++)
 	{
 		axes.push_back(glm::normalize(glm::vec3(second->m_transformations * glm::vec4(secondFaces[i], 1.0))));

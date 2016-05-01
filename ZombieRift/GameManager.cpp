@@ -15,6 +15,9 @@ GameManager * GameManager::GetInstance()
 	}
 	else
 	{
+		//Create a new Cube model as the default model
+		Model* model = new Model("Cube");
+		model->GenCube(1.0f);
 		return instance = new GameManager();
 	}
 }

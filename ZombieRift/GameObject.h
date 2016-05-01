@@ -1,8 +1,9 @@
 #pragma once
-#include "Shape.h"
-#include "Camera.h"
+#include "Model.h"
 #include "CollisionData.h"
-extern class CollisionData;
+#include "Camera.h"
+
+class Model;
 
 ///<summary>
 ///The base game object used by the engine.  This is the base object, and
@@ -16,7 +17,7 @@ private:
 protected:
 	GameObject();
 	~GameObject();
-	Shape* m_model;
+	Model* m_model;
 	Camera* m_worldCamera;
 public:
 	//TODO: add variables for world position, rotation, and scale and implement
@@ -44,7 +45,7 @@ public:
 
 	CollisionData* m_collisionData;
 
-	Shape* GetModel() { return m_model; }
+	Model* GetModel();
 
 	///<summary>
 	///Update function must be implemented. Game object must be inherited form to use.
@@ -57,9 +58,11 @@ public:
 	///</summary>
 	virtual void onCollision(GameObject* other) {};
 	
-	void SetModel(Shape* shape);
-	void SetColor(glm::vec3 color) { m_model->ReColor(color); }
+	void SetModel(Model* model);
+	void SetColor(glm::vec3 color);
 
 	virtual void Draw();
 	virtual void DrawDebug();
+
+	void EnableCollision();
 };

@@ -1,7 +1,5 @@
 #pragma once
-
 #include "GameObject.h"
-#include "CollisionData.h"
 
 class Scene {
 public:

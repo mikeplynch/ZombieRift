@@ -123,7 +123,7 @@ copy "$(SolutionDir)include\GL\bin\*.*" "$(SolutionDir)_Binary\"</Command>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MyMesh.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Shape.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="XboxControls.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -138,7 +138,7 @@ copy "$(SolutionDir)include\GL\bin\*.*" "$(SolutionDir)_Binary\"</Command>
     <ClInclude Include="Main.h" />
     <ClInclude Include="MyMesh.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="Shape.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="SimpleObjects.h" />
     <ClInclude Include="XboxControls.h" />
   </ItemGroup>

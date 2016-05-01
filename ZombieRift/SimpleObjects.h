@@ -8,9 +8,9 @@ extern GLFWwindow* window;
 
 class CubeObject : public GameObject {
 public:
-	CubeObject() { m_model->GenCube(1.0f); m_collisionData = new CollisionData(m_model, this);}
+	CubeObject() { m_model->GenCube(1.0f); EnableCollision(); }
 
-	CubeObject(float size) { m_model->GenCube(size); m_collisionData = new CollisionData(m_model, this); }
+	CubeObject(float size) { m_model->GenCube(size); EnableCollision(); }
 
 	void Update() 
 	{
@@ -21,7 +21,11 @@ public:
 class BoxObject : public GameObject {
 public:
 	BoxObject() { BoxObject(1.0f, 2.0f, 1.0f); }
-	BoxObject(float length, float width, float height) { m_model->GenBox(length, width, height); m_collisionData = new CollisionData(m_model, this);  }
+	BoxObject(float length, float width, float height) { 
+		m_model = new Model("Cube");  
+		m_model->GenCube(1.0); 
+		EnableCollision(); 
+		m_scales = glm::vec3(length, width, height);}
 
 	void Update() 
 	{
@@ -33,7 +37,7 @@ public:
 class PlayerBox : public BoxObject {
 public:
 	XboxControls* Controller = new XboxControls(1);
-	PlayerBox() { m_model->GenBox(1.0f, 2.0f, 1.0f); m_collisionData = new CollisionData(m_model, this);}
+	PlayerBox() : BoxObject(1.0f, 1.0f, 1.0f) { }
 	void Update()
 	{
 		m_collisionData->UpdateBoundingBoxes();
