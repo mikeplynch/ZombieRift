@@ -9,7 +9,7 @@ void A10Scene::Init()
 
 	player = new PlayerBox();
 	player->m_name = "player";
-	player->m_translations = glm::vec3(0.0f, 2.0f, 0.0f);
+	player->m_translations = glm::vec3(-1.0f, 2.0f, -0.5f);
 
 	AddObject(box);
 	AddObject(player);

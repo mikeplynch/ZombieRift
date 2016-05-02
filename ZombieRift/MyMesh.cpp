@@ -143,6 +143,10 @@ void MyMesh::CompileCollisionData()
 			}
 		}
 	}
+	m_modelCollisionData->m_SATNormals.resize(m_modelCollisionData->m_SATNormals.size());
+	m_modelCollisionData->m_SATRemovalEdges.resize(m_modelCollisionData->m_SATRemovalEdges.size());
+	m_lVertexPos.resize(m_lVertexPos.size());
+
 }
 void MyMesh::CompileOpenGL3X(void)
 {
@@ -175,6 +179,7 @@ void MyMesh::CompileOpenGL3X(void)
 void MyMesh::CompileMesh()
 {
 	CompileOpenGL3X();
+	CompileCollisionData();
 }
 
 void MyMesh::AddTri(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3, glm::vec3 color1, glm::vec3 color2, glm::vec3 color3)

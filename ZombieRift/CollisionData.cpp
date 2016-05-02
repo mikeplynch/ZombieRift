@@ -97,6 +97,7 @@ void CollisionData::DrawBoundingBox()
 	if (s_boundingBox == nullptr) 
 	{
 		s_boundingBox = new Model("Cube");
+		s_boundingBox->GenCube(1.0f);
 	}
 
 	glm::mat4 world = glm::mat4(1.0f);
@@ -134,9 +135,10 @@ bool CollisionData::AreColliding(CollisionDetectionType type, GameObject* first,
 	}
 
 	areColliding = Overlaps(min1, max1, min2, max2);
-	if (areColliding == true) {
+	//Code removed as functionality has slowed down since refactor.
+	/*if (areColliding == true) {
 		areColliding = SeperatingAxisTest(first, second);
-	}
+	}*/
 
 	return areColliding;
 }

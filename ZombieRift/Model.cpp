@@ -8,7 +8,7 @@ void Model::compileShape()
 	m_needsCompilation = false;
 	if (Exists(m_modelName) != nullptr) return;
 
-	m_model->CompileOpenGL3X();
+	m_model->CompileMesh();
 	s_MeshCollection->insert(std::pair<std::string, MyMesh*>(m_modelName, m_model));
 }
 

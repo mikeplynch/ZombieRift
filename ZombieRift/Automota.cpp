@@ -16,6 +16,7 @@ Colony::Colony(int length, int width, int height)
 			for (int l = 0; l < length; l++)
 			{
 				cells[h][w][l] = new Automota(this, h, w, l);
+				cells[h][w][l]->SetColor(glm::vec3((float)h / height, (float)w / width, (float)l / length));
 			}
 		}
 	}
@@ -84,9 +85,9 @@ Automota::Automota(Colony * col, int h, int w, int l)
 	m_colony = col;
 	m_index = glm::vec3(h, w, l);
 	m_neighbors = new std::vector<Automota*>();
+	m_model = new Model("Cube");
 	EnableCollision();
 	m_collisionData->m_collisionMask = 0;
-	m_model->GenCube(1.0f);
 }
 
 void Automota::DetermineNeighbors()
@@ -150,7 +151,11 @@ void Automota::Update()
 	{
 		m_nextState = 1;
 	}
-	m_translations = m_colony->worldPosition + m_index * m_colony->spacing;
+	m_translations = m_colony->worldPosition + glm::vec3(
+		(m_index.x - m_colony->width / 2) * m_colony->spacing,
+		(m_index.y - m_colony->height / 2) * m_colony->spacing,
+		(m_index.z - m_colony->length / 2) * m_colony->spacing);
+								
 	if (m_state < 1) {
 		m_visible = false;
 	}
