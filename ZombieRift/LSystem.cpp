@@ -28,7 +28,6 @@ std::string LSytem::ApplyAxioms(std:: string system)
 		}
 		if (passThrough)
 			applied += system[c];
-		std::cout << applied.c_str() << std::endl;
 	}
 
 	return applied;

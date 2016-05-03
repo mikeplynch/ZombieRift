@@ -2,8 +2,10 @@
 
 void AestheticsScene::Init()
 {
+	Camera* camera = Camera::GetInstance();
+
 	glClearColor(0, 0, 0, 0);
-	colony = new Colony(1, 10, 10);
+	colony = new Colony(10, 20, 20);
 	//colony->RandomizeState(80);
 	colony->AddToScene(this);
 	int tries = 0;
@@ -24,7 +26,7 @@ void AestheticsScene::Init()
 void AestheticsScene::Update()
 {
 	counter++;
-	if (counter % 5 == 0)
+	if (counter % 2 == 0)
 		colony->Update();
 	//if (counter % 500 == 0)
 	//	colony->RandomizeState(80);

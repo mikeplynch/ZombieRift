@@ -10,6 +10,7 @@ GLFWwindow* window;
 
 int main(void)
 {
+	bool debug = false;
 	// Initialise GLFW
 	if (!glfwInit())
 	{
@@ -52,14 +53,13 @@ int main(void)
 		fprintf(stderr, "Failed to initialize GLEW\n");
 		return -1;
 	}
-
+	
 	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
 	// Sky Blue background
 	glClearColor(0.529f, 0.807f, 0.9803f, 0.0f);
 	glClearDepth(1.0f);
-
 	
 	Model* myModel = new Model("Default");
 
@@ -84,7 +84,8 @@ int main(void)
 		game->DrawDebug();
 
 		// Draw
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		if(debug == false)
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 		// Limit the frame rate to 60fps
 		double wait_time = 1.0 / (target_frame_rate);
@@ -106,6 +107,8 @@ int main(void)
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+		if (glfwGetKey(window, GLFW_KEY_SEMICOLON))
+			debug == false ? debug = true : debug = false;
 	} // Check if the ESC key was pressed or the window was closed
 	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 	glfwWindowShouldClose(window) == 0);

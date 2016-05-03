@@ -19,7 +19,6 @@ static struct SHADER_TYPES {
 class Model{
 private:
 	bool m_needsCompilation = true;
-	void compileShape();
 
 	static std::map<std::string, MyMesh*>* s_MeshCollection;
 	std::string m_modelName;
@@ -39,6 +38,8 @@ public:
 	//When color is unspecied, defaultColor is used. default is set to red when unset.
 	//</summary>
 	glm::vec3 m_color; 
+
+	void compileShape();
 
 	void Render(glm::mat4 toWorld, glm::mat4 view, glm::mat4 persp);
 
@@ -63,6 +64,8 @@ public:
 	void GenBox(float width, float length, float height, glm::vec3 front, glm::vec3 left, glm::vec3 right, glm::vec3 bottom, glm::vec3 top, glm::vec3 back);
 	void GenBox(float width, float length, float height, glm::vec3 color);
 	void GenBox(float width, float length, float height);
+
+	void AssignModel(Model* model);
 
 	std::vector<glm::vec3> GetVertices();
 

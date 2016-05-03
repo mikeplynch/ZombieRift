@@ -11,6 +11,11 @@ void A10Scene::Init()
 	player->m_name = "player";
 	player->m_translations = glm::vec3(-1.0f, 2.0f, -0.5f);
 
+	MeshGenerator generator;
+	generator.GenerateModel("[c+]t+ttSS+t+ss+t+ss+", 1, "Dreidal", glm::vec3(0, 0, 0), .5f, 6);
+	
+	player->SetModel(generator.m_model);
+
 	AddObject(box);
 	AddObject(player);
 }

@@ -231,6 +231,11 @@ void Model::GenBox(float width, float height, float length)
 	GenBox(width, height, length, m_color);
 }
 
+void Model::AssignModel(Model * model)
+{
+	m_model = model->GetMesh();
+}
+
 std::vector<glm::vec3> Model::GetVertices()
 {
 	return m_model->GetVertices();

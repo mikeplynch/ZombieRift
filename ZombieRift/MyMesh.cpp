@@ -91,6 +91,9 @@ void MyMesh::CompileCollisionData()
 			}
 		}
 	}
+	m_lVertexPos.resize(m_lVertexPos.size());
+	if (m_compileSAT)
+		return;
 	//Remove interior edges
 	for (int i = 0; i < m_modelCollisionData->m_SATRemovalEdges.size(); i++)
 	{
@@ -145,8 +148,6 @@ void MyMesh::CompileCollisionData()
 	}
 	m_modelCollisionData->m_SATNormals.resize(m_modelCollisionData->m_SATNormals.size());
 	m_modelCollisionData->m_SATRemovalEdges.resize(m_modelCollisionData->m_SATRemovalEdges.size());
-	m_lVertexPos.resize(m_lVertexPos.size());
-
 }
 void MyMesh::CompileOpenGL3X(void)
 {
@@ -179,8 +180,7 @@ void MyMesh::CompileOpenGL3X(void)
 void MyMesh::CompileMesh()
 {
 	CompileOpenGL3X();
-	if(compileSAT)
-		CompileCollisionData();
+	CompileCollisionData();
 }
 
 void MyMesh::AddTri(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3, glm::vec3 color1, glm::vec3 color2, glm::vec3 color3)
@@ -193,6 +193,9 @@ void MyMesh::AddTri(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3, glm::v
 	AddVertexColor(color2);
 	AddVertexColor(color3);
 	Face f = Face(point1, point2, point3);
+	m_faces.push_back(f);
+	if (m_compileSAT)
+		return;
 	for (int i = 0; i < m_faces.size(); i++)
 	{
 		if (f.surfaceNormal == m_faces[i].surfaceNormal)
@@ -263,11 +266,8 @@ void MyMesh::AddTri(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3, glm::v
 				if (f.point1 == other.point2) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point1 - f.point3);
 				if (f.point1 == other.point3) m_modelCollisionData->m_SATRemovalEdges.push_back(f.point1 - f.point3);
 			}
-
-
 		}
 	}
-	m_faces.push_back(f);
 	m_modelCollisionData->m_SATEdges.push_back(glm::normalize(f.edge1));
 	m_modelCollisionData->m_SATEdges.push_back(glm::normalize(f.edge2));
 	m_modelCollisionData->m_SATEdges.push_back(glm::normalize(f.edge3));
