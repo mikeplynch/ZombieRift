@@ -80,3 +80,13 @@ void GameObject::EnableCollision()
 	m_collisionData->BindToObject(this);
 	m_collisionData->SetModel(m_model->GetMesh());
 }
+
+void GameObject::CreateModel(std::string name)
+{
+	if (m_model != nullptr)
+	{
+		delete m_model;
+	}
+
+	m_model = new Model(name);
+}

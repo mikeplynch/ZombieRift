@@ -260,6 +260,7 @@ public:
 
 	glm::vec3 GetForward(void) { return m_v3Forward; }
 	glm::vec3 GetRightward(void) { return m_v3Rightward; }
+	glm::vec2 GetNearFarPlanes(void) { return m_v2NearFar; }
 
 private:
 	/*

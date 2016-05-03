@@ -14,24 +14,33 @@ public:
 
 	void Update() 
 	{
-		m_collisionData->UpdateBoundingBoxes();
+		//m_collisionData->UpdateBoundingBoxes();
 	};
 };
 
 class BoxObject : public GameObject {
 public:
 	BoxObject() { BoxObject(1.0f, 2.0f, 1.0f); }
-	BoxObject(float length, float width, float height) { 
-		m_model = new Model("Cube");  
-		m_model->GenCube(1.0); 
-		EnableCollision(); 
-		m_scales = glm::vec3(length, width, height);}
+	BoxObject(float length, float width, float height) 
+	{
+		m_name = "Box";
+		m_model = new Model(m_name);
+		m_model->GenCube(1.0);
+		m_scales = glm::vec3(length, width, height);
+		EnableCollision();
+	}
 
 	void Update() 
 	{
 		//TODO: Discuss whether or not calling this should be an "option" of those inheriting form GameObject
-		m_collisionData->UpdateBoundingBoxes();
+		//m_collisionData->UpdateBoundingBoxes();
+		SetColor(glm::vec3(0.0f, 0.0f, 1.0f));
 	};
+
+	virtual void onCollision(GameObject* other) override
+	{
+		SetColor(glm::vec3(1.0f, 1.0f, 0.0f));
+	}
 };
 
 class PlayerBox : public BoxObject {
@@ -40,7 +49,7 @@ public:
 	PlayerBox() : BoxObject(1.0f, 1.0f, 1.0f) { }
 	void Update()
 	{
-		m_collisionData->UpdateBoundingBoxes();
+		//m_collisionData->UpdateBoundingBoxes();
 		SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
 
 		if (glfwGetKey(GameManager::window, GLFW_KEY_LEFT_SHIFT))

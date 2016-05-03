@@ -65,4 +65,7 @@ public:
 	virtual void DrawDebug();
 
 	void EnableCollision();
+	
+protected:
+	void CreateModel(std::string name);
 };
