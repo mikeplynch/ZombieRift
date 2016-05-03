@@ -3,7 +3,7 @@
 void AestheticsScene::Init()
 {
 	glClearColor(0, 0, 0, 0);
-	colony = new Colony(1, 100, 100);
+	colony = new Colony(1, 10, 10);
 	//colony->RandomizeState(80);
 	colony->AddToScene(this);
 	int tries = 0;
@@ -49,6 +49,8 @@ void AestheticsScene::Update()
 
 			colony->cells[xCoord][yCoord][zCoord]->m_state = 1;
 			colony->cells[xCoord][yCoord][zCoord]->m_nextState = 1;
+
+			//for()
 
 			//Left hand
 			const CameraSpacePoint& leftHand = kinect->joints[JointType_HandLeft].Position;

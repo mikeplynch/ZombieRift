@@ -94,6 +94,8 @@ public:
 	bool m_bBinded = false; //Binded flag
 	int m_nVertexCount = 0; //Number of Vertices in this Mesh
 
+	bool compileSAT = true;
+
 	GLuint m_vao = 0;			//OpenGL Vertex Array Object
 	GLuint m_VertexBuffer = 0;	//OpenGL Buffer (Will hold the vertex buffer pointer)
 	GLuint m_ColorBuffer = 0;	//OpenGL Buffer (Will hold the color buffer pointer)

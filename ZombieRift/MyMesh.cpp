@@ -179,7 +179,8 @@ void MyMesh::CompileOpenGL3X(void)
 void MyMesh::CompileMesh()
 {
 	CompileOpenGL3X();
-	CompileCollisionData();
+	if(compileSAT)
+		CompileCollisionData();
 }
 
 void MyMesh::AddTri(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3, glm::vec3 color1, glm::vec3 color2, glm::vec3 color3)

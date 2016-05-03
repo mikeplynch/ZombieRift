@@ -4,6 +4,7 @@ modified by labigm@rit.edu
 --------------------------------------------------------------------------------------------------*/
 // Include standard headers
 #include "Main.h"
+#include "LSystem.h"
 
 GLFWwindow* window;
 
