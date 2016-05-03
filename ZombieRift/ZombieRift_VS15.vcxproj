@@ -122,6 +122,7 @@ copy "$(SolutionDir)include\GL\bin\*.*" "$(SolutionDir)_Binary\"</Command>
     <ClCompile Include="KinectUtilities.cpp" />
     <ClCompile Include="LSystem.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MeshGenerator.cpp" />
     <ClCompile Include="MyMesh.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -138,6 +139,7 @@ copy "$(SolutionDir)include\GL\bin\*.*" "$(SolutionDir)_Binary\"</Command>
     <ClInclude Include="KinectUtilites.h" />
     <ClInclude Include="LSystem.h" />
     <ClInclude Include="Main.h" />
+    <ClInclude Include="MeshGenerator.h" />
     <ClInclude Include="MyMesh.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Model.h" />
