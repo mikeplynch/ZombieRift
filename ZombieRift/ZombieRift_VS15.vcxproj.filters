@@ -72,6 +72,9 @@
     <ClCompile Include="MeshGenerator.cpp">
       <Filter>Aesthetics</Filter>
     </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h">
@@ -121,6 +124,9 @@
     </ClInclude>
     <ClInclude Include="MeshGenerator.h">
       <Filter>Aesthetics</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

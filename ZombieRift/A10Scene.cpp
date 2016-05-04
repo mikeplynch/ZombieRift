@@ -77,10 +77,8 @@ void MainGameScene::Init()
 	box = new BoxObject(1.0f, 10.0f, 2.0f);
 	box->SetColor(glm::vec3(0.0f, 0.0f, 1.0f));
 	box->m_translations = glm::vec3(0.0f, 1.0f, -15.0f);
-	box->m_name = "Box";
 
 	player = new Player();
-	player->m_name = "Player";
 	//player->m_translations = glm::vec3(0.0f, 2.0f, 0.0f);
 
 	AddObject(box);
@@ -89,5 +87,9 @@ void MainGameScene::Init()
 
 void MainGameScene::Update()
 {
-
+	/* This is probably very bad and not correct. */
+	for (unsigned int i = 0; i < player->GetBullets().size(); i++)
+	{
+		AddObject(player->GetBullets().at(i));
+	}
 }
