@@ -5,8 +5,8 @@ void AestheticsScene::Init()
 	Camera* camera = Camera::GetInstance();
 
 	glClearColor(0, 0, 0, 0);
-	colony = new Colony(10, 20, 20);
-	//colony->RandomizeState(80);
+	colony = new Colony(30, 30, 30);
+	//colony->RandomizeState(90);
 	colony->AddToScene(this);
 	int tries = 0;
 	while ((kinect = KinectUtilities::GetInstance()) == nullptr || tries > 100) {
@@ -35,6 +35,9 @@ void AestheticsScene::Update()
 		kinect->GetKinectData();
 		if (kinect->m_tracked)
 		{
+			//Map the head
+			const CameraSpacePoint& head = kinect->joints[JointType_Head].Position;
+			Camera::GetInstance()->SetPositionAndTarget(glm::vec3(head.X * 5, head.Y * 5, head.Z * 10), glm::vec3(0,0,0));
 			//Right hand
 			const CameraSpacePoint& rightHand = kinect->joints[JointType_HandRight].Position;
 			//colony->worldPosition = glm::vec3(rightHand.X, rightHand.Y, -20.0f);
@@ -49,8 +52,13 @@ void AestheticsScene::Update()
 			int yCoord = round(MapRange(rightHand.Y, lowY, highY, 0, (float)colony->height - 1));
 			int zCoord = round(MapRange(rightHand.Z, lowZ, highZ, 0, (float)colony->length - 1));
 
-			colony->cells[xCoord][yCoord][zCoord]->m_state = 1;
-			colony->cells[xCoord][yCoord][zCoord]->m_nextState = 1;
+			colony->cells[xCoord][yCoord][zCoord]->m_state = colony->cells[xCoord][yCoord][zCoord]->m_state + 1;
+			colony->cells[xCoord][yCoord][zCoord]->m_nextState = colony->cells[xCoord][yCoord][zCoord]->m_state + 1;
+			for (int i = 0; i < colony->cells[xCoord][yCoord][zCoord]->m_neighbors->size(); i++)
+			{
+				colony->cells[xCoord][yCoord][zCoord]->m_neighbors->at(i)->m_state = colony->cells[xCoord][yCoord][zCoord]->m_neighbors->at(i)->m_state + 1;
+				colony->cells[xCoord][yCoord][zCoord]->m_neighbors->at(i)->m_nextState = colony->cells[xCoord][yCoord][zCoord]->m_neighbors->at(i)->m_state + 1;
+			}
 
 			//for()
 
@@ -70,6 +78,14 @@ void AestheticsScene::Update()
 
 			colony->cells[xCoord][yCoord][zCoord]->m_state = 1;
 			colony->cells[xCoord][yCoord][zCoord]->m_nextState = 1;
+
+			colony->cells[xCoord][yCoord][zCoord]->m_state = colony->cells[xCoord][yCoord][zCoord]->m_state + 1;
+			colony->cells[xCoord][yCoord][zCoord]->m_nextState = colony->cells[xCoord][yCoord][zCoord]->m_state + 1;
+			for (int i = 0; i < colony->cells[xCoord][yCoord][zCoord]->m_neighbors->size(); i++)
+			{
+				colony->cells[xCoord][yCoord][zCoord]->m_neighbors->at(i)->m_state = 0;
+				colony->cells[xCoord][yCoord][zCoord]->m_neighbors->at(i)->m_nextState = 0;
+			}
 		}
 		/*int last = 0;
 		for (int i = 0; i < 512 * 424; ) {
@@ -113,9 +129,54 @@ void AestheticsScene::Update()
 			}
 		}*/
 	}
+
+	HandleInput(Camera::GetInstance());
 }
 
 float AestheticsScene::MapRange(float value, float low1, float high1, float low2, float high2)
 {
 	return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+}
+
+void AestheticsScene::HandleInput(Camera* camera) {
+	if (glfwGetKey(window, GLFW_KEY_LEFT))
+	{
+		camera->ChangeYaw(0.5f);
+	}
+	if (glfwGetKey(window, GLFW_KEY_RIGHT))
+	{
+		camera->ChangeYaw(-0.5f);
+	}
+	if (glfwGetKey(window, GLFW_KEY_DOWN))
+	{
+		camera->ChangePitch(-0.5f);
+	}
+	if (glfwGetKey(window, GLFW_KEY_UP))
+	{
+		camera->ChangePitch(0.5f);
+	}
+	if (glfwGetKey(window, GLFW_KEY_A))
+	{
+		camera->MoveSideways(-0.5f);
+	}
+	if (glfwGetKey(window, GLFW_KEY_D))
+	{
+		camera->MoveSideways(0.5f);
+	}
+	if (glfwGetKey(window, GLFW_KEY_W))
+	{
+		camera->MoveForward(0.5f);
+	}
+	if (glfwGetKey(window, GLFW_KEY_S))
+	{
+		camera->MoveForward(-0.5f);
+	}
+	if (glfwGetKey(window, GLFW_KEY_Q))
+	{
+		camera->MoveVertical(0.5f);
+	}
+	if (glfwGetKey(window, GLFW_KEY_E))
+	{
+		camera->MoveVertical(-0.5f);
+	}
 }

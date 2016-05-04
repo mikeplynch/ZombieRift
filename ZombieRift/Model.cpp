@@ -134,6 +134,12 @@ void Model::AddTri(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3)
 	AddTri(point1, point2, point3, m_color, m_color, m_color);
 }
 
+void Model::AddQuad(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3, glm::vec3 point4)
+{
+	AddTri(point1, point2, point3);
+	AddTri(point4, point3, point2);
+}
+
 void Model::GenCube(float size, glm::vec3 front, glm::vec3 left, glm::vec3 right, glm::vec3 bottom, glm::vec3 top, glm::vec3 back)
 {
 	GenBox(size, size, size, front, left, right, bottom, top, back);
@@ -151,7 +157,7 @@ void Model::GenCube(float size)
 
 void Model::GenBox(std::vector<glm::vec3> points, glm::vec3 front, glm::vec3 left, glm::vec3 right, glm::vec3 bottom, glm::vec3 top, glm::vec3 back)
 {
-	if (m_needsCompilation = false)
+	if (m_needsCompilation == false)
 		return;
 	if (points.size() < 8)
 	{
@@ -229,6 +235,143 @@ void Model::GenBox(float width, float height, float length, glm::vec3 color)
 void Model::GenBox(float width, float height, float length)
 {
 	GenBox(width, height, length, m_color);
+}
+
+void Model::GenSphere(float radius, int subdivisions)
+{
+	if (m_needsCompilation == false)
+		return;
+	//Sets minimum and maximum of subdivisions
+	if (subdivisions < 1)
+	{
+		GenCube(radius * 2);
+		return;
+	}
+
+	float value = 1.0f;
+	glm::vec3 pointA(-value, -value, value); //0
+	glm::vec3 pointB(value, -value, value); //1
+	glm::vec3 pointC(-value, value, value); //2
+
+	//left to right List of vector3
+	std::vector<glm::vec3> vectorAB;
+	vectorAB.push_back(pointA);
+	for (int i = 0; i < subdivisions; i++)
+	{
+		glm::vec3 temp(pointB - pointA);
+		temp /= subdivisions + 1;
+		temp *= (i + 1);
+		vectorAB.push_back(temp + pointA);
+	}
+	vectorAB.push_back(pointB);
+
+	//height increments
+	float fHeight = pointC.y - pointA.y;
+	fHeight /= subdivisions + 1;
+
+	//List of Lists
+	std::vector<std::vector<glm::vec3>> list;
+	list.push_back(vectorAB);
+	for (int j = 0; j < subdivisions + 1; j++)
+	{
+		std::vector<glm::vec3> temp = list[0];
+		float increment = fHeight * (j + 1);
+		for (int i = 0; i < subdivisions + 2; i++)
+		{
+			temp[i].y += increment;
+		}
+		list.push_back(temp);
+	}
+
+	//Creating the patch of quads
+	for (int j = 0; j < subdivisions + 1; j++)
+	{
+		for (int i = 0; i < subdivisions + 1; i++)
+		{
+			AddQuad(list[j][i], list[j][i + 1], list[j + 1][i], list[j + 1][i + 1]);
+		}
+	}
+
+	//normalizing the vectors to make them round
+	for (int i = 0; i < m_model->GetVertexTotal(); i++)
+	{
+		m_model->m_lVertexPos[i] = glm::normalize(m_model->GetVertices()[i]);
+		m_model->m_lVertexPos[i] *= radius;
+	}
+
+	//RightSideFace
+	int nVert = m_model->GetVertexTotal();
+	std::vector<glm::vec3> right;
+	for (int i = 0; i < nVert; i++)
+	{
+		glm::mat4 rotation;
+		rotation = glm::rotate(glm::mat4(1.0f), 90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+		right.push_back(static_cast <glm::vec3> (rotation * glm::vec4(m_model->m_lVertexPos[i], 1.0f)));
+	}
+
+
+	for (int i = 0; i < nVert; i++)
+	{
+		AddVertex(right[i]);
+	}
+
+	//LeftSideFace
+	std::vector<glm::vec3> left;
+	for (int i = 0; i < nVert; i++)
+	{
+		glm::mat4 rotation;
+		rotation = glm::rotate(glm::mat4(1.0f), -90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+		left.push_back(static_cast <glm::vec3>(rotation * glm::vec4(m_model->m_lVertexPos[i], 1.0f)));
+	}
+
+	for (int i = 0; i < nVert; i++)
+	{
+		AddVertex(left[i]);
+	}
+
+	//BackSideFace
+	std::vector<glm::vec3> back;
+	for (int i = 0; i < nVert; i++)
+	{
+		glm::mat4 rotation;
+		rotation = glm::rotate(glm::mat4(1.0f), 180.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+		back.push_back(static_cast <glm::vec3>(rotation * glm::vec4(m_model->m_lVertexPos[i], 1.0f)));
+	}
+
+	for (int i = 0; i < nVert; i++)
+	{
+		AddVertex(back[i]);
+	}
+
+	//TopSideFace
+	std::vector<glm::vec3> top;
+	for (int i = 0; i < nVert; i++)
+	{
+		glm::mat4 rotation;
+		rotation = glm::rotate(glm::mat4(1.0f), -90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+		top.push_back(static_cast <glm::vec3>(rotation * glm::vec4(m_model->m_lVertexPos[i], 1.0f)));
+	}
+
+	for (int i = 0; i < nVert; i++)
+	{
+		AddVertex(top[i]);
+	}
+
+	//BottomSideFace
+	std::vector<glm::vec3> bottom;
+	for (int i = 0; i < nVert; i++)
+	{
+		glm::mat4 rotation;
+		rotation = glm::rotate(glm::mat4(1.0f), 90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+		bottom.push_back(static_cast <glm::vec3>(rotation * glm::vec4(m_model->m_lVertexPos[i], 1.0f)));
+	}
+
+	for (int i = 0; i < nVert; i++)
+	{
+		AddVertex(bottom[i]);
+	}
+
+	compileShape();
 }
 
 void Model::AssignModel(Model * model)

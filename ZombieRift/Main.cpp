@@ -23,8 +23,8 @@ int main(void)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	
-	int width = 1920;
-	int height = 1080;
+	int width = 1280;
+	int height = 800;
 
 	// Open a window and create its OpenGL context
 	window = glfwCreateWindow(width, height, "MyMesh class", NULL, NULL);

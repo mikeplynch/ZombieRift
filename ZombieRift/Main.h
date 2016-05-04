@@ -15,5 +15,6 @@ This project was generated in 2013
 //Include scene headers
 #include "A10Scene.h"
 #include "AestheticsScene.h"
+#include "InteractivePong.h"
 
 #endif //_MAIN_H

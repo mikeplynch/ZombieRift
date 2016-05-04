@@ -1,5 +1,4 @@
 #include "MeshGenerator.h"
-#define PI 3.14159265359f
 
 void MeshGenerator::GenerateModel(std::string system, int iterations, std::string modelName, glm::vec3 startingPoint, float radius, int pointsPerLevel)
 {
@@ -9,15 +8,16 @@ void MeshGenerator::GenerateModel(std::string system, int iterations, std::strin
 	std::vector< std::pair<glm::vec3, glm::vec3>> pointCollections;
 	glm::vec3 radiusVector = glm::vec3(radius, 0, 0);
 	std::vector<std::pair<glm::vec3, glm::vec3>> pointStack;
-	float translationOffset = 1.0f;
-	float scaleOffset = 1.5f;
+	std::vector<int> closeOffIndeces;
 	glm::vec3 translationVector = glm::vec3(0, 1, 0);
-	glm::quat rotation = glm::quat(glm::vec3(PI / 6, PI / 6, PI / 6));
+	glm::quat rotation = glm::quat(glm::vec3(rotationOffset, 0, 0));
 	for (int i = 0; i < system.size(); i++)
 	{
 		switch (system[i])
 		{
 		case 't': //translate
+			startingPoint -= translationVector;
+			break;
 		case 'T':
 			startingPoint += translationVector;
 			break;
@@ -40,9 +40,10 @@ void MeshGenerator::GenerateModel(std::string system, int iterations, std::strin
 		case 'c':
 		case 'C':
 			radiusVector *= 0.001f;
+			closeOffIndeces.push_back(pointStack.size() - 1);
 			break;
 		case '[': //push point onto the stack
-			pointStack.push_back(std::make_pair(startingPoint, radiusVector));
+			pointStack.push_back(pointCollections.back());
 			break;
 		case ']': { //pop point from the stack
 			std::pair<glm::vec3, glm::vec3> popped = pointStack.back();
@@ -71,6 +72,8 @@ void MeshGenerator::GenerateModel(std::string system, int iterations, std::strin
 			glm::vec3 rotAxis = vertex;
 			if (glm::length(vertex) > 0)
 				rotAxis = glm::normalize(rotAxis);
+			else //Assume 0,1,0
+				rotAxis = glm::vec3(0, 1, 0);
 			float theta = 2 * PI / pointsPerLevel * n;
 			radVec = radVec * cos(theta) + (glm::cross(rotAxis, radVec)) * sin(theta) + rotAxis * (glm::dot(rotAxis, radVec))* (1 - cos(theta));
 			pointsForIteration.push_back(vertex + radVec);
@@ -84,6 +87,12 @@ void MeshGenerator::GenerateModel(std::string system, int iterations, std::strin
 		int nextRowSize = meshGeometry[(i + 1) % meshGeometry.size()].size();
 		for (int k = 0; k < currentSize; k++)
 		{
+			//Don't connect points to the next layer of the index is a close off point
+			if (closeOffIndeces.size() > 0 && i == closeOffIndeces.front())
+			{
+				closeOffIndeces.erase(closeOffIndeces.begin());
+				continue;
+			}
 			//Draw to the next layer of points, unless this is the first or last layer.
 			//In those situations the shape needs to close, so connect those to the center points.
 			if (i == 0)

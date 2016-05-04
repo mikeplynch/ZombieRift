@@ -84,6 +84,7 @@ Automota::Automota(Colony * col, int h, int w, int l)
 {
 	m_colony = col;
 	m_index = glm::vec3(h, w, l);
+	initialIndex = m_index;
 	m_neighbors = new std::vector<Automota*>();
 	m_model = new Model("Cube");
 	EnableCollision();
@@ -132,29 +133,38 @@ void Automota::DetermineNeighbors()
 void Automota::Update()
 {
 	int living = countNeighbors();
+	m_nextState = 0;
 	if (m_state > 0)
 	{
-		if (living < 2)
+		if (living < 4)
 		{
 			m_nextState = 0;
 		}
-		if (living == 2 || living == 3)
+		else if (living > 4)
 		{
-			m_nextState = 1;
+			m_nextState = m_state + 1;
 		}
-		if (living > 3)
+		if (living > 10 && living < 15)
 		{
 			m_nextState = 0;
 		}
 	}
-	else if (living == 3)
+	else if (living > 9 && living < 12)
 	{
 		m_nextState = 1;
 	}
+	if (m_state > 10)
+	{
+		m_nextState = m_state / 2;
+	}
+	glm::vec3 grav = Gravitation();
 	m_translations = m_colony->worldPosition + glm::vec3(
-		(m_index.x - m_colony->width / 2) * m_colony->spacing,
-		(m_index.y - m_colony->height / 2) * m_colony->spacing,
-		(m_index.z - m_colony->length / 2) * m_colony->spacing);
+		(grav.x - m_colony->width / 2) * m_colony->spacing,
+		(grav.y - m_colony->height / 2) * m_colony->spacing,
+		(grav.z - m_colony->length / 2) * m_colony->spacing);
+	m_index = (initialIndex + grav * 4.0f + m_index * 3.0f) / 8.0f;
+	
+	m_scales = glm::vec3(1, 1, 1) * (float)m_state / 6.0f;
 								
 	if (m_state < 1) {
 		m_visible = false;
@@ -175,6 +185,32 @@ int Automota::countNeighbors()
 		}
 	}
 	return n;
+}
+
+glm::vec3 Automota::Gravitation()
+{
+	glm::vec3 grav = glm::vec3(0, 0, 0);
+	int weight = 0;
+	for (int i = 0; i < m_neighbors->size(); i++)
+	{
+		if (m_neighbors->at(i)->m_state > 0)
+		{
+			grav += m_neighbors->at(i)->m_index * (float)m_neighbors->at(i)->m_state;
+			weight += m_neighbors->at(i)->m_state;
+		}
+	}
+	if (m_state > 0)
+	{
+		grav += m_index * (float)m_state;
+		grav /= (float)weight + m_state;
+	}
+	else
+	{
+		grav += m_index * 2.0f;
+		grav /= (float)weight + 2.0f;
+	}
+
+	return grav;
 }
 
 

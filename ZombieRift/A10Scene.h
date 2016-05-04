@@ -2,7 +2,6 @@
 #include "GameManager.h"
 #include "SimpleObjects.h"
 #include "Player.h"
-#include "MeshGenerator.h"
 
 class A10Scene : public Scene {
 	BoxObject* box;

@@ -52,6 +52,8 @@ public:
 	void AddTri(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3, glm::vec3 color);
 	void AddTri(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3);
 
+	void AddQuad(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3, glm::vec3 point4);
+
 	//Creates a cube with the designated colors for the faces
 	void GenCube(float size, glm::vec3 front, glm::vec3 left, glm::vec3 right, glm::vec3 bottom, glm::vec3 top, glm::vec3 back);
 	void GenCube(float size, glm::vec3 color);
@@ -64,6 +66,8 @@ public:
 	void GenBox(float width, float length, float height, glm::vec3 front, glm::vec3 left, glm::vec3 right, glm::vec3 bottom, glm::vec3 top, glm::vec3 back);
 	void GenBox(float width, float length, float height, glm::vec3 color);
 	void GenBox(float width, float length, float height);
+
+	void GenSphere(float radius, int subdivisions);
 
 	void AssignModel(Model* model);
 

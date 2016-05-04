@@ -46,6 +46,7 @@ private:
 //System Class
 class MyMesh
 {
+	friend class Model;
 protected:
 	std::vector<glm::vec3> m_lVertexPos;	//List of Vertices
 	std::vector<glm::vec3> m_lVertexCol;	//List of Colors

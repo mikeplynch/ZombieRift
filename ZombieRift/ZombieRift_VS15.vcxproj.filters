@@ -75,6 +75,9 @@
     <ClCompile Include="Bullet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="InteractivePong.cpp">
+      <Filter>Aesthetics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h">
@@ -127,6 +130,9 @@
     </ClInclude>
     <ClInclude Include="Bullet.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InteractivePong.h">
+      <Filter>Aesthetics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

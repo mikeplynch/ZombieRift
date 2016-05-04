@@ -119,6 +119,7 @@ copy "$(SolutionDir)include\GL\bin\*.*" "$(SolutionDir)_Binary\"</Command>
     <ClCompile Include="CollisionData.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="InteractivePong.cpp" />
     <ClCompile Include="KinectUtilites.cpp" />
     <ClCompile Include="KinectUtilities.cpp" />
     <ClCompile Include="LSystem.cpp" />
@@ -138,6 +139,7 @@ copy "$(SolutionDir)include\GL\bin\*.*" "$(SolutionDir)_Binary\"</Command>
     <ClInclude Include="CollisionData.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="InteractivePong.h" />
     <ClInclude Include="KinectUtilites.h" />
     <ClInclude Include="LSystem.h" />
     <ClInclude Include="Main.h" />

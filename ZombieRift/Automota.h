@@ -5,17 +5,19 @@ class Colony;
 
 class Automota : public GameObject {
 private:
-	std::vector<Automota*>* m_neighbors;
 	Colony* m_colony;
 	glm::vec3 m_index;
+	glm::vec3 initialIndex;
 public:
 	int m_state = 0;
 	int m_nextState = 0;
 	Automota() { };
 	Automota(Colony* col, int h, int w, int l);
+	std::vector<Automota*>* m_neighbors;
 	virtual void DetermineNeighbors();
 	void Update();
 	int countNeighbors();
+	glm::vec3 Gravitation();
 };
 
 
