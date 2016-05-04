@@ -194,7 +194,7 @@ void MyMesh::AddTri(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3, glm::v
 	AddVertexColor(color3);
 	Face f = Face(point1, point2, point3);
 	m_faces.push_back(f);
-	if (m_compileSAT)
+	if (!m_compileSAT)
 		return;
 	for (int i = 0; i < m_faces.size(); i++)
 	{
@@ -282,6 +282,7 @@ Face::Face(glm::vec3 point1, glm::vec3 point2, glm::vec3 point3)
 	this->edge1 = point2 - point1;
 	this->edge2 = point3 - point2;
 	this->edge3 = point1 - point3;
-
-	surfaceNormal = glm::normalize(glm::cross(point2 - point1, point3 - point1));
+	surfaceNormal = glm::cross(point2 - point1, point3 - point1);
+	if(glm::length(surfaceNormal) > 0)
+		surfaceNormal = glm::normalize(surfaceNormal);
 }

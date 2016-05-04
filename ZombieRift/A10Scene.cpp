@@ -12,8 +12,12 @@ void A10Scene::Init()
 	player->m_translations = glm::vec3(-1.0f, 2.0f, -0.5f);
 
 	MeshGenerator generator;
-	generator.GenerateModel("[c+]t+ttSS+t+ss+t+ss+", 1, "Dreidal", glm::vec3(0, 0, 0), .5f, 6);
-	
+	//generator.GenerateModel("[c+]t+ttSS+t+ss+t+ss+", 1, "Dreidal", glm::vec3(0, 0, 0), .5f, 6);
+	generator.m_system.AddAxiom('+', "+RTRT+");
+	//generator.m_system.AddAxiom('a', "SSat+RRt[b]tsa");
+	//generator.m_system.AddAxiom('b', "[c+][ttttSSS+]");
+	generator.GenerateModel("+", 4, "Test1", glm::vec3(0, 0, 0), .5f, 20);
+
 	player->SetModel(generator.m_model);
 
 	AddObject(box);

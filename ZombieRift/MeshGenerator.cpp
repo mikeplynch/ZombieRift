@@ -6,12 +6,13 @@ void MeshGenerator::GenerateModel(std::string system, int iterations, std::strin
 	m_model = new Model(modelName);
 	m_model->GetMesh()->m_compileSAT = false;
 	system = m_system.ApplyAxioms(system, iterations);
-	std::vector< std::pair<glm::vec3, float>> pointCollections;
-	std::vector<std::pair<glm::vec3, float>> pointStack;
+	std::vector< std::pair<glm::vec3, glm::vec3>> pointCollections;
+	glm::vec3 radiusVector = glm::vec3(radius, 0, 0);
+	std::vector<std::pair<glm::vec3, glm::vec3>> pointStack;
 	float translationOffset = 1.0f;
 	float scaleOffset = 1.5f;
 	glm::vec3 translationVector = glm::vec3(0, 1, 0);
-	glm::quat rotation = glm::quat(glm::vec3(0, PI / 6, 0));
+	glm::quat rotation = glm::quat(glm::vec3(PI / 6, PI / 6, PI / 6));
 	for (int i = 0; i < system.size(); i++)
 	{
 		switch (system[i])
@@ -21,33 +22,37 @@ void MeshGenerator::GenerateModel(std::string system, int iterations, std::strin
 			startingPoint += translationVector;
 			break;
 		case 's': //scale smaller
-			radius /= scaleOffset;
+			//radius /= scaleOffset;
+			radiusVector /= scaleOffset;
 			break;
 		case 'S': //scale larger
-			radius *= scaleOffset;
+			//radius *= scaleOffset;
+			radiusVector *= scaleOffset;
 			break;
 		case 'r': //rotate counter clockwise
 			translationVector = glm::rotate(-rotation, translationVector);
+			radiusVector = glm::rotate(-rotation, translationVector);
 			break;
 		case 'R': //rotate clockwise
-			translationVector = glm::rotate(-rotation, translationVector);
+			translationVector = glm::rotate(rotation, translationVector);
+			radiusVector = glm::rotate(rotation, translationVector);
 			break;
 		case 'c':
 		case 'C':
-			radius = .01f;
+			radiusVector *= 0.001f;
 			break;
 		case '[': //push point onto the stack
-			pointStack.push_back(std::make_pair(startingPoint, radius));
+			pointStack.push_back(std::make_pair(startingPoint, radiusVector));
 			break;
 		case ']': { //pop point from the stack
-			std::pair<glm::vec3, float> popped = pointStack.back();
+			std::pair<glm::vec3, glm::vec3> popped = pointStack.back();
 			pointStack.pop_back();
 			startingPoint = popped.first;
-			radius = popped.second;
+			radiusVector = popped.second;
 		}
 			break;
 		case '+': //pushes the current point to be used on the geometry
-			pointCollections.push_back(std::make_pair(startingPoint, radius));
+			pointCollections.push_back(std::make_pair(startingPoint, radiusVector));
 			break;
 		default:
 			break;
@@ -62,10 +67,13 @@ void MeshGenerator::GenerateModel(std::string system, int iterations, std::strin
 		{
 			glm::vec3 vertex;
 			vertex = pointCollections[i].first;
-			float r = pointCollections[i].second;
-			vertex.x += r * cos(2 * PI / pointsPerLevel * n );
-			vertex.z += r * sin(2 * PI / pointsPerLevel * n);
-			pointsForIteration.push_back(vertex);
+			glm::vec3 radVec = pointCollections[i].second;
+			glm::vec3 rotAxis = vertex;
+			if (glm::length(vertex) > 0)
+				rotAxis = glm::normalize(rotAxis);
+			float theta = 2 * PI / pointsPerLevel * n;
+			radVec = radVec * cos(theta) + (glm::cross(rotAxis, radVec)) * sin(theta) + rotAxis * (glm::dot(rotAxis, radVec))* (1 - cos(theta));
+			pointsForIteration.push_back(vertex + radVec);
 		}
 		meshGeometry.push_back(pointsForIteration);
 	}
