@@ -14,7 +14,7 @@ class AestheticsScene : public Scene {
 
 	virtual void Init();
 
-	virtual void Update();
+	virtual void Update(float dt);
 	float MapRange(float value, float low1, float high1, float low2, float high2);
 	void HandleInput(Camera* camera);
 };

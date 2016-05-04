@@ -39,9 +39,9 @@ void Player::ClearBullets()
 	m_bullets.clear();
 }
 
-void Player::Update()
+void Player::Update(float dt)
 {
-	HandleInput();
+	HandleInput(dt);
 	//glm::vec3 behind = glm::vec3(m_translations.x, m_translations.y, m_translations.z + 5); TC - Don't remove this please
 	m_worldCamera->SetPositionAndTarget(m_translations, m_translations + m_worldCamera->GetForward());
 
@@ -53,15 +53,15 @@ void Player::onCollision(GameObject* other)
 	
 }
 
-void Player::HandleInput()
+void Player::HandleInput(float dt)
 {
 	float speed = m_moveSpeed;
 	float degrees = 0.01f;
 
 	if (glfwGetKey(GameManager::window, GLFW_KEY_LEFT_SHIFT) || glfwGetKey(GameManager::window, GLFW_KEY_RIGHT_SHIFT))
 	{
-		speed *= SPEED_MODIFIER;
-		degrees *= SPEED_MODIFIER;
+		speed *= SPEED_MODIFIER * dt;
+		degrees *= SPEED_MODIFIER * dt;
 	}
 
 	// For now, we don't want player movement.

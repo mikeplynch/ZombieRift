@@ -12,7 +12,7 @@ public:
 
 	CubeObject(float size) { m_model->GenCube(size); EnableCollision(); }
 
-	void Update() 
+	void Update(float dt)
 	{
 		//m_collisionData->UpdateBoundingBoxes();
 	};
@@ -30,7 +30,7 @@ public:
 		EnableCollision();
 	}
 
-	void Update() 
+	void Update(float dt)
 	{
 		//TODO: Discuss whether or not calling this should be an "option" of those inheriting form GameObject
 		//m_collisionData->UpdateBoundingBoxes();
@@ -47,20 +47,20 @@ class PlayerBox : public BoxObject {
 public:
 	XboxControls* Controller = new XboxControls(1);
 	PlayerBox() : BoxObject(1.0f, 1.0f, 1.0f) { }
-	void Update()
+	void Update(float dt)
 	{
-		//m_collisionData->UpdateBoundingBoxes();
+		float velocity = 5.0f * dt;
 		SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
 
 		if (glfwGetKey(GameManager::window, GLFW_KEY_LEFT_SHIFT))
 		{
 			if (glfwGetKey(GameManager::window, GLFW_KEY_I))
 			{
-				m_translations += glm::vec3(0.0f, -0.1f, 0.0f);
+				m_translations += glm::vec3(0.0f, -velocity, 0.0f);
 			}
 			if (glfwGetKey(GameManager::window, GLFW_KEY_K))
 			{
-				m_translations += glm::vec3(0.0f, 0.1f, 0.01f);
+				m_translations += glm::vec3(0.0f, velocity, 0.01f);
 			}
 			if (glfwGetKey(GameManager::window, GLFW_KEY_U))
 			{
@@ -75,19 +75,19 @@ public:
 		{
 			if (glfwGetKey(GameManager::window, GLFW_KEY_J) || (Controller->GetState().Gamepad.sThumbLX < 0))
 			{
-				m_translations += glm::vec3(-0.1f, 0.0f, 0.0f);
+				m_translations += glm::vec3(-velocity, 0.0f, 0.0f);
 			}
 			if (glfwGetKey(GameManager::window, GLFW_KEY_L) || (Controller->GetState().Gamepad.sThumbLX > 0))
 			{
-				m_translations += glm::vec3(0.1f, 0.0f, 0.0f);
+				m_translations += glm::vec3(velocity, 0.0f, 0.0f);
 			}
 			if (glfwGetKey(GameManager::window, GLFW_KEY_I) || (Controller->GetState().Gamepad.sThumbLY > 0))
 			{
-				m_translations += glm::vec3(0.0f, 0.1f, 0.0f);
+				m_translations += glm::vec3(0.0f, velocity, 0.0f);
 			}
 			if (glfwGetKey(GameManager::window, GLFW_KEY_K) || (Controller->GetState().Gamepad.sThumbLY < 0))
 			{
-				m_translations += glm::vec3(0.0f, -0.1f, 0.0f);
+				m_translations += glm::vec3(0.0f, -velocity, 0.0f);
 			}
 			if (glfwGetKey(GameManager::window, GLFW_KEY_U))
 			{

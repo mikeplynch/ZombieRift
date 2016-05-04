@@ -11,7 +11,7 @@ private:
 	std::vector<Bullet*> m_bullets;
 
 	virtual void onCollision(GameObject* other) override;
-	void HandleInput();
+	void HandleInput(float dt);
 	
 	void MoveSideways(float dist);
 	void MoveVertical(float dist);
@@ -30,7 +30,7 @@ public:
 	Player();
 	~Player();
 
-	virtual void Update() override;
+	virtual void Update(float dt) override;
 
 	std::vector<Bullet*> GetBullets() { return m_bullets; }
 };

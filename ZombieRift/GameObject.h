@@ -50,7 +50,7 @@ public:
 	///<summary>
 	///Update function must be implemented. Game object must be inherited form to use.
 	///</summary>
-	virtual void Update() = 0;
+	virtual void Update(float dt) = 0;
 
 	///<Summary>
 	///This function is called whenever a collision between two objects happens. Use this

@@ -7,7 +7,7 @@ class A10Scene : public Scene {
 	BoxObject* box;
 	PlayerBox* player;
 	virtual void Init();
-	virtual void Update();
+	virtual void Update(float dt);
 
 	void HandleInput(Camera* camera);
 };
@@ -24,5 +24,5 @@ private:
 	virtual void Init();
 
 public:
-	virtual void Update();
+	virtual void Update(float dt);
 };

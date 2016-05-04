@@ -44,7 +44,7 @@ void Bullet::DisableBullet()
 	m_collisionData->m_collisionMask = 0;
 }
 
-void Bullet::Update()
+void Bullet::Update(float dt)
 {
 	m_translations += m_speed * m_dir;
 	m_totalDistance += m_speed;

@@ -71,7 +71,7 @@ void GameManager::Update(float deltaTime)
 	for (int i = 0; i < m_currentScene->m_objects.size(); i++)
 	{
 		GameObject* go = m_currentScene->m_objects[i];
-		go->Update();
+		go->Update(deltaTime);
 
 		// For now, check to see if collision is enabled. If so, update bounding boxes.
 		if (go->m_collisionData != nullptr)
@@ -80,7 +80,7 @@ void GameManager::Update(float deltaTime)
 		}
 	}
 
-	m_currentScene->Update();
+	m_currentScene->Update(deltaTime);
 
 	DetectCollisions();
 }

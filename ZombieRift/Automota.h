@@ -15,7 +15,7 @@ public:
 	Automota(Colony* col, int h, int w, int l);
 	std::vector<Automota*>* m_neighbors;
 	virtual void DetermineNeighbors();
-	void Update();
+	void Update(float dt);
 	int countNeighbors();
 	glm::vec3 Gravitation();
 };

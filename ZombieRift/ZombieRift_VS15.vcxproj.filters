@@ -19,6 +19,9 @@
     <Filter Include="GameScenes">
       <UniqueIdentifier>{623691c8-a018-4088-b383-5fa5c4ffa3bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameObjects">
+      <UniqueIdentifier>{983ec45e-4181-4f7a-befb-10651df8c219}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -51,12 +54,6 @@
     <ClCompile Include="A10Scene.cpp">
       <Filter>GameScenes</Filter>
     </ClCompile>
-    <ClCompile Include="AestheticsScene.cpp">
-      <Filter>Aesthetics</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="KinectUtilities.cpp">
       <Filter>Aesthetics</Filter>
     </ClCompile>
@@ -76,7 +73,13 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InteractivePong.cpp">
-      <Filter>Aesthetics</Filter>
+      <Filter>GameScenes</Filter>
+    </ClCompile>
+    <ClCompile Include="AestheticsScene.cpp">
+      <Filter>GameScenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -95,9 +98,6 @@
     <ClInclude Include="CollisionData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SimpleObjects.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GameManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -109,12 +109,6 @@
     </ClInclude>
     <ClInclude Include="A10Scene.h">
       <Filter>GameScenes</Filter>
-    </ClInclude>
-    <ClInclude Include="AestheticsScene.h">
-      <Filter>Aesthetics</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="KinectUtilites.h">
       <Filter>Aesthetics</Filter>
@@ -132,7 +126,16 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="InteractivePong.h">
-      <Filter>Aesthetics</Filter>
+      <Filter>GameScenes</Filter>
+    </ClInclude>
+    <ClInclude Include="AestheticsScene.h">
+      <Filter>GameScenes</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleObjects.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

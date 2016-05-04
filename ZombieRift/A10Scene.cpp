@@ -15,7 +15,7 @@ void A10Scene::Init()
 	AddObject(player);
 }
 
-void A10Scene::Update()
+void A10Scene::Update(float dt)
 {
 	HandleInput(Camera::GetInstance());
 }
@@ -76,7 +76,7 @@ void MainGameScene::Init()
 	AddObject(player);
 }
 
-void MainGameScene::Update()
+void MainGameScene::Update(float dt)
 {
 	/* This is probably very bad and not correct. */
 	for (unsigned int i = 0; i < player->GetBullets().size(); i++)

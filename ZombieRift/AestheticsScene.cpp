@@ -6,7 +6,7 @@ void AestheticsScene::Init()
 
 	glClearColor(0, 0, 0, 0);
 	colony = new Colony(30, 30, 30);
-	//colony->RandomizeState(90);
+	//colony->RandomizeState(50);
 	colony->AddToScene(this);
 	int tries = 0;
 	while ((kinect = KinectUtilities::GetInstance()) == nullptr || tries > 100) {
@@ -23,7 +23,7 @@ void AestheticsScene::Init()
 	highZ = 0;
 }
 
-void AestheticsScene::Update()
+void AestheticsScene::Update(float dt)
 {
 	counter++;
 	if (counter % 2 == 0)

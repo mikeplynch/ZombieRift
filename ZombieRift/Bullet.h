@@ -22,7 +22,7 @@ public:
 
 	Bullet(glm::vec3 dir, float maxDistance);
 
-	virtual void Update() override;
+	virtual void Update(float dt) override;
 
 	bool IsAlive() { return m_isAlive; }
 };

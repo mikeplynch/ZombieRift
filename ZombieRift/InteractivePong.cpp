@@ -27,7 +27,7 @@ void InteractivePong::Init()
 	}
 }
 
-void InteractivePong::Update()
+void InteractivePong::Update(float dt)
 {
 	if (kinect != nullptr)
 	{

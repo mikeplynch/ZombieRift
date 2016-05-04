@@ -13,5 +13,5 @@ class InteractivePong : public Scene {
 
 	virtual void Init();
 
-	virtual void Update();
+	virtual void Update(float dt);
 };

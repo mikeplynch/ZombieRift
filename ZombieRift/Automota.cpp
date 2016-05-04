@@ -86,7 +86,8 @@ Automota::Automota(Colony * col, int h, int w, int l)
 	m_index = glm::vec3(h, w, l);
 	initialIndex = m_index;
 	m_neighbors = new std::vector<Automota*>();
-	m_model = new Model("Cube");
+	m_model = new Model("Sphere");
+	m_model->GenSphere(1.0f, 6);
 	EnableCollision();
 	m_collisionData->m_collisionMask = 0;
 }
@@ -130,7 +131,7 @@ void Automota::DetermineNeighbors()
 	if(!(h + 1  >= height || h + 1  < 0 || w + -1 >= width || w + -1 < 0 || l + -1 >= length || l + -1 < 0 ))m_neighbors->push_back(cells[h + 1 ][w + -1][l + -1]);
 }
 
-void Automota::Update()
+void Automota::Update(float dt)
 {
 	int living = countNeighbors();
 	m_nextState = 0;

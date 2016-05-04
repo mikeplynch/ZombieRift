@@ -96,10 +96,12 @@ int main(void)
 		{
 			Sleep((DWORD)durDW);
 		}
-
 		double frame_end = glfwGetTime();
+		deltaTime = frame_end - frame_start;
 		frame_start = frame_end;
 		game->Draw();
+
+		std::cout << deltaTime << std::endl;
 
 		// Update
 		game->Update(deltaTime);
