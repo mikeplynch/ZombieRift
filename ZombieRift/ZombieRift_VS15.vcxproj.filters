@@ -54,9 +54,6 @@
     <ClCompile Include="A10Scene.cpp">
       <Filter>GameScenes</Filter>
     </ClCompile>
-    <ClCompile Include="KinectUtilities.cpp">
-      <Filter>Aesthetics</Filter>
-    </ClCompile>
     <ClCompile Include="KinectUtilites.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -72,14 +69,17 @@
     <ClCompile Include="Bullet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="InteractivePong.cpp">
-      <Filter>GameScenes</Filter>
-    </ClCompile>
     <ClCompile Include="AestheticsScene.cpp">
       <Filter>GameScenes</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GravityObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Gravity.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -125,9 +125,6 @@
     <ClInclude Include="Bullet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InteractivePong.h">
-      <Filter>GameScenes</Filter>
-    </ClInclude>
     <ClInclude Include="AestheticsScene.h">
       <Filter>GameScenes</Filter>
     </ClInclude>
@@ -136,6 +133,12 @@
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GravityObject.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Gravity.h">
+      <Filter>GameScenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

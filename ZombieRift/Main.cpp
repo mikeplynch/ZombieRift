@@ -72,6 +72,9 @@ int main(void)
 	// - SET THE ACTIVE SCENE HERE -
 	game->SetCurrentScene(new A10Scene);
 
+	// Pre-draw the gamescene to update positions and prevent collisions
+	game->Draw();
+
 	static double target_frame_rate = 60;
 	static double frame_start = 0;
 	do{
@@ -100,8 +103,6 @@ int main(void)
 		deltaTime = frame_end - frame_start;
 		frame_start = frame_end;
 		game->Draw();
-
-		std::cout << deltaTime << std::endl;
 
 		// Update
 		game->Update(deltaTime);

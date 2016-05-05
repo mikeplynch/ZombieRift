@@ -37,7 +37,7 @@ void AestheticsScene::Update(float dt)
 		{
 			//Map the head
 			const CameraSpacePoint& head = kinect->joints[JointType_Head].Position;
-			Camera::GetInstance()->SetPositionAndTarget(glm::vec3(head.X * 5, head.Y * 5, head.Z * 10), glm::vec3(0,0,0));
+			//Camera::GetInstance()->SetPositionAndTarget(glm::vec3(head.Z * 5, head.Y * 5, head.X * 10), glm::vec3(0,0,0));
 			//Right hand
 			const CameraSpacePoint& rightHand = kinect->joints[JointType_HandRight].Position;
 			//colony->worldPosition = glm::vec3(rightHand.X, rightHand.Y, -20.0f);
@@ -48,9 +48,9 @@ void AestheticsScene::Update(float dt)
 			if (rightHand.Z > highZ) highZ = rightHand.Z;
 			if (rightHand.Z < lowZ) lowZ = rightHand.X;
 
-			int xCoord = round(MapRange(rightHand.X, lowX, highX, 0, (float)colony->width - 1));
+			int xCoord = round(MapRange(highZ - rightHand.Z, lowZ, highZ, 0, (float)colony->width - 1));
 			int yCoord = round(MapRange(rightHand.Y, lowY, highY, 0, (float)colony->height - 1));
-			int zCoord = round(MapRange(rightHand.Z, lowZ, highZ, 0, (float)colony->length - 1));
+			int zCoord = round(MapRange(rightHand.X, lowX, highX, 0, (float)colony->length - 1));
 
 			colony->cells[xCoord][yCoord][zCoord]->m_state = colony->cells[xCoord][yCoord][zCoord]->m_state + 1;
 			colony->cells[xCoord][yCoord][zCoord]->m_nextState = colony->cells[xCoord][yCoord][zCoord]->m_state + 1;
@@ -72,9 +72,9 @@ void AestheticsScene::Update(float dt)
 			if (leftHand.Z > highZ) highZ = leftHand.Z;
 			if (leftHand.Z < lowZ) lowZ = leftHand.X;
 
-			xCoord = round(MapRange(leftHand.X, lowX, highX, 0, (float)colony->width - 1));
+			xCoord = round(MapRange(highZ - leftHand.Z, lowZ, highZ, 0, (float)colony->width - 1));
 			yCoord = round(MapRange(leftHand.Y, lowY, highY, 0, (float)colony->height - 1));
-			zCoord = round(MapRange(leftHand.Z, lowZ, highZ, 0, (float)colony->length - 1));
+			zCoord = round(MapRange(leftHand.X, lowX, highX, 0, (float)colony->length - 1));
 
 			colony->cells[xCoord][yCoord][zCoord]->m_state = 1;
 			colony->cells[xCoord][yCoord][zCoord]->m_nextState = 1;

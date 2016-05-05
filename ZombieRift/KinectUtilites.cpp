@@ -50,7 +50,7 @@ void KinectUtilities::GetKinectData()
 {	
 	IMultiSourceFrame* frame = NULL;
 	if (SUCCEEDED(m_reader->AcquireLatestFrame(&frame))) {
-		GetDepthData(frame, m_ColorData);
+		//GetDepthData(frame, m_ColorData);
 		//GetColorData(frame, m_DepthData);
 		GetBodyData(frame);
 	}

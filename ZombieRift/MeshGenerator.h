@@ -1,7 +1,6 @@
 #pragma once
 #include "LSystem.h"
 #include "Model.h"
-#include "glm\gtc\constants.hpp"
 
 #define PI 3.14159265359f
 
