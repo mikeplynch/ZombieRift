@@ -12,6 +12,11 @@ Player::Player()
 	m_worldCamera->ResetCamera();
 	m_worldCamera->SetPositionAndTarget(m_translations, m_translations + m_worldCamera->GetForward());
 	m_bullets = std::vector<Bullet*>();
+
+	m_reticle = new SphereObject(0.00005f);
+	m_reticle->m_collisionData->m_collisionMask = 0;
+	m_reticle->SetColor(glm::vec3(255/255.0f, 100/255.0f, 120/255.0f));
+
 	m_visible = false;
 }
 
@@ -42,9 +47,9 @@ void Player::ClearBullets()
 void Player::Update(float dt)
 {
 	HandleInput(dt);
-	//glm::vec3 behind = glm::vec3(m_translations.x, m_translations.y, m_translations.z + 5); TC - Don't remove this please
+	//glm::vec3 behind = glm::vec3(m_translations.x, m_translations.y, m_translations.z + 5); //TC - Don't remove this please
 	m_worldCamera->SetPositionAndTarget(m_translations, m_translations + m_worldCamera->GetForward());
-
+	m_reticle->m_translations = m_translations + (0.01f * m_worldCamera->GetForward());
 	CheckBullets();
 }
 
@@ -55,17 +60,18 @@ void Player::onCollision(GameObject* other)
 
 void Player::HandleInput(float dt)
 {
-	float speed = m_moveSpeed;
-	float degrees = 0.01f;
+	float speed = m_moveSpeed * dt;
+	float degrees = 0.1f;
 
 	if (glfwGetKey(GameManager::window, GLFW_KEY_LEFT_SHIFT) || glfwGetKey(GameManager::window, GLFW_KEY_RIGHT_SHIFT))
 	{
-		speed *= SPEED_MODIFIER * dt;
-		degrees *= SPEED_MODIFIER * dt;
+		speed *= SPEED_MODIFIER;
+		degrees *= SPEED_MODIFIER;
+
 	}
 
 	// For now, we don't want player movement.
-	/*if (glfwGetKey(GameManager::window, GLFW_KEY_A))
+	if (glfwGetKey(GameManager::window, GLFW_KEY_A))
 	{
 		MoveSideways(-speed);
 	}
@@ -80,7 +86,7 @@ void Player::HandleInput(float dt)
 	if (glfwGetKey(GameManager::window, GLFW_KEY_S))
 	{
 		MoveForward(-speed);
-	}*/
+	}
 	
 
 	/* Looking around */
@@ -111,8 +117,10 @@ void Player::Shoot()
 {
 	glm::vec3 direction = m_worldCamera->GetForward();
 	float farDistance = m_worldCamera->GetNearFarPlanes().y;
+	Bullet* bullet = new Bullet(direction, farDistance / 4);
 
-	m_bullets.push_back(new Bullet(direction, farDistance / 4));
+	GameManager::GetInstance()->m_currentScene->AddObject(bullet);
+	m_bullets.push_back(bullet);	
 }
 
 void Player::CheckBullets()

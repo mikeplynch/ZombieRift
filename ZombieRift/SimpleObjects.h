@@ -43,6 +43,23 @@ public:
 	}
 };
 
+class SphereObject : public GameObject {
+public:
+	SphereObject() : SphereObject(1.0f) {};
+	SphereObject(float radius)
+	{
+		m_name = "Sphere";
+		m_model = new Model(m_name);
+		m_model->GenSphere(radius, 6);
+		EnableCollision();
+	}
+
+	void Update(float dt)
+	{
+
+	}
+};
+
 class PlayerBox : public BoxObject {
 public:
 	XboxControls* Controller = new XboxControls(1);

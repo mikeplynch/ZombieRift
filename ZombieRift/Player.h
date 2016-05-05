@@ -2,12 +2,14 @@
 
 #include "GameObject.h"
 #include "Bullet.h"
+#include "SimpleObjects.h"
 
 class Player : public GameObject
 {
 private:
-	float m_moveSpeed = 0.01f;
+	float m_moveSpeed = 1.0f;
 
+	SphereObject* m_reticle;
 	std::vector<Bullet*> m_bullets;
 
 	virtual void onCollision(GameObject* other) override;
@@ -32,5 +34,6 @@ public:
 
 	virtual void Update(float dt) override;
 
+	SphereObject* GetReticle() { return m_reticle; }
 	std::vector<Bullet*> GetBullets() { return m_bullets; }
 };
