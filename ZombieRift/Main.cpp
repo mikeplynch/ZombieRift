@@ -6,6 +6,8 @@ modified by labigm@rit.edu
 #include "Main.h"
 #include "LSystem.h"
 
+#define FULLSCREEN false
+
 GLFWwindow* window;
 
 int main(void)
@@ -27,13 +29,19 @@ int main(void)
 	int height = 800;
 
 	// Open a window and create its OpenGL context
-	window = glfwCreateWindow(width, height, "MyMesh class", NULL, NULL);
+	if(FULLSCREEN)
+		window = glfwCreateWindow(width, height, "TAC-ENGINE", glfwGetPrimaryMonitor(), NULL);
+	else
+		window = glfwCreateWindow(width, height, "TAC-ENGINE", NULL, NULL);
 	if (window == NULL){
 		fprintf(stderr, "Failed to open GLFW window with OpenGL 3.3.  Attempting 3.1\n");
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
-		window = glfwCreateWindow(width, height, "MyMesh class", NULL, NULL);
+		if (FULLSCREEN)
+			window = glfwCreateWindow(width, height, "TAC-ENGINE", glfwGetPrimaryMonitor(), NULL);
+		else
+			window = glfwCreateWindow(width, height, "TAC-ENGINE", NULL, NULL);
 		if (window == NULL)
 		{
 			fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
@@ -68,6 +76,7 @@ int main(void)
 
 	Camera* camera = Camera::GetInstance();
 	camera->SetPosition(glm::vec3(0.0f, 0.0f, 15.0f));
+
 
 	// - SET THE ACTIVE SCENE HERE -
 	game->SetCurrentScene(new A10Scene);
