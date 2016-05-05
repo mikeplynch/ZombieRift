@@ -27,7 +27,7 @@ int main(void)
 	int height = 800;
 
 	// Open a window and create its OpenGL context
-	window = glfwCreateWindow(width, height, "MyMesh class", NULL, NULL);
+	window = glfwCreateWindow(width, height, "TAC-ENGINE", glfwGetPrimaryMonitor(), NULL);
 	if (window == NULL){
 		fprintf(stderr, "Failed to open GLFW window with OpenGL 3.3.  Attempting 3.1\n");
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -68,6 +68,7 @@ int main(void)
 
 	Camera* camera = Camera::GetInstance();
 	camera->SetPosition(glm::vec3(0.0f, 0.0f, 15.0f));
+
 
 	// - SET THE ACTIVE SCENE HERE -
 	game->SetCurrentScene(new A10Scene);
