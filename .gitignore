@@ -238,3 +238,5 @@ _Pvt_Extensions
 # ignore Z_DELETE
 Z_DELETE/
 Z_DELETE
+
+*.exe
