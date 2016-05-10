@@ -81,6 +81,9 @@
     <ClCompile Include="Gravity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Zombie.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h">
@@ -141,6 +144,9 @@
       <Filter>GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="Octree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Zombie.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

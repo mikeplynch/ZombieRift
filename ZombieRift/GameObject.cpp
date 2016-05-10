@@ -90,3 +90,10 @@ void GameObject::CreateModel(std::string name)
 
 	m_model = new Model(name);
 }
+
+void GameObject::Delete()
+{
+	isDelete = true;
+	m_visible = false;
+	m_collisionData->m_collisionMask = 0;
+}

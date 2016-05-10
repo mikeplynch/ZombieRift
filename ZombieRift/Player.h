@@ -7,6 +7,7 @@
 class Player : public GameObject
 {
 private:
+	int m_score = 0;
 	float m_moveSpeed = 1.0f;
 
 	SphereObject* m_reticle;
@@ -33,7 +34,10 @@ public:
 	~Player();
 
 	virtual void Update(float dt) override;
+	
+	void AddPoints(int points);
 
 	SphereObject* GetReticle() { return m_reticle; }
 	std::vector<Bullet*> GetBullets() { return m_bullets; }
+	int GetScore() { return m_score; }
 };

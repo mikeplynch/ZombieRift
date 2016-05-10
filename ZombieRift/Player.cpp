@@ -52,6 +52,8 @@ void Player::Update(float dt)
 	//m_worldCamera->SetPosition(m_translations);
 	m_reticle->m_translations = m_translations + (0.01f * m_worldCamera->GetForward());
 	CheckBullets();
+
+	std::cout << m_score << std::endl;
 }
 
 void Player::onCollision(GameObject* other)
@@ -118,7 +120,7 @@ void Player::Shoot()
 {
 	glm::vec3 direction = m_worldCamera->GetForward();
 	float farDistance = m_worldCamera->GetNearFarPlanes().y;
-	Bullet* bullet = new Bullet(direction, farDistance / 4);
+	Bullet* bullet = new Bullet(this, direction, farDistance / 10);
 
 	GameManager::GetInstance()->m_currentScene->AddObject(bullet);
 	m_bullets.push_back(bullet);	
@@ -128,14 +130,16 @@ void Player::CheckBullets()
 {
 	for (unsigned int i = 0; i < m_bullets.size(); i++)
 	{
-		Bullet* bullet = m_bullets.at(i);
-
-		if (!bullet->IsAlive())
+		if (m_bullets.at(i) == nullptr)
 		{
 			m_bullets.erase(m_bullets.begin() + i);
-			bullet->Delete();
 		}
 	}
+}
+
+void Player::AddPoints(int points)
+{
+	m_score += points;
 }
 
 void Player::MoveSideways(float dist)

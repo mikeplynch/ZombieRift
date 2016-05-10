@@ -129,6 +129,7 @@ copy "$(SolutionDir)include\GL\bin\*.*" "$(SolutionDir)_Binary\"</Command>
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="XboxControls.cpp" />
+    <ClCompile Include="Zombie.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="A10Scene.h" />
@@ -151,6 +152,7 @@ copy "$(SolutionDir)include\GL\bin\*.*" "$(SolutionDir)_Binary\"</Command>
     <ClInclude Include="Model.h" />
     <ClInclude Include="SimpleObjects.h" />
     <ClInclude Include="XboxControls.h" />
+    <ClInclude Include="Zombie.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\BTO.rc" />

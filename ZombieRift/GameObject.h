@@ -67,7 +67,7 @@ public:
 
 	void EnableCollision();
 
-	void Delete() { isDelete = true; }
+	virtual void Delete();
 	bool IsDelete() { return isDelete; }
 
 	~GameObject();
