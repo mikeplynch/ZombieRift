@@ -6,9 +6,47 @@ modified by labigm@rit.edu
 #include "Main.h"
 #include "LSystem.h"
 
-#define FULLSCREEN false
+#define FULLSCREEN true
 
 GLFWwindow* window;
+int switchState = 49;
+bool switchStateChanged = false;
+
+void readCOM()
+{
+	while (true)
+	{
+		FILE* comport;
+		if (fopen_s(&comport, "COM6", "r") == 0)
+		{
+
+			int temp = fgetc(comport);
+			fclose(comport);
+			std::cout << "Com value: " << (char)temp << std::endl;
+			if (temp != switchState && temp != '\n')
+			{
+				switchState = temp;
+				switchStateChanged = true;
+				std::cout << "State Change occured" << std::endl;
+				switch (switchState)
+				{
+				case '0':
+					GameManager::GetInstance()->SetCurrentScene(new A10Scene);
+					break;
+				case '1':
+					GameManager::GetInstance()->SetCurrentScene(new Gravity);
+					break;
+				case '2':
+					GameManager::GetInstance()->SetCurrentScene(new AestheticsScene);
+					break;
+				default:
+					GameManager::GetInstance()->SetCurrentScene(new Gravity);
+					break;
+				}
+			}
+		}
+	}
+}
 
 int main(void)
 {
@@ -79,14 +117,33 @@ int main(void)
 
 
 	// - SET THE ACTIVE SCENE HERE -
-	game->SetCurrentScene(new A10Scene);
+	game->SetCurrentScene(new Gravity);
+	
 
 	// Pre-draw the gamescene to update positions and prevent collisions
 	game->Draw();
-
+	
 	static double target_frame_rate = 60;
 	static double frame_start = 0;
 	do{
+		if (switchStateChanged)
+		{
+			switchStateChanged = false;
+			switch (switchState)
+			{
+			case '0':
+				GameManager::GetInstance()->SetCurrentScene(new A10Scene);
+				break;
+			case '1':
+				GameManager::GetInstance()->SetCurrentScene(new Gravity);
+				break;
+			case '2':
+				GameManager::GetInstance()->SetCurrentScene(new AestheticsScene);
+				break;
+			default:
+				break;
+			}
+		}
 
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -124,7 +181,6 @@ int main(void)
 	} // Check if the ESC key was pressed or the window was closed
 	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 	glfwWindowShouldClose(window) == 0);
-
 	// Close OpenGL window and terminate GLFW
 	glfwTerminate();
 

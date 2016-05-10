@@ -5,6 +5,7 @@ This project was generated in 2013
 #define _MAIN_H
 
 #include <iostream>
+#include <thread>
 
 #include "Camera.h"
 #include "SimpleObjects.h"

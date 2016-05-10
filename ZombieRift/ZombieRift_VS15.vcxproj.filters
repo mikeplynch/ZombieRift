@@ -81,6 +81,9 @@
     <ClCompile Include="Gravity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Bouncing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h">
@@ -139,6 +142,9 @@
     </ClInclude>
     <ClInclude Include="Gravity.h">
       <Filter>GameScenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Bouncing.h">
+      <Filter>GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

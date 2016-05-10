@@ -30,12 +30,19 @@ void Gravity::Init()
 		tries++;
 		fprintf(stderr, "Attempting to initializse the kinect...\n");
 	}
-	kinectIndicator = new BoxObject(5, 5, 5);
+	kinectIndicator = new BoxObject(18, 18, 18);
 	kinectIndicator->m_name = "indicator";
 	kinectIndicator->EnableCollision();
 	AddObject(kinectIndicator);
 	kinectIndicator->m_visible = false;
 	kinectIndicator->m_collisionData->m_collisionMask = 0;
+
+	kinectIndicatorLeft = new BoxObject(10, 10, 10);
+	kinectIndicatorLeft->m_name = "indicator";
+	kinectIndicatorLeft->EnableCollision();
+	AddObject(kinectIndicatorLeft);
+	kinectIndicatorLeft->m_visible = false;
+	kinectIndicatorLeft->m_collisionData->m_collisionMask = 0;
 
 	glClearColor(0, 0, 0, 0);
 	Camera::GetInstance()->SetPositionAndTarget(glm::vec3(0, 0, 100.0f), glm::vec3(0, 0, 0));
@@ -68,11 +75,23 @@ void Gravity::Init()
 		{
 			if (x == 0 && y == 0)
 				continue;
-			GravityObject* obj = new GravityObject(sunMass / 4, sunMass);
+			if (x == 1 && y == 0)
+				continue;
+			GravityObject* obj = new GravityObject(sunMass / 12, sunMass);
 			obj->m_name = "BlackHole";
 			obj->SetColor(glm::vec3(0, 1, 1));
 			obj->m_position = glm::vec3(-40.5 * x, 20.5 * y, 0);
 			obj->m_collisionData->m_collisionMask = 1;
+			int i = 0;
+			if (x == -1 && y == 1) i = 7;
+			if (x == -1 && y == 0) i = 6;
+			if (x == -1 && y == -1) i = 5;
+			if (x == 0 && y == -1) i = 4;
+			if (x == 1 && y == -1) i = 3;
+			if (x == 1 && y == 0) i = 2;
+			if (x == 1 && y == 1) i = 1;
+			if (x == 0 && y == 1) i = 8;
+			obj->m_data->insert(std::make_pair("index", i));
 			AddAstralBody(obj);
 		}
 	}
@@ -100,7 +119,26 @@ void Gravity::Update(float dt)
 	}
 	if (glfwGetKey(GameManager::window, GLFW_KEY_1))
 	{
+		GameManager::GetInstance()->SetCurrentScene(new AestheticsScene);
+	}
+	if (glfwGetKey(GameManager::window, GLFW_KEY_R))
+	{
 		GameManager::GetInstance()->SetCurrentScene(new Gravity);
+		for (int i = 0; i < GameManager::GetInstance()->m_sceneStack.size() - 1; i++)
+		{
+			GameManager::GetInstance()->m_sceneStack.erase(GameManager::GetInstance()->m_sceneStack.begin() + i);
+			i--;
+		}
+	}
+	if (glfwGetKey(GameManager::window, GLFW_KEY_W))
+	{
+		xCalib += .5f;
+		
+	}
+	if (glfwGetKey(GameManager::window, GLFW_KEY_D))
+	{
+		xCalib -= .5f;
+		
 	}
 
 	for (int i = 0; i < blackHoles.size(); i++)
@@ -115,18 +153,30 @@ void Gravity::Update(float dt)
 		{
 			kinectIndicator->m_visible = false;
 			kinectIndicator->m_collisionData->m_collisionMask = 0;
+
+			kinectIndicatorLeft->m_visible = false;
+			kinectIndicatorLeft->m_collisionData->m_collisionMask = 0;
 		}
 		else {
-			kinectIndicator->m_visible = true;
+			//kinectIndicator->m_visible = true;
 			kinectIndicator->m_collisionData->m_collisionMask = 1;
+
+			//kinectIndicatorLeft->m_visible = true;
+			//kinectIndicatorLeft->m_collisionData->m_collisionMask = 1;
 			if (!REARPROJECTED)
 			{
 				const CameraSpacePoint& rightHand = kinect->joints[JointType_HandRight].Position;
 				kinectIndicator->m_translations = glm::vec3(rightHand.X * 50, rightHand.Y * 40, -1);
+
+				const CameraSpacePoint& leftHand = kinect->joints[JointType_HandLeft].Position;
+				kinectIndicatorLeft->m_translations = glm::vec3(leftHand.X * 50, leftHand.Y * 40, -1);
 			}
 			else {
 				const CameraSpacePoint& rightHand = kinect->joints[JointType_HandRight].Position;
-				kinectIndicator->m_translations = glm::vec3((-rightHand.Z + 2) * 50, rightHand.Y * 40, -1);
+				kinectIndicator->m_translations = glm::vec3((-rightHand.Z + 2.01f) * xCalib, (rightHand.Y - .25f) * 75, -1);
+
+				//const CameraSpacePoint& leftHand = kinect->joints[JointType_HandLeft].Position;
+				//kinectIndicatorLeft->m_translations = glm::vec3((-leftHand.Z + 2.01f) * xCalib, (leftHand.Y - .25f) * 75, -1);
 			}
 		}
 	} 

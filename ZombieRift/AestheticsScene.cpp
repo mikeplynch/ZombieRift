@@ -3,9 +3,9 @@
 void AestheticsScene::Init()
 {
 	Camera* camera = Camera::GetInstance();
-
+	camera->SetPositionAndTarget(glm::vec3(0,0,15), glm::vec3(0,0,0));
 	glClearColor(0, 0, 0, 0);
-	colony = new Colony(30, 30, 30);
+	colony = new Colony(5, 50, 50);
 	//colony->RandomizeState(50);
 	colony->AddToScene(this);
 	int tries = 0;
@@ -48,6 +48,9 @@ void AestheticsScene::Update(float dt)
 			if (rightHand.Z > highZ) highZ = rightHand.Z;
 			if (rightHand.Z < lowZ) lowZ = rightHand.X;
 
+			//Try sending vibration data
+			VibeData(MapRange(highZ - rightHand.Z, lowZ, highZ, -1, 1), MapRange(rightHand.Y, lowY, highY, -1, 1));
+
 			int xCoord = round(MapRange(highZ - rightHand.Z, lowZ, highZ, 0, (float)colony->width - 1));
 			int yCoord = round(MapRange(rightHand.Y, lowY, highY, 0, (float)colony->height - 1));
 			int zCoord = round(MapRange(rightHand.X, lowX, highX, 0, (float)colony->length - 1));
@@ -71,6 +74,9 @@ void AestheticsScene::Update(float dt)
 			if (leftHand.Y < lowY) lowY = leftHand.Y;
 			if (leftHand.Z > highZ) highZ = leftHand.Z;
 			if (leftHand.Z < lowZ) lowZ = leftHand.X;
+
+			//Try sending vibration data
+			VibeData(MapRange(highZ - leftHand.Z, lowZ, highZ, -1, 1), MapRange(leftHand.Y, lowY, highY, -1, 1));
 
 			xCoord = round(MapRange(highZ - leftHand.Z, lowZ, highZ, 0, (float)colony->width - 1));
 			yCoord = round(MapRange(leftHand.Y, lowY, highY, 0, (float)colony->height - 1));
@@ -179,4 +185,34 @@ void AestheticsScene::HandleInput(Camera* camera) {
 	{
 		camera->MoveVertical(-0.5f);
 	}
+	if (glfwGetKey(GameManager::window, GLFW_KEY_2))
+	{
+		GameManager::GetInstance()->SetCurrentScene(GameManager::GetInstance()->m_sceneStack.at(0));
+	}
+}
+
+void AestheticsScene::VibeData(float x, float y)
+{
+	int xInt = round(x);
+	int yInt = round(y);
+	int i = 0;
+	if (xInt == -1 && yInt == 1) i = 1;
+	if (xInt == -1 && yInt == 0) i = 2;
+	if (xInt == -1 && yInt == -1) i = 3;
+	if (xInt == 0 && yInt == -1) i = 4;
+	if (xInt == 1 && yInt == -1) i = 5;
+	if (xInt == 1 && yInt == 0) i = 6;
+	if (xInt == 1 && yInt == 1) i = 7;
+	if (xInt == 0 && yInt == 1) i = 8;
+	if (i == 0) return;
+	FILE* comport;
+	if (fopen_s(&comport, "COM6", "wt") == 0)
+	{
+		char putChar = '0' + i;
+		fputc(putChar, comport);
+		fputc('\n', comport);
+		fflush(comport);
+		fclose(comport);
+	}
+
 }

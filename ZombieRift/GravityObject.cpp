@@ -67,7 +67,17 @@ void GravityObject::onCollision(GameObject * other)
 	if (other->m_name == "indicator")
 	{
 		SetColor(m_model->m_color * .999f);
-		m_mass += 1000;
+		m_mass += 5000;
+
+		FILE* comport;
+		if (fopen_s(&comport, "COM6", "wt") == 0)
+		{
+			char putChar = '0' + m_data->at("index");
+			fputc(putChar, comport);
+			fputc('\n', comport);
+			fflush(comport);
+			fclose(comport);
+		}
 	}
 }
 
