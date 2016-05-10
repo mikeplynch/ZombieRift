@@ -16,9 +16,10 @@ private:
 
 protected:
 	GameObject();
-	~GameObject();
 	Model* m_model;
 	Camera* m_worldCamera;
+
+	bool isDelete = false;
 public:
 	//TODO: add variables for world position, rotation, and scale and implement
 	//them automatically being utilized in draw.
@@ -65,6 +66,11 @@ public:
 	virtual void DrawDebug();
 
 	void EnableCollision();
+
+	void Delete() { isDelete = true; }
+	bool IsDelete() { return isDelete; }
+
+	~GameObject();
 	
 protected:
 	void CreateModel(std::string name);

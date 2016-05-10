@@ -27,6 +27,7 @@ private:
 	GameManager();
 	GameManager(GameManager const* other) {};
 	GameManager& operator=(GameManager const& other) {};
+	std::vector<int> deleteQueue;
 public:
 	static GameManager* GetInstance();
 	static void ReleaseInstance();

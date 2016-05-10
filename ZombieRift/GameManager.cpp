@@ -66,7 +66,17 @@ void GameManager::Update(float deltaTime)
 			m_isDebug = true;
 		}
 	}
-	
+
+	//Delete anything in the delete Queue
+	for (int i = 0; i < deleteQueue.size(); i++)
+	{
+		int index = deleteQueue[i] - i;
+		GameObject* obj = m_currentScene->m_objects[index];
+		m_currentScene->m_objects.erase(m_currentScene->m_objects.begin() + index);
+		delete obj;
+	}
+
+	deleteQueue.clear();
 
 	for (int i = 0; i < m_currentScene->m_objects.size(); i++)
 	{
@@ -89,6 +99,12 @@ void GameManager::Draw()
 {
 	for (int i = 0; i < m_currentScene->m_objects.size(); i++)
 	{
+		if (m_currentScene->m_objects[i]->IsDelete())
+		{
+			deleteQueue.push_back(i);
+			continue;
+		} 
+		
 		m_currentScene->m_objects[i]->Draw();
 	}
 }
