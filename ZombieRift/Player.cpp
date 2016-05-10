@@ -48,7 +48,8 @@ void Player::Update(float dt)
 {
 	HandleInput(dt);
 	//glm::vec3 behind = glm::vec3(m_translations.x, m_translations.y, m_translations.z + 5); //TC - Don't remove this please
-	m_worldCamera->SetPositionAndTarget(m_translations, m_translations + m_worldCamera->GetForward());
+	//m_worldCamera->SetPositionAndTarget(m_translations, m_translations + m_worldCamera->GetForward());
+	//m_worldCamera->SetPosition(m_translations);
 	m_reticle->m_translations = m_translations + (0.01f * m_worldCamera->GetForward());
 	CheckBullets();
 }
@@ -71,7 +72,7 @@ void Player::HandleInput(float dt)
 	}
 
 	// For now, we don't want player movement.
-	if (glfwGetKey(GameManager::window, GLFW_KEY_A))
+	/*if (glfwGetKey(GameManager::window, GLFW_KEY_A))
 	{
 		MoveSideways(-speed);
 	}
@@ -86,7 +87,7 @@ void Player::HandleInput(float dt)
 	if (glfwGetKey(GameManager::window, GLFW_KEY_S))
 	{
 		MoveForward(-speed);
-	}
+	}*/
 	
 
 	/* Looking around */
@@ -132,8 +133,7 @@ void Player::CheckBullets()
 		if (!bullet->IsAlive())
 		{
 			m_bullets.erase(m_bullets.begin() + i);
-			// This crashes
-			/*delete bullet;*/
+			bullet->Delete();
 		}
 	}
 }

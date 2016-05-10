@@ -13,7 +13,7 @@ Date: 2015/10
 //Camera Class
 class Camera
 {
-	bool m_bFPS = true; //If set to false will behave like a flight simulator camera
+	bool m_bFPS = false; //If set to false will behave like a flight simulator camera
 
 	float m_fFOV = 45.0f;
 
@@ -248,8 +248,8 @@ public:
 	ARGUMENTS:
 	OUTPUT: ---
 	*/
-	void SetFPS(bool a_bFPS = true);
-
+	void SetFPS(bool a_bFPS = false);
+	
 	/*
 
 	USAGE: Resets the value of the camera
