@@ -74,13 +74,14 @@ void MainGameScene::Init()
 
 	AddObject(box);
 	AddObject(player);
+	AddObject(player->GetReticle());
 }
 
 void MainGameScene::Update(float dt)
 {
-	/* This is probably very bad and not correct. */
-	for (unsigned int i = 0; i < player->GetBullets().size(); i++)
-	{
-		AddObject(player->GetBullets().at(i));
-	}
+	///* This is probably very bad and not correct. */
+	//for (unsigned int i = 0; i < player->GetBullets().size(); i++)
+	//{
+	//	AddObject(player->GetBullets().at(i));
+	//}
 }
