@@ -9,6 +9,16 @@ modified by labigm@rit.edu
 #define FULLSCREEN false
 
 GLFWwindow* window;
+int frameRate = 0;
+
+void printFrameRate() 
+{
+	while (true)
+	{
+		std::cout << frameRate << std::endl;
+		Sleep(100);
+	}
+}
 
 int main(void)
 {
@@ -79,11 +89,12 @@ int main(void)
 
 
 	// - SET THE ACTIVE SCENE HERE -
-	game->SetCurrentScene(new MainGameScene);
+	game->SetCurrentScene(new A10Scene);
 
 	// Pre-draw the gamescene to update positions and prevent collisions
 	game->Draw();
 
+	std::thread printThread(printFrameRate);
 	static double target_frame_rate = 60;
 	static double frame_start = 0;
 	do{
@@ -110,6 +121,7 @@ int main(void)
 		}
 		double frame_end = glfwGetTime();
 		deltaTime = frame_end - frame_start;
+		frameRate = round(1 / deltaTime);
 		frame_start = frame_end;
 		game->Draw();
 
@@ -124,6 +136,8 @@ int main(void)
 	} // Check if the ESC key was pressed or the window was closed
 	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 	glfwWindowShouldClose(window) == 0);
+
+	printThread.detach();
 
 	// Close OpenGL window and terminate GLFW
 	glfwTerminate();

@@ -13,11 +13,12 @@ class Model;
 class GameObject {
 	friend class CollisionData;
 private:
-
+	bool m_transformationsModified = false;
 protected:
 	GameObject();
 	Model* m_model;
 	Camera* m_worldCamera;
+	glm::mat4 m_oldTransformations;
 
 	bool isDelete = false;
 
@@ -77,6 +78,8 @@ public:
 
 	void Delete();
 	bool IsDelete() { return isDelete; }
+
+	bool DidModifyTransformations() { return m_transformationsModified; }
 
 	~GameObject();
 	
