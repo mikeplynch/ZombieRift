@@ -45,9 +45,8 @@ void Bullet::onCollision(GameObject* other)
 	}
 }
 
-void Bullet::Delete()
+void Bullet::CleanUp()
 {
-	GameObject::Delete();
 	m_speed = 0.0f;
 	m_isAlive = false;
 }

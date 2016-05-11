@@ -18,6 +18,8 @@ private:
 
 	Bullet();
 
+protected:
+	virtual void CleanUp() override;
 public:
 	~Bullet();
 
@@ -26,6 +28,4 @@ public:
 	virtual void Update(float dt) override;
 
 	bool IsAlive() { return m_isAlive; }
-
-	virtual void Delete() override;
 };

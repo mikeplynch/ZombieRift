@@ -20,6 +20,14 @@ protected:
 	Camera* m_worldCamera;
 
 	bool isDelete = false;
+
+	///<summary>
+	/// Cleanup is called whenever Delete is called, so this function is to be overriden if there is any
+	/// pre-delete work that you want to do before the object is deleted, but also to happen when delete is called,
+	/// rather than waiting until it is removed from the delete queue.
+	///</summary>
+	virtual void CleanUp() { };
+
 public:
 	//TODO: add variables for world position, rotation, and scale and implement
 	//them automatically being utilized in draw.
@@ -67,7 +75,7 @@ public:
 
 	void EnableCollision();
 
-	virtual void Delete();
+	void Delete();
 	bool IsDelete() { return isDelete; }
 
 	~GameObject();

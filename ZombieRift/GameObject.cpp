@@ -93,6 +93,7 @@ void GameObject::CreateModel(std::string name)
 
 void GameObject::Delete()
 {
+	CleanUp();
 	isDelete = true;
 	m_visible = false;
 	m_collisionData->m_collisionMask = 0;

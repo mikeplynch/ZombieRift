@@ -44,9 +44,8 @@ void Zombie::onCollision(GameObject* other)
 	}
 }
 
-void Zombie::Delete()
+void Zombie::CleanUp()
 {
-	GameObject::Delete();
 	m_points = 0;
 	m_moveSpeed = 0.0f;
 }

@@ -14,6 +14,8 @@ private:
 	virtual void onCollision(GameObject* other) override;
 
 	Zombie();
+protected:
+	virtual void CleanUp() override;
 public:
 
 	~Zombie();
@@ -23,6 +25,4 @@ public:
 	virtual void Update(float dt) override;
 
 	int GetPoints() { return m_points; }
-	
-	virtual void Delete() override;
 };
