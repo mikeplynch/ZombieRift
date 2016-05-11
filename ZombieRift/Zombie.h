@@ -24,5 +24,5 @@ public:
 
 	virtual void Update(float dt) override;
 
-	int GetPoints() { return m_points; }
+	const int GetPoints() { return m_points; }
 };

@@ -31,7 +31,7 @@ void Bullet::onCollision(GameObject* other)
 		Player* player = static_cast<Player*>(m_shooter);
 		Zombie* zombie = static_cast<Zombie*>(other);
 
-		int points = zombie->GetPoints();
+		const int points = zombie->GetPoints();
 		player->AddPoints(points);
 
 		Delete();
@@ -39,9 +39,7 @@ void Bullet::onCollision(GameObject* other)
 
 		// Spawn more zombies
 		MainGameScene* scene = static_cast<MainGameScene*>(GameManager::GetInstance()->m_currentScene);
-
-		// There is a bug with this right now. I think I need to queue it to happen next frame. - TC
-		//scene->AddZombies(player->GetScore(), points);
+		scene->AddZombies(player->GetScore(), points);
 	}
 }
 

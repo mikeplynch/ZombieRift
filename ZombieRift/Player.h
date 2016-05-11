@@ -39,5 +39,5 @@ public:
 
 	SphereObject* GetReticle() { return m_reticle; }
 	std::vector<Bullet*> GetBullets() { return m_bullets; }
-	int GetScore() { return m_score; }
+	const int GetScore() { return m_score; }
 };
