@@ -258,6 +258,8 @@ void Octree::CheckCollisions()
 				if (i == k)
 					continue;
 				GameObject* second = m_gameObjects[k];
+				if (first->m_collisionData->m_collisionMask == 0 || second->m_collisionData->m_collisionMask == 0)
+					continue;
 				if (first->m_collisionData->m_collisionMask & second->m_collisionData->m_collisionMask == 0)
 					continue;
 				if (CollisionData::AreColliding(CollisionData::CollisionDetectionType::AxisRealignedBoundingBox, first, second))
