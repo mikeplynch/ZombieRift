@@ -7,6 +7,7 @@
 class A10Scene : public Scene {
 	BoxObject* box;
 	PlayerBox* player;
+	bool toggle = false;
 	virtual void Init();
 	virtual void Update(float dt);
 

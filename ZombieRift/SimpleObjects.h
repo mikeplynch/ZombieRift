@@ -106,6 +106,14 @@ public:
 			{
 				m_translations += glm::vec3(0.0f, -velocity, 0.0f);
 			}
+			if (glfwGetKey(GameManager::window, GLFW_KEY_N))
+			{
+				m_translations += glm::vec3(0.0f, 0.0f, -velocity);
+			}
+			if (glfwGetKey(GameManager::window, GLFW_KEY_M))
+			{
+				m_translations += glm::vec3(0.0f, 0.0f, velocity);
+			}
 			if (glfwGetKey(GameManager::window, GLFW_KEY_U))
 			{
 				m_rotations *= glm::rotate(1.0f, glm::vec3(0.0f, 0.0f, 1.0f));

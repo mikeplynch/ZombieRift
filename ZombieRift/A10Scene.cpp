@@ -7,12 +7,18 @@ void A10Scene::Init()
 	box->m_translations = glm::vec3(2.0f, 1.0f, 0.0f);
 	box->m_name = "box";
 
+	BoxObject* box2 = new BoxObject(1.0f, 1.0f, 2.0f);
+	box2->SetColor(glm::vec3(0.0f, 1.0f, 0.0f));
+	box2->m_translations = glm::vec3(-1.0f, 1.0f, -1.0f);
+	box2->m_name = "box";
+
 	player = new PlayerBox();
 	player->m_name = "player";
 	player->m_translations = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	AddObject(box);
 	AddObject(player);
+	AddObject(box2);
 }
 
 void A10Scene::Update(float dt)
@@ -60,6 +66,30 @@ void A10Scene::HandleInput(Camera* camera) {
 	if (glfwGetKey(window, GLFW_KEY_E))
 	{
 		camera->MoveVertical(-0.5f);
+	}
+	if (glfwGetKey(window, GLFW_KEY_EQUAL))
+	{
+		if (toggle == false)
+		{
+			GameManager::GetInstance()->m_subdivisions++;
+		}
+		toggle = true;
+	}
+	else if (glfwGetKey(window, GLFW_KEY_MINUS))
+	{
+		if (toggle == false)
+		{
+			GameManager::GetInstance()->m_subdivisions--;
+			if (GameManager::GetInstance()->m_subdivisions < 0)
+			{
+				GameManager::GetInstance()->m_subdivisions = 0;
+			}
+		}
+		toggle = true;
+	}
+	else 
+	{
+		toggle = false;
 	}
 }
 

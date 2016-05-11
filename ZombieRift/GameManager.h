@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Octree.h"
 
 class Scene {
 public:
@@ -19,6 +20,11 @@ public:
 	std::vector<GameObject*> GetAllObjectsByName(std::string name);
 };
 
+enum COLLISION_TYPE {
+	BRUTE_FORCE,
+	OCTREE
+};
+
 class GameManager {
 private:
 	bool m_isDebug = false;
@@ -27,12 +33,16 @@ private:
 	GameManager();
 	GameManager(GameManager const* other) {};
 	GameManager& operator=(GameManager const& other) {};
+	void BruteForceCollision();
 	std::vector<int> deleteQueue;
+	Octree* m_octree;
 public:
 	static GameManager* GetInstance();
 	static void ReleaseInstance();
 
 	static GLFWwindow* window;
+	int m_subdivisions = 1;
+	int m_collisionType = OCTREE;
 
 	std::vector<Scene*> m_sceneStack;
 	Scene* m_currentScene;

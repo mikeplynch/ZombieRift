@@ -7,6 +7,30 @@ GameManager::GameManager()
 {
 }
 
+void GameManager::BruteForceCollision()
+{
+	for (int i = 0; i < m_currentScene->m_objects.size(); i++)
+	{
+		GameObject* first = m_currentScene->m_objects[i];
+		if (first->m_collisionData->m_collisionMask == 0)
+			continue;
+		for (int p = 0; p < m_currentScene->m_objects.size(); p++)
+		{
+			if (i == p)
+				continue;
+			GameObject* second = m_currentScene->m_objects[p];
+			if (first->m_collisionData->m_collisionMask & second->m_collisionData->m_collisionMask == 0)
+				continue;
+			if (CollisionData::AreColliding(CollisionData::CollisionDetectionType::AxisRealignedBoundingBox, first, second))
+			{
+				//TODO: This is slow as they are both going to check for collision against each other
+				//there should be logic to prevent this v
+				first->onCollision(second);
+			}
+		}
+	}
+}
+
 GameManager * GameManager::GetInstance()
 {
 	if (instance != nullptr)
@@ -46,7 +70,7 @@ void GameManager::PopCurrentScene()
 {
 	Scene* oldScene = m_sceneStack.back();
 	m_sceneStack.pop_back();
-	m_currentScene = m_sceneStack.back();
+	SetCurrentScene(m_sceneStack.back());
 	delete oldScene;
 }
 
@@ -84,13 +108,15 @@ void GameManager::Update(float deltaTime)
 		go->Update(deltaTime);
 
 		// For now, check to see if collision is enabled. If so, update bounding boxes.
-		if (go->m_collisionData != nullptr)
+		if (go->m_collisionData != nullptr && go->m_collisionData->m_collisionMask != 0)
 		{
 			go->m_collisionData->UpdateBoundingBoxes();
 		}
 	}
 
 	m_currentScene->Update(deltaTime);
+	delete m_octree;
+	m_octree = new Octree(m_currentScene->m_objects, m_subdivisions);
 
 	DetectCollisions();
 }
@@ -120,30 +146,23 @@ void GameManager::DrawDebug()
 	{
 		m_currentScene->m_objects[i]->DrawDebug();
 	}
+	if(m_octree != nullptr)
+		m_octree->Render();
 }
 
 void GameManager::DetectCollisions()
 {
-	for (int i = 0; i < m_currentScene->m_objects.size(); i++)
+	switch (m_collisionType)
 	{
-		GameObject* first = m_currentScene->m_objects[i];
-		if (first->m_collisionData->m_collisionMask == 0)
-			continue;
-		for (int p = 0; p < m_currentScene->m_objects.size(); p++)
-		{
-			if (i == p)
-				continue;
-			GameObject* second = m_currentScene->m_objects[p];
-			if (first->m_collisionData->m_collisionMask & second->m_collisionData->m_collisionMask == 0)
-				continue;
-			if (CollisionData::AreColliding(CollisionData::CollisionDetectionType::AxisRealignedBoundingBox, first, second))
-			{
-				//TODO: This is slow as they are both going to check for collision against each other
-				//there should be logic to prevent this v
-				first->onCollision(second);
-			}
-		}
+	case OCTREE:
+		m_octree->CheckCollisions();
+		break;
+	case BRUTE_FORCE:
+	default:
+		BruteForceCollision();
+		break;
 	}
+	
 }
 
 Scene::~Scene()
