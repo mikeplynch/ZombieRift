@@ -87,6 +87,12 @@
     <ClCompile Include="Octree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BasicGun.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainGameScene.cpp">
+      <Filter>GameScenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h">
@@ -154,6 +160,12 @@
     </ClInclude>
     <ClInclude Include="EasyCPlusPlus.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicGun.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainGameScene.h">
+      <Filter>GameScenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

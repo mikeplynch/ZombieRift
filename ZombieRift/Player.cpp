@@ -13,9 +13,13 @@ Player::Player()
 	m_worldCamera->SetPositionAndTarget(m_translations, m_translations + m_worldCamera->GetForward());
 	m_bullets = std::vector<Bullet*>();
 
+	m_gun = new BasicGun(this);
+	m_gun->m_translations = m_translations + (0.1f * m_worldCamera->GetForward()) + glm::vec3(0.05f, -0.05f, 0.0f);
+
 	m_reticle = new SphereObject(0.00005f);
 	m_reticle->m_collisionData->m_collisionMask = 0;
 	m_reticle->SetColor(glm::vec3(255/255.0f, 100/255.0f, 120/255.0f));
+	m_reticle->m_translations = m_translations + (0.01f * m_worldCamera->GetForward());
 
 	m_visible = false;
 }
@@ -50,10 +54,8 @@ void Player::Update(float dt)
 	//glm::vec3 behind = glm::vec3(m_translations.x, m_translations.y, m_translations.z + 5); //TC - Don't remove this please
 	//m_worldCamera->SetPositionAndTarget(m_translations, m_translations + m_worldCamera->GetForward());
 	//m_worldCamera->SetPosition(m_translations);
-	m_reticle->m_translations = m_translations + (0.01f * m_worldCamera->GetForward());
+	//m_reticle->m_translations = m_translations + (0.01f * m_worldCamera->GetForward());
 	CheckBullets();
-
-	std::cout << m_score << std::endl;
 }
 
 void Player::onCollision(GameObject* other)
@@ -64,6 +66,7 @@ void Player::onCollision(GameObject* other)
 void Player::HandleInput(float dt)
 {
 	float speed = m_moveSpeed * dt;
+	float reticleSpeed = m_reticleSpeed * dt;
 	float degrees = 0.1f;
 
 	if (glfwGetKey(GameManager::window, GLFW_KEY_LEFT_SHIFT) || glfwGetKey(GameManager::window, GLFW_KEY_RIGHT_SHIFT))
@@ -95,19 +98,28 @@ void Player::HandleInput(float dt)
 	/* Looking around */
 	if (glfwGetKey(GameManager::window, GLFW_KEY_LEFT))
 	{
-		ChangeLookYaw(degrees);
+		//ChangeLookYaw(degrees);
+		ChangeAimHorizontal(-reticleSpeed);
+		//m_reticle->m_translations += glm::vec3(-reticleSpeed, 0.0f, 0.0f);
 	}
 	if (glfwGetKey(GameManager::window, GLFW_KEY_RIGHT))
 	{
-		ChangeLookYaw(-degrees);
+		ChangeAimHorizontal(reticleSpeed);
+		//ChangeLookYaw(-degrees);
+		//m_reticle->m_translations += glm::vec3(reticleSpeed, 0.0f, 0.0f);
+
 	}
 	if (glfwGetKey(GameManager::window, GLFW_KEY_DOWN))
 	{
-		ChangeLookPitch(-degrees);
+		ChangeAimVertical(-reticleSpeed);
+		//ChangeLookPitch(-degrees);
+		//m_reticle->m_translations += glm::vec3(0.0f, -reticleSpeed, 0.0f);
 	}
 	if (glfwGetKey(GameManager::window, GLFW_KEY_UP))
 	{
-		ChangeLookPitch(degrees);
+		ChangeAimVertical(reticleSpeed);
+		//ChangeLookPitch(degrees);
+		//m_reticle->m_translations += glm::vec3(0.0f, reticleSpeed, 0.0f);
 	}
 
 	if (glfwGetKey(GameManager::window, GLFW_KEY_SPACE))
@@ -118,12 +130,13 @@ void Player::HandleInput(float dt)
 
 void Player::Shoot()
 {
-	glm::vec3 direction = m_worldCamera->GetForward();
+	glm::vec3 direction = glm::normalize(m_reticle->m_translations - m_translations);
 	float farDistance = m_worldCamera->GetNearFarPlanes().y;
 	Bullet* bullet = new Bullet(this, direction, farDistance / 10);
+	bullet->m_translations = m_gun->m_translations; //+(0.0f * m_worldCamera->GetForward());
 
 	GameManager::GetInstance()->m_currentScene->AddObject(bullet);
-	m_bullets.push_back(bullet);	
+	m_bullets.push_back(bullet);
 }
 
 void Player::CheckBullets()
@@ -140,6 +153,19 @@ void Player::CheckBullets()
 void Player::AddPoints(int points)
 {
 	m_score += points;
+}
+
+void Player::ChangeAimHorizontal(float dist)
+{
+	m_reticle->m_translations += glm::vec3(dist, 0.0f, 0.0f);
+	m_gun->m_rotations *= glm::rotate(-dist * 5000, glm::vec3(0.0f, 1.0f, 0.0f));
+
+}
+
+void Player::ChangeAimVertical(float dist)
+{
+	m_reticle->m_translations += glm::vec3(0.0f, dist, 0.0f);
+	m_gun->m_rotations *= glm::rotate(dist * 5000, glm::vec3(1.0f, 0.0f, 0.0f));
 }
 
 void Player::MoveSideways(float dist)

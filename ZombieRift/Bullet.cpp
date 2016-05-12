@@ -1,7 +1,7 @@
 #include "Bullet.h"
 #include "Player.h"
 #include "Zombie.h"
-#include "A10Scene.h"
+#include "MainGameScene.h"
 
 Bullet::Bullet()
 {
@@ -11,7 +11,7 @@ Bullet::Bullet(GameObject* shooter, glm::vec3 dir, float maxDistance)
 {
 	m_name = "Bullet";
 	CreateModel(m_name);
-	m_model->GenCube(0.1f);
+	m_model->GenCube(0.05f);
 	EnableCollision();
 	
 	m_shooter = shooter;

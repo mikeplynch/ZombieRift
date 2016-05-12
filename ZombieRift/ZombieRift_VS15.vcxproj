@@ -114,6 +114,7 @@ copy "$(SolutionDir)include\GL\bin\*.*" "$(SolutionDir)_Binary\"</Command>
     <ClCompile Include="A10Scene.cpp" />
     <ClCompile Include="AestheticsScene.cpp" />
     <ClCompile Include="Automota.cpp" />
+    <ClCompile Include="BasicGun.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CollisionData.cpp" />
@@ -124,6 +125,7 @@ copy "$(SolutionDir)include\GL\bin\*.*" "$(SolutionDir)_Binary\"</Command>
     <ClCompile Include="KinectUtilites.cpp" />
     <ClCompile Include="LSystem.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MainGameScene.cpp" />
     <ClCompile Include="MeshGenerator.cpp" />
     <ClCompile Include="MyMesh.cpp" />
     <ClCompile Include="Octree.cpp" />
@@ -136,6 +138,7 @@ copy "$(SolutionDir)include\GL\bin\*.*" "$(SolutionDir)_Binary\"</Command>
     <ClInclude Include="A10Scene.h" />
     <ClInclude Include="AestheticsScene.h" />
     <ClInclude Include="Automota.h" />
+    <ClInclude Include="BasicGun.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CollisionData.h" />
@@ -147,6 +150,7 @@ copy "$(SolutionDir)include\GL\bin\*.*" "$(SolutionDir)_Binary\"</Command>
     <ClInclude Include="KinectUtilites.h" />
     <ClInclude Include="LSystem.h" />
     <ClInclude Include="Main.h" />
+    <ClInclude Include="MainGameScene.h" />
     <ClInclude Include="MeshGenerator.h" />
     <ClInclude Include="MyMesh.h" />
     <ClInclude Include="Octree.h" />
