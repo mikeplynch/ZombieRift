@@ -84,6 +84,8 @@ bool Octree::Overlaps(glm::vec3 min1, glm::vec3 max1, glm::vec3 min2, glm::vec3 
 
 void Octree::AdjustObject(GameObject * obj)
 {	
+	if (obj->IsDelete())
+		return;
 	if (Overlaps(obj->m_collisionData->m_min + obj->m_translations, obj->m_collisionData->m_max + obj->m_translations, m_min, m_max))
 	{
 		if (m_children.size() == 0)
@@ -120,8 +122,8 @@ void Octree::AdjustObject(GameObject * obj)
 void Octree::PlaceObject(GameObject * obj)
 {
 	if (Overlaps(obj->m_collisionData->m_min + obj->m_translations, obj->m_collisionData->m_max + obj->m_translations, m_min, m_max))
-	{
-		if (m_children.size() == 0)
+	{ 
+		if (m_children.size() != 0)
 		{
 			for (int i = 0; i < m_children.size(); i++)
 			{

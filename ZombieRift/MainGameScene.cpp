@@ -5,7 +5,7 @@
 
 void MainGameScene::Init()
 {
-	GameManager::GetInstance()->m_collisionType = BRUTE_FORCE;
+	//GameManager::GetInstance()->m_collisionType = BRUTE_FORCE;
 
 	player = new Player();
 

@@ -89,7 +89,7 @@ int main(void)
 
 
 	// - SET THE ACTIVE SCENE HERE -
-	game->SetCurrentScene(new MainGameScene);
+	game->SetCurrentScene(new A10Scene);
 
 	// Pre-draw the gamescene to update positions and prevent collisions
 	game->Draw();

@@ -45,7 +45,7 @@ public:
 	static void ReleaseInstance();
 
 	static GLFWwindow* window;
-	int m_subdivisions = 1;
+	int m_subdivisions = 2;
 	int m_collisionType = OCTREE;
 
 	std::vector<Scene*> m_sceneStack;
