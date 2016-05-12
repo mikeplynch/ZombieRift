@@ -12,6 +12,8 @@ private:
 	float m_moveSpeed = 1.0f;
 	float m_reticleSpeed = 0.01f;
 
+	bool m_canShoot = true;
+
 	SphereObject* m_reticle;
 	BasicGun* m_gun;
 	std::vector<Bullet*> m_bullets;

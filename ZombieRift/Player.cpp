@@ -56,6 +56,8 @@ void Player::Update(float dt)
 	//m_worldCamera->SetPosition(m_translations);
 	//m_reticle->m_translations = m_translations + (0.01f * m_worldCamera->GetForward());
 	CheckBullets();
+
+	std::cout << "Score: " << m_score << std::endl;
 }
 
 void Player::onCollision(GameObject* other)
@@ -124,7 +126,16 @@ void Player::HandleInput(float dt)
 
 	if (glfwGetKey(GameManager::window, GLFW_KEY_SPACE))
 	{
-		Shoot();
+		if (m_canShoot)
+		{
+			Shoot();
+		}
+
+		m_canShoot = false;
+	}
+	else
+	{
+		m_canShoot = true;
 	}
 }
 

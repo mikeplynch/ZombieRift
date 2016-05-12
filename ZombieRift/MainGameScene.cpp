@@ -5,10 +5,7 @@
 
 void MainGameScene::Init()
 {
-	//box = new BoxObject(1.0f, 10.0f, 2.0f);
-	//box->SetColor(glm::vec3(0.0f, 0.0f, 1.0f));
-	//box->m_translations = glm::vec3(0.0f, 1.0f, -15.0f);
-	//AddObject(box);
+	GameManager::GetInstance()->m_collisionType = BRUTE_FORCE;
 
 	player = new Player();
 
