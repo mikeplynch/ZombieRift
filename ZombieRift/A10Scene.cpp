@@ -110,6 +110,7 @@ void MainGameScene::Init()
 	
 	AddObject(player);
 	AddObject(player->GetReticle());
+	AddObject(player->GetGun());
 }
 
 void MainGameScene::Update(float dt)
