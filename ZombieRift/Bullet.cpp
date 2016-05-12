@@ -11,7 +11,7 @@ Bullet::Bullet(GameObject* shooter, glm::vec3 dir, float maxDistance)
 {
 	m_name = "Bullet";
 	CreateModel(m_name);
-	m_model->GenCube(0.05f);
+	m_model->GenCube(0.03f);
 	EnableCollision();
 	
 	m_shooter = shooter;
