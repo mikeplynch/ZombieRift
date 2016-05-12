@@ -11,7 +11,7 @@ void AestheticsScene::Init()
 	int tries = 0;
 	while ((kinect = KinectUtilities::GetInstance()) == nullptr || tries > 100) {
 		tries++;
-		fprintf(stderr, "Attempting to initializse the kinect...\n");
+		fprintf(stderr, "Attempting to initialize the kinect...\n");
 	}
 	colony->worldPosition = glm::vec3(0, 0, -20);
 

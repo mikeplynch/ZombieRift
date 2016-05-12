@@ -3,6 +3,7 @@
 #include "GameManager.h"
 #include "SimpleObjects.h"
 #include "Player.h"
+#include "KinectUtilites.h"
 
 class MainGameScene : public Scene
 {

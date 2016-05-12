@@ -40,11 +40,11 @@ void GameManager::OctreeCollision()
 		m_currentSubdivisions = m_subdivisions;
 		if (m_octree != nullptr)
 			delete m_octree;
-		m_octree = new Octree(m_currentScene->m_objects, m_currentSubdivisions);
+		m_octree = new Octree(m_currentScene->m_objects, m_currentSubdivisions, glm::vec3(100, 25, 100));
 	}
 	if (m_octree == nullptr)
 	{
-		m_octree = new Octree(m_currentScene->m_objects, m_currentSubdivisions);
+		m_octree = new Octree(m_currentScene->m_objects, m_currentSubdivisions, glm::vec3(100, 25, 100));
 	}
 	m_octree->CheckCollisions();
 }

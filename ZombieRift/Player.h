@@ -4,6 +4,7 @@
 #include "Bullet.h"
 #include "SimpleObjects.h"
 #include "BasicGun.h"
+#include "KinectUtilites.h"
 
 class Player : public GameObject
 {
@@ -17,6 +18,7 @@ private:
 	SphereObject* m_reticle;
 	BasicGun* m_gun;
 	std::vector<Bullet*> m_bullets;
+	KinectUtilities* kinect;
 
 	virtual void onCollision(GameObject* other) override;
 	void HandleInput(float dt);

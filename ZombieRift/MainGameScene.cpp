@@ -27,6 +27,8 @@ void MainGameScene::Update(float dt)
 
 void MainGameScene::AddZombie(glm::vec3 target)
 {
+	if (initialized == true && GameManager::GetInstance()->m_currentScene->m_objects.size() > 100)
+		return;
 	int x = rand() % 20 - 10; // -10 to +10
 	int y = 0;
 	int z = rand() % 20 - 40; // -40 to -20

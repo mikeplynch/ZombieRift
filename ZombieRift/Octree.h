@@ -44,6 +44,7 @@ public:
 	/// It will then attempt to place and subdivide accordingly.
 	/// <summary>
 	Octree(std::vector<GameObject*> contained, int subdivisions);
+	Octree(std::vector<GameObject*> contained, int subdivisions, glm::vec3 size);
 
 	void AddNode(GameObject* object);
 

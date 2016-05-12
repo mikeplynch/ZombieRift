@@ -22,6 +22,12 @@ Player::Player()
 	m_reticle->m_translations = m_translations + (0.01f * m_worldCamera->GetForward());
 
 	m_visible = false;
+
+	int tries = 0;
+	while ((kinect = KinectUtilities::GetInstance()) == nullptr || tries > 100) {
+		tries++;
+		fprintf(stderr, "Attempting to initialize the kinect...\n");
+	}
 }
 
 Player::~Player()
@@ -76,6 +82,24 @@ void Player::HandleInput(float dt)
 		speed *= SPEED_MODIFIER;
 		degrees *= SPEED_MODIFIER;
 
+	}
+
+	if (kinect != nullptr) {
+		kinect->GetKinectData();
+		if (kinect->m_tracked)
+		{
+			const CameraSpacePoint& rightHand = kinect->joints[JointType_HandRight].Position;
+			const CameraSpacePoint& leftHand = kinect->joints[JointType_HandLeft].Position;
+
+			float angleX = acos(glm::dot(glm::normalize(glm::vec3(rightHand.X, 0, rightHand.Z)), 
+				glm::normalize(glm::vec3(leftHand.X, 0, leftHand.Z))));
+			float angleY = acos(glm::dot(glm::normalize(glm::vec3(0, rightHand.Y, rightHand.Z)),
+				glm::normalize(glm::vec3(0, leftHand.Y, leftHand.Z))));
+			//ChangeAimHorizontal(angleX * dt);
+			//ChangeAimVertical(angleY * dt);
+			
+			m_reticle->m_translations = m_translations + glm::vec3(rightHand.X , rightHand.Y , 0);
+		}
 	}
 
 	// For now, we don't want player movement.

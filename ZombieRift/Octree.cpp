@@ -145,6 +145,17 @@ Octree::Octree(std::vector<GameObject*> contained, int subdivisions)
 	SubDivide(contained, subdivisions);
 }
 
+Octree::Octree(std::vector<GameObject*> contained, int subdivisions, glm::vec3 size)
+{
+	m_cube = new Model("cube");
+	m_cube->GenCube(1.0f);
+	CalcBounds(contained);
+	m_size = size;
+	m_min = m_position - size;
+	m_max = m_position + size;
+	SubDivide(contained, subdivisions);
+}
+
 Octree::Octree(std::vector<GameObject*> contained, int subdivisions, glm::vec3 min, glm::vec3 max, glm::vec3 position, glm::vec3 size)
 {
 	m_min = min;
