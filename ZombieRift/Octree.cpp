@@ -266,11 +266,23 @@ void Octree::CheckCollisions()
 		for (int i = 0; i < m_gameObjects.size(); i++)
 		{
 			GameObject* first = m_gameObjects[i];
+			if (first->IsDelete())
+			{
+				m_gameObjects.erase(m_gameObjects.begin() + i);
+				i--;
+				continue;
+			}
 			for (int k = 0; k < m_gameObjects.size(); k++)
 			{
 				if (i == k)
 					continue;
 				GameObject* second = m_gameObjects[k];
+				if (second->IsDelete())
+				{
+					m_gameObjects.erase(m_gameObjects.begin() + k);
+					k--;
+					continue;
+				}
 				if (first->m_collisionData->m_collisionMask == 0 || second->m_collisionData->m_collisionMask == 0)
 					continue;
 				if (first->m_collisionData->m_collisionMask & second->m_collisionData->m_collisionMask == 0)
@@ -297,15 +309,15 @@ void Octree::AdjustOctree()
 	}
 	else
 	{
-		int offset = 0;
-		for (int i = 0; i < m_gameObjects.size() - offset; i++)
+		int curSize = m_gameObjects.size();
+		for (int i = 0; i < curSize; i++)
 		{
 			if (m_gameObjects[i]->DidModifyTransformations())
 			{
 				AdjustObject(m_gameObjects[i]);
 				m_gameObjects.erase(m_gameObjects.begin() + i);
 				i--;
-				offset++;
+				curSize--;
 			}
 		}
 	}

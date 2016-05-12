@@ -136,20 +136,6 @@ void GameManager::Update(float deltaTime)
 	
 	deleteQueue.clear();
 
-	//Add all of the objects that are currently in the dynamic addition queue
-	for (int i = 0; i < m_currentScene->m_dynamicAdditionQueue.size(); i++)
-	{
-		if (m_octree != nullptr)
-		{
-			m_octree->AddNode(m_currentScene->m_dynamicAdditionQueue[i]);
-		}
-		AddObjectToCurrentScene(m_currentScene->m_dynamicAdditionQueue[i]);
-		m_currentScene->m_dynamicAdditionQueue.erase(m_currentScene->m_dynamicAdditionQueue.begin() + i);
-		i--;
-	}
-	
-	m_currentScene->m_dynamicAdditionQueue.clear();
-
 	for (int i = 0; i < m_currentScene->m_objects.size(); i++)
 	{
 		GameObject* go = m_currentScene->m_objects[i];
@@ -165,6 +151,19 @@ void GameManager::Update(float deltaTime)
 	m_currentScene->Update(deltaTime);
 
 	DetectCollisions();
+
+	//Add all of the objects that are currently in the dynamic addition queue
+	for (int i = 0; i < m_currentScene->m_dynamicAdditionQueue.size(); i++)
+	{
+		if (m_octree != nullptr)
+		{
+			m_octree->AddNode(m_currentScene->m_dynamicAdditionQueue[i]);
+		}
+		AddObjectToCurrentScene(m_currentScene->m_dynamicAdditionQueue[i]);
+		m_currentScene->m_dynamicAdditionQueue.erase(m_currentScene->m_dynamicAdditionQueue.begin() + i);
+		i--;
+	}
+	m_currentScene->m_dynamicAdditionQueue.clear();
 }
 
 void GameManager::Draw()
