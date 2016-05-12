@@ -7,10 +7,20 @@ void A10Scene::Init()
 	box->m_translations = glm::vec3(2.0f, 1.0f, 0.0f);
 	box->m_name = "box";
 
-	BoxObject* box2 = new BoxObject(1.0f, 1.0f, 2.0f);
-	box2->SetColor(glm::vec3(0.0f, 1.0f, 0.0f));
-	box2->m_translations = glm::vec3(-1.0f, 1.0f, -1.0f);
-	box2->m_name = "box";
+	for (int x = 0; x < 10; x++)
+	{
+		for (int y = 0; y < 10; y++)
+		{
+			for (int z = 0; z < 10; z++)
+			{
+				BoxObject* b = new BoxObject(0.5f, 0.5f, 0.5f);
+				b->SetColor(glm::vec3(1.0f / (float)x, 1.0f / (float)y, z / (float)1.0f));
+				b->m_translations = glm::vec3(10 - 2 * x, 10 - 2 * y, 10 - 2 * z);
+				b->m_name = "box";
+				AddObject(b);
+			}
+		}
+	}
 
 	player = new PlayerBox();
 	player->m_name = "player";
@@ -18,7 +28,6 @@ void A10Scene::Init()
 
 	AddObject(box);
 	AddObject(player);
-	AddObject(box2);
 }
 
 void A10Scene::Update(float dt)
@@ -87,9 +96,17 @@ void A10Scene::HandleInput(Camera* camera) {
 		}
 		toggle = true;
 	}
-	else 
+	else
 	{
 		toggle = false;
+	}
+	if (glfwGetKey(window, GLFW_KEY_1))
+	{
+		GameManager::GetInstance()->m_collisionType = BRUTE_FORCE;
+	}
+	if (glfwGetKey(window, GLFW_KEY_2))
+	{
+		GameManager::GetInstance()->m_collisionType = OCTREE;
 	}
 }
 

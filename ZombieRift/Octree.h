@@ -29,7 +29,10 @@ private:
 	void CalcBounds(std::vector<GameObject*> objects);
 	void CheckMinMax(glm::vec3 checkAgainst);
 	void CheckMinMax(std::vector<glm::vec3> points);
-	bool WithinBounds(GameObject* object);
+	bool Overlaps(glm::vec3 min1, glm::vec3 max1, glm::vec3 min2, glm::vec3 max2);
+	void AdjustObject(GameObject* obj);
+	void PlaceObject(GameObject* obj);
+	void AdjustOctree();
 public:
 	std::vector<Octree*> m_children;
 	std::vector<GameObject*> m_gameObjects;

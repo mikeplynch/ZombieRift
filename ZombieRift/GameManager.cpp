@@ -33,6 +33,20 @@ void GameManager::BruteForceCollision()
 	}
 }
 
+void GameManager::OctreeCollision()
+{
+	if (m_currentSubdivisions != m_subdivisions)
+	{
+		m_currentSubdivisions = m_subdivisions;
+		m_octree = new Octree(m_currentScene->m_objects, m_currentSubdivisions);
+	}
+	if (m_octree == nullptr)
+	{
+		m_octree = new Octree(m_currentScene->m_objects, m_currentSubdivisions);
+	}
+	m_octree->CheckCollisions();
+}
+
 GameManager * GameManager::GetInstance()
 {
 	if (instance != nullptr)
@@ -66,6 +80,7 @@ void GameManager::SetCurrentScene(Scene* scene)
 	}
 	m_sceneStack.push_back(scene);
 	m_currentScene = scene;
+	m_octree = nullptr;
 }
 
 void GameManager::PopCurrentScene()
@@ -101,8 +116,22 @@ void GameManager::Update(float deltaTime)
 		m_currentScene->m_objects.erase(m_currentScene->m_objects.begin() + index);
 		delete obj;
 	}
-
+	
 	deleteQueue.clear();
+
+	//Add all of the objects that are currently in the dynamic addition queue
+	for (int i = 0; i < m_currentScene->m_dynamicAdditionQueue.size(); i++)
+	{
+		if (m_octree != nullptr)
+		{
+			m_octree->AddNode(m_currentScene->m_dynamicAdditionQueue[i]);
+		}
+		m_currentScene->AddObject(m_currentScene->m_dynamicAdditionQueue[i]);
+		i--;
+		m_currentScene->m_dynamicAdditionQueue.erase(m_currentScene->m_dynamicAdditionQueue.begin() + i);
+	}
+	
+	m_currentScene->m_dynamicAdditionQueue.clear();
 
 	for (int i = 0; i < m_currentScene->m_objects.size(); i++)
 	{
@@ -117,8 +146,6 @@ void GameManager::Update(float deltaTime)
 	}
 
 	m_currentScene->Update(deltaTime);
-	delete m_octree;
-	m_octree = new Octree(m_currentScene->m_objects, m_subdivisions);
 
 	DetectCollisions();
 }
@@ -148,8 +175,10 @@ void GameManager::DrawDebug()
 	{
 		m_currentScene->m_objects[i]->DrawDebug();
 	}
-	if(m_octree != nullptr)
+	if (m_octree != nullptr && m_collisionType == OCTREE) 
+	{
 		m_octree->Render();
+	}
 }
 
 void GameManager::DetectCollisions()
@@ -157,7 +186,7 @@ void GameManager::DetectCollisions()
 	switch (m_collisionType)
 	{
 	case OCTREE:
-		m_octree->CheckCollisions();
+		OctreeCollision();
 		break;
 	case BRUTE_FORCE:
 	default:
@@ -175,16 +204,23 @@ Scene::~Scene()
 
 void Scene::AddObject(GameObject* object)
 {
-	if (m_objectsDictionary.find(object->m_name) != m_objectsDictionary.end())
+	if (initialized == false)
 	{
-		m_objects.push_back(object);
-		m_objectsDictionary[object->m_name].push_back(object);
+		if (m_objectsDictionary.find(object->m_name) != m_objectsDictionary.end())
+		{
+			m_objects.push_back(object);
+			m_objectsDictionary[object->m_name].push_back(object);
+		}
+		else {
+			std::vector<GameObject*> objects;
+			objects.push_back(object);
+			m_objects.push_back(object);
+			m_objectsDictionary[object->m_name] = objects;
+		}
 	}
-	else {
-		std::vector<GameObject*> objects;
-		objects.push_back(object);
-		m_objects.push_back(object);
-		m_objectsDictionary[object->m_name] = objects;
+	else
+	{
+		m_dynamicAdditionQueue.push_back(object);
 	}
 }
 

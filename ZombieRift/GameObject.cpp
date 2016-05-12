@@ -5,9 +5,6 @@ GameObject::GameObject()
 {
 	m_worldCamera = Camera::GetInstance();
 	m_data = new std::map<std::string, int>();
-	/*m_model = new Model("DefaultCube");
-	m_model->GenCube(1.0f);
-	m_collisionData = nullptr;*/
 }
 
 GameObject::~GameObject()
@@ -57,10 +54,15 @@ void GameObject::SetColor(glm::vec3 color)
 
 void GameObject::Draw()
 {
+	m_oldTransformations = m_transformations;
 	m_transformations = glm::mat4(1.0f);
 	m_transformations *= glm::translate(m_translations);
 	m_transformations *= m_rotations;
 	m_transformations *= glm::scale(m_scales);
+	if (m_oldTransformations != m_transformations)
+		m_transformationsModified = true;
+	else
+		m_transformationsModified = false;
 	if (m_visible)
 	{
 		m_model->Render(m_transformations, m_worldCamera->GetView(), m_worldCamera->GetProjection());

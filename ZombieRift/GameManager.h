@@ -6,6 +6,7 @@ class Scene {
 public:
 	Scene() { };
 	~Scene();
+	std::vector<GameObject*> m_dynamicAdditionQueue;
 	std::map<std::string, std::vector<GameObject*>> m_objectsDictionary;
 	std::vector<GameObject*> m_objects;
 	bool initialized = false;
@@ -34,8 +35,10 @@ private:
 	GameManager(GameManager const* other) {};
 	GameManager& operator=(GameManager const& other) {};
 	void BruteForceCollision();
+	void OctreeCollision();
 	std::vector<int> deleteQueue;
-	Octree* m_octree;
+	Octree* m_octree = nullptr;
+	int m_currentSubdivisions = m_subdivisions;
 public:
 	static GameManager* GetInstance();
 	static void ReleaseInstance();

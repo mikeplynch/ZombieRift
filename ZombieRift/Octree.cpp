@@ -38,17 +38,17 @@ void Octree::CheckMinMax(glm::vec3 checkAgainst)
 {
 	if (checkAgainst.x > m_max.x)
 		m_max.x = checkAgainst.x;
-	else if (checkAgainst.x < m_min.x)
+	if (checkAgainst.x < m_min.x)
 		m_min.x = checkAgainst.x;
 
 	if (checkAgainst.y > m_max.y)
 		m_max.y = checkAgainst.y;
-	else if (checkAgainst.y < m_min.y)
+	if (checkAgainst.y < m_min.y)
 		m_min.y = checkAgainst.y;
 
 	if (checkAgainst.z > m_max.z)
 		m_max.z = checkAgainst.z;
-	else if (checkAgainst.z < m_min.z)
+	if (checkAgainst.z < m_min.z)
 		m_min.z = checkAgainst.z;
 }
 
@@ -60,24 +60,66 @@ void Octree::CheckMinMax(std::vector<glm::vec3> points)
 	}
 }
 
-bool Octree::WithinBounds(GameObject* object)
+bool Octree::Overlaps(glm::vec3 min1, glm::vec3 max1, glm::vec3 min2, glm::vec3 max2)
 {
-	for (int i = 0; i < object->m_collisionData->m_boundingPoints.size(); i++)
+	bool areColliding = true;
+
+	if (max1.x < min2.x)
+		areColliding = false;
+	if (min1.x > max2.x)
+		areColliding = false;
+
+	if (max1.y < min2.y)
+		areColliding = false;
+	if (min1.y > max2.y)
+		areColliding = false;
+
+	if (max1.z < min2.z)
+		areColliding = false;
+	if (min1.z > max2.z)
+		areColliding = false;
+
+	return areColliding;
+}
+
+void Octree::AdjustObject(GameObject * obj)
+{	
+	if (Overlaps(obj->m_collisionData->m_min + obj->m_translations, obj->m_collisionData->m_max + obj->m_translations, m_min, m_max))
 	{
-		glm::vec3 point = object->m_collisionData->m_boundingPoints[i];
-		if (point.x > m_min.x)
-			 if (point.x < m_max.x)
-				return true;
-
-		if (point.y > m_min.y)
-			if (point.y < m_max.y)
-			return true;
-
-		if (point.z > m_min.z)
-			 if (point.z < m_max.z)
-				return true;
+		if (m_children.size() == 0)
+		{
+			m_gameObjects.push_back(obj);
+		} 
+		else
+		{
+			for (int i = 0; i < m_children.size(); i++)
+			{
+				m_children[i]->PlaceObject(obj);
+			}
+		}
+	} 
+	else if (m_parent != nullptr)
+	{
+		m_parent->AdjustObject(obj);
 	}
-	return false;
+}
+
+void Octree::PlaceObject(GameObject * obj)
+{
+	if (Overlaps(obj->m_collisionData->m_min + obj->m_translations, obj->m_collisionData->m_max + obj->m_translations, m_min, m_max))
+	{
+		if (m_children.size() == 0)
+		{
+			for (int i = 0; i < m_children.size(); i++)
+			{
+				m_children[i]->PlaceObject(obj);
+			}
+		}
+		else
+		{
+			m_gameObjects.push_back(obj);
+		}
+	}
 }
 
 Octree::Octree(std::vector<GameObject*> contained, int subdivisions)
@@ -101,6 +143,13 @@ Octree::Octree(std::vector<GameObject*> contained, int subdivisions, glm::vec3 m
 
 void Octree::AddNode(GameObject * object)
 {
+	if (m_children.size() != 0)
+	{
+		for (int i = 0; i < m_children.size(); i++)
+		{
+			m_children[i]->PlaceObject(object);
+		}
+	}
 }
 
 void Octree::SubDivide(std::vector<GameObject*> contained, int subdivisions)
@@ -142,7 +191,16 @@ void Octree::SubDivide(std::vector<GameObject*> contained, int subdivisions)
 			}	
 			glm::vec3 max = position + size;
 			glm::vec3 min = position - size;
-			Octree* octree = new Octree(contained, subdivisions - 1, min, max, position, size);
+
+			std::vector<GameObject*> collection;
+			for (int i = 0; i < contained.size(); i++)
+			{
+				if (Overlaps(contained[i]->m_collisionData->m_min + contained[i]->m_translations, contained[i]->m_collisionData->m_max + contained[i]->m_translations, min, max))
+				{
+					collection.push_back(contained[i]);
+				}
+			}
+			Octree* octree = new Octree(collection, subdivisions - 1, min, max, position, size);
 			octree->m_parent = this;
 			m_children.push_back(octree);
 		}
@@ -151,7 +209,7 @@ void Octree::SubDivide(std::vector<GameObject*> contained, int subdivisions)
 	{
 		for (int i = 0; i < contained.size(); i++)
 		{
-			if (WithinBounds(contained[i]))
+			if (Overlaps(contained[i]->m_collisionData->m_min + contained[i]->m_translations, contained[i]->m_collisionData->m_max + contained[i]->m_translations, m_min, m_max))
 			{
 				m_gameObjects.push_back(contained[i]);
 			}
@@ -161,6 +219,14 @@ void Octree::SubDivide(std::vector<GameObject*> contained, int subdivisions)
 
 void Octree::Render()
 {
+	if (m_children.size() != 0)
+	{
+		for (int i = 0; i < m_children.size(); i++)
+		{
+			m_children[i]->Render();
+		}
+		return;
+	}
 	if (worldCamera == nullptr)
 	{
 		worldCamera = Camera::GetInstance();
@@ -169,14 +235,12 @@ void Octree::Render()
 	transformations *= glm::translate(m_position);
 	transformations *= glm::scale(m_size);
 	m_cube->Render(transformations, worldCamera->GetView(), worldCamera->GetProjection());
-	for (int i = 0; i < m_children.size(); i++)
-	{
-		m_children[i]->Render();
-	}
+	
 }
 
 void Octree::CheckCollisions()
 {
+	AdjustOctree();
 	if (m_gameObjects.size() == 0)
 	{
 		for (int i = 0; i < m_children.size(); i++)
@@ -204,6 +268,31 @@ void Octree::CheckCollisions()
 					//there should be logic to prevent this
 					first->onCollision(second);
 				}
+			}
+		}
+	}
+}
+
+void Octree::AdjustOctree()
+{
+	if (m_gameObjects.size() == 0)
+	{
+		for (int i = 0; i < m_children.size(); i++)
+		{
+			m_children[i]->AdjustOctree();
+		}
+	}
+	else
+	{
+		int offset = 0;
+		for (int i = 0; i < m_gameObjects.size() - offset; i++)
+		{
+			if (m_gameObjects[i]->DidModifyTransformations())
+			{
+				AdjustObject(m_gameObjects[i]);
+				m_gameObjects.erase(m_gameObjects.begin() + i);
+				i--;
+				offset++;
 			}
 		}
 	}
