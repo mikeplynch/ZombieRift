@@ -102,6 +102,19 @@ void Octree::AdjustObject(GameObject * obj)
 	{
 		m_parent->AdjustObject(obj);
 	}
+	else if (m_parent == nullptr)
+	{
+		//Resizing code not functioning as intended
+		/*for (int i = 0; i < m_children.size(); i++)
+		{
+			for (int i = 0; i < obj->m_collisionData->m_boundingPoints.size(); i++)
+			{
+				CheckMinMax(obj->m_collisionData->m_boundingPoints[i]);
+			}
+			m_size = (m_max - m_min);
+			m_children[i]->AdjustSize(m_size / 2.0f);
+		}*/
+	}
 }
 
 void Octree::PlaceObject(GameObject * obj)
@@ -296,6 +309,25 @@ void Octree::AdjustOctree()
 			}
 		}
 	}
+}
+
+void Octree::AdjustSize(glm::vec3 size)
+{
+	if (m_parent == nullptr)
+		return;
+	glm::vec3 vecFromParent = m_position - m_parent->m_position;
+	vecFromParent = glm::normalize(vecFromParent);
+	m_position = vecFromParent * glm::length(size);
+	m_min = m_position - size;
+	m_max = m_position + size;
+	if (m_children.size() != 0)
+	{
+		for (int i = 0; i < m_children.size(); i++)
+		{
+			m_children[i]->AdjustSize(size / 2.0f);
+		}
+	}
+	
 }
 
 Octree::~Octree()

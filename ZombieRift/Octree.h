@@ -33,6 +33,7 @@ private:
 	void AdjustObject(GameObject* obj);
 	void PlaceObject(GameObject* obj);
 	void AdjustOctree();
+	void AdjustSize(glm::vec3 size);
 public:
 	std::vector<Octree*> m_children;
 	std::vector<GameObject*> m_gameObjects;

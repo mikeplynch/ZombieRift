@@ -38,6 +38,8 @@ void GameManager::OctreeCollision()
 	if (m_currentSubdivisions != m_subdivisions)
 	{
 		m_currentSubdivisions = m_subdivisions;
+		if (m_octree != nullptr)
+			delete m_octree;
 		m_octree = new Octree(m_currentScene->m_objects, m_currentSubdivisions);
 	}
 	if (m_octree == nullptr)
@@ -45,6 +47,21 @@ void GameManager::OctreeCollision()
 		m_octree = new Octree(m_currentScene->m_objects, m_currentSubdivisions);
 	}
 	m_octree->CheckCollisions();
+}
+
+void GameManager::AddObjectToCurrentScene(GameObject* object)
+{
+	if (m_currentScene->m_objectsDictionary.find(object->m_name) != m_currentScene->m_objectsDictionary.end())
+	{
+		m_currentScene->m_objects.push_back(object);
+		m_currentScene->m_objectsDictionary[object->m_name].push_back(object);
+	}
+	else {
+		std::vector<GameObject*> objects;
+		objects.push_back(object);
+		m_currentScene->m_objects.push_back(object);
+		m_currentScene->m_objectsDictionary[object->m_name] = objects;
+	}
 }
 
 GameManager * GameManager::GetInstance()
@@ -126,9 +143,9 @@ void GameManager::Update(float deltaTime)
 		{
 			m_octree->AddNode(m_currentScene->m_dynamicAdditionQueue[i]);
 		}
-		m_currentScene->AddObject(m_currentScene->m_dynamicAdditionQueue[i]);
-		i--;
+		AddObjectToCurrentScene(m_currentScene->m_dynamicAdditionQueue[i]);
 		m_currentScene->m_dynamicAdditionQueue.erase(m_currentScene->m_dynamicAdditionQueue.begin() + i);
+		i--;
 	}
 	
 	m_currentScene->m_dynamicAdditionQueue.clear();

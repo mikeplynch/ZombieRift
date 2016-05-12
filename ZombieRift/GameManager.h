@@ -39,6 +39,7 @@ private:
 	std::vector<int> deleteQueue;
 	Octree* m_octree = nullptr;
 	int m_currentSubdivisions = m_subdivisions;
+	void AddObjectToCurrentScene(GameObject* object);
 public:
 	static GameManager* GetInstance();
 	static void ReleaseInstance();
