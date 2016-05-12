@@ -17,5 +17,6 @@ This project was generated in 2013
 #include "A10Scene.h"
 #include "AestheticsScene.h"
 #include "Gravity.h"
+#include "MainGameScene.h"
 
 #endif //_MAIN_H

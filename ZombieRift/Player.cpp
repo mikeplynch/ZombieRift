@@ -56,8 +56,6 @@ void Player::Update(float dt)
 	//m_worldCamera->SetPosition(m_translations);
 	//m_reticle->m_translations = m_translations + (0.01f * m_worldCamera->GetForward());
 	CheckBullets();
-
-	std::cout << m_score << std::endl;
 }
 
 void Player::onCollision(GameObject* other)

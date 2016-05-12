@@ -1,7 +1,7 @@
 #include "Bullet.h"
 #include "Player.h"
 #include "Zombie.h"
-#include "A10Scene.h"
+#include "MainGameScene.h"
 
 Bullet::Bullet()
 {
